@@ -11,7 +11,7 @@ Dự án tập trung giải quyết bài toán mua sắm nguyên liệu và dụ
 | :---: | :--- | :--- | :---: |
 | **BW-01** | Mua sắm nguyên liệu và dụng cụ theo công thức làm bánh (Recipe-to-Cart) | Khách vãng lai, Khách hàng, Hệ thống | F05 – F13 |
 | **BW-02** | Xử lý đơn hàng, cập nhật tồn kho và theo dõi giao nhận (Order Fulfillment) | Khách hàng, Quản trị viên (Admin), Hệ thống | F12, F13, F16, F17, F19 |
-| **BW-03** | Quản trị công thức và thiết lập ánh xạ định lượng sang SKU (Recipe & SKU Mapping) | Quản trị viên (Admin), Cơ sở dữ liệu | F04, F14, F15, F16 |
+
 
 ---
 
@@ -96,3 +96,74 @@ Dự án tập trung giải quyết bài toán mua sắm nguyên liệu và dụ
 
 * **Số lượng mua vượt quá tồn kho khả dụng:**  
   Hệ thống cảnh báo số lượng tối đa có thể mua ngay tại bước bấm thêm vào giỏ.
+  ## 2. Quy trình BW-02: Xử lý đơn hàng, cập nhật tồn kho và theo dõi giao nhận (Order Fulfillment)
+
+Quy trình này kiểm soát tính toàn vẹn dữ liệu đơn hàng, đảm bảo việc trừ tồn kho chính xác, minh bạch trạng thái xử lý giữa khách hàng và bộ phận vận hành cửa hàng.
+
+---
+
+### 2.1. Sơ đồ trạng thái đơn hàng (Order State Machine)
+
+```text
+[Khách đặt hàng] ──> (1. Chờ xác nhận / Pending)
+                             │
+                             ├── (Admin hủy / Khách hủy) ──> [Đơn đã hủy / Cancelled]
+                             │                                 (Hoàn lại tồn kho)
+                             ▼
+                     (2. Đã xác nhận / Confirmed)
+                             │
+                             ▼
+                     (3. Đang đóng gói / Processing)
+                             │
+                             ▼
+                     (4. Đang giao hàng / Shipping)
+                             │
+                             ├── (Giao thất bại) ──────────> [Chuyển hoàn / Returned]
+                             │
+                             ▼
+                     (5. Hoàn tất / Completed)
+```
+### 2.2. Các bước thực hiện chi tiết
+
+**Bước 1: Khởi tạo và ghi nhận đơn hàng**
+
+* Sau khi khách hàng nhấn xác nhận đặt đơn tại trang Checkout, hệ thống kích hoạt transaction phía cơ sở dữ liệu:
+  * Kiểm tra lại giá bán và số lượng tồn kho thực tế của từng SKU.
+  * Lưu thông tin đơn hàng vào bảng `Orders` (Trạng thái: `Pending` - Chờ xác nhận).
+  * Sao lưu ảnh chụp thông tin sản phẩm và giá bán tại thời điểm mua vào bảng `Order_Details` (đảm bảo nếu giá bán sau này thay đổi thì dữ liệu lịch sử đơn cũ không bị ảnh hưởng).
+  * Tạm khóa số lượng hàng trong kho tương ứng với đơn hàng.
+* Hệ thống sinh mã đơn hàng ngẫu nhiên (ví dụ: `#BM-8921`) và hiển thị thông báo đặt hàng thành công kèm hướng dẫn thanh toán.
+
+**Bước 2: Tiếp nhận và xác nhận đơn hàng (Phía Quản trị viên)**
+
+* Quản trị viên truy cập bảng điều khiển Admin (F17), lọc danh sách các đơn hàng mới ở trạng thái `Pending`.
+* Kiểm tra tính hợp lệ của địa chỉ nhận hàng, số điện thoại và ghi chú khách hàng.
+* **Xử lý đơn:**
+  * *Nếu hợp lệ:* Bấm **"Xác nhận đơn hàng"**, trạng thái chuyển sang `Confirmed`.
+  * *Nếu có sai sót (thông tin ảo, gọi xác nhận không được):* Bấm **"Hủy đơn"**, hệ thống mở khóa hoàn trả số lượng tồn kho đã giữ.
+
+**Bước 3: Đóng gói và bàn giao vận chuyển**
+
+* Nhân viên kho in phiếu đóng gói (Pick list) chứa danh sách SKU, số lượng gói và vị trí kệ hàng.
+* Cập nhật trạng thái sang `Processing` (Đang đóng gói) và thực hiện trừ trực tiếp số lượng tồn kho khả dụng trong CSDL (F16).
+* Sau khi hoàn tất đóng gói, bàn giao kiện hàng cho bưu tá giao hàng, cập nhật trạng thái sang `Shipping` (Đang giao hàng).
+
+**Bước 4: Khách hàng theo dõi trạng thái đơn hàng**
+
+* Khách hàng đã đăng nhập có thể vào mục **"Lịch sử đơn hàng"** (F19) để xem tiến độ.
+* Khách vãng lai có thể sử dụng công cụ tra cứu nhanh bằng cách nhập `Mã đơn hàng` + `Số điện thoại nhận hàng` để xem trạng thái xử lý hiện tại mà không cần tạo tài khoản.
+
+**Bước 5: Giao hàng và hoàn tất**
+
+* Khách hàng nhận gói hàng, kiểm tra tem niêm phong và thanh toán tiền mặt (COD) hoặc xác nhận đã chuyển khoản thành công.
+* Quản trị viên cập nhật trạng thái đơn thành `Completed`. Hệ thống ghi nhận doanh thu vào báo cáo tài chính.
+
+---
+
+### 2.3. Quy định xử lý hủy đơn hàng
+
+* **Khách hàng chủ động hủy đơn:**  
+  Chỉ được phép hủy trực tiếp trên giao diện website khi đơn hàng đang ở trạng thái `Pending` (Chưa xác nhận). Nếu đơn đã chuyển sang `Processing` hoặc `Shipping`, nút hủy sẽ bị ẩn và khách hàng phải liên hệ trực tiếp hotline để can thiệp.
+
+* **Hoàn trả tồn kho tự động:**  
+  Bất kỳ thao tác hủy đơn nào thành công đều kích hoạt trigger hoàn trả lại số lượng tồn kho tương ứng cho các sản phẩm liên quan.
