@@ -36,18 +36,23 @@ Website giải quyết vấn đề bằng cách cho phép khách hàng chọn c�
 20. Đánh giá sản phẩm.
 21. Quản trị sản phẩm, danh mục sản phẩm, công thức làm bánh, tồn kho, khách hàng, đơn hàng, khuyến mãi.
 
-## 4. Thành viên
+## 4. Thành viên và phân công công việc
 
-| STT | Họ và tên | Vai trò | Trách nhiệm và công việc phụ trách |
-| :---: | :--- | :--- | :--- |
-| 1 | **Trần Thị Bảo Ngọc** | Project Manager (PM) & BA | Điều phối công việc nhóm, theo dõi tiến độ, quản lý GitHub và phân tích nghiệp vụ. |
-| 2 | **Trần Lê Như Hậu** | Business Analyst (BA) | Khảo sát nhu cầu khách hàng, xác định yêu cầu chức năng và viết tài liệu đặc tả. |
-| 3 | **Phạm Hoài Thương** | QA & Tester | Lập kế hoạch kiểm thử, thiết kế kịch bản kiểm thử (Test Cases), kiểm thử luồng chức năng và báo cáo lỗi. |
-| 4 | **Hồ Gia Bảo** | QA & Documentation / Developer | Kiểm soát chất lượng tài liệu dự án, hỗ trợ thiết kế cơ sở dữ liệu và lập trình Backend. |
-| 5 | **Vũ Ngọc Minh Thư** | UI/UX Designer | Thiết kế giao diện website trên Figma, chuẩn bị hình ảnh minh họa và tài nguyên đồ họa. |
-| 6 | **Siu Đen Ny** | Frontend Developer | Xây dựng giao diện web bằng HTML/CSS/JavaScript, đảm bảo responsive trên mobile và desktop. |
-| 7 | **Dương Thúy Hiền** | Backend Developer | Thiết kế cơ sở dữ liệu (ERD), viết API và xử lý logic lưu trữ phía máy chủ. |
-| 8 | **Nguyễn Hoài Thương** | Fullstack / Backend Developer | Lập trình logic tính toán định lượng theo khẩu phần, ghép nối SKU vào giỏ hàng và tối ưu luồng xử lý. |
+| STT | Họ và tên thành viên | Vai trò chính | Trách nhiệm và công việc được phân công | Sản phẩm / kết quả cần đạt |
+| :---: | :--- | :--- | :--- | :--- |
+| 1 | **Trần Thị Bảo Ngọc** | Project Manager (PM) | Điều phối hoạt động nhóm, phân công công việc, theo dõi tiến độ và thời hạn; hỗ trợ các thành viên phối hợp thực hiện dự án. | Kế hoạch dự án, bảng phân công công việc và báo cáo tiến độ thực hiện. |
+| 2 | **Trần Thị Bảo Ngọc, Trần Lê Như Hậu** | Business Analyst (BA) | Thu thập thông tin, tìm hiểu nhu cầu khách hàng, phân tích nghiệp vụ và xác định yêu cầu chức năng của BakeMate. | Tài liệu phân tích nghiệp vụ, nhu cầu khách hàng và bảng yêu cầu chức năng. |
+| 3 | **Phạm Hoài Thương** | Tester | Kiểm thử các chức năng website, phát hiện lỗi và kiểm tra kết quả sau khi lỗi được khắc phục. | Danh sách trường hợp kiểm thử và bảng ghi nhận kết quả, lỗi phát hiện. |
+| 4 | **Hồ Gia Bảo** | QA & Documentation | Theo dõi chất lượng phần mềm, hỗ trợ kiểm tra quy trình thực hiện và tổng hợp, hoàn thiện tài liệu dự án. | Báo cáo chất lượng, tài liệu dự án và tài liệu kiểm thử. |
+| 5 | **Vũ Ngọc Minh Thư, Siu Đen Ny** | UI/UX Designer | Thiết kế giao diện, đề xuất trải nghiệm người dùng và xây dựng giao diện website BakeMate. | Bản thiết kế giao diện, tài nguyên thiết kế và mã nguồn frontend. |
+| 6 | **Hồ Gia Bảo, Dương Thúy Hiền, Nguyễn Hoài Thương** | Developer | Thiết kế cơ sở dữ liệu, xử lý nghiệp vụ và phát triển các chức năng phía máy chủ; kết nối dữ liệu với frontend. | Cơ sở dữ liệu, mã nguồn backend và các chức năng xử lý dữ liệu theo yêu cầu. |
+
+### Nguyên tắc phối hợp và thực hiện công việc:
+1. Mỗi công việc có một thành viên chịu trách nhiệm chính và có kết quả đầu ra cụ thể.
+2. Các thành viên phối hợp, hỗ trợ nhau trong quá trình phát triển, tích hợp và kiểm thử website.
+3. Vai trò được phân công là trách nhiệm chính, không giới hạn việc hỗ trợ các thành viên khác khi cần thiết.
+4. Không giao toàn bộ công việc lập trình cho một thành viên hoặc cho AI; mỗi thành viên phải hiểu và giải thích được phần việc mình phụ trách.
+5. Các công việc, thời hạn và trạng thái thực hiện được theo dõi xuyên suốt trong file PROJECT_PLAN.md và hệ thống GitHub Issues của nhóm.
 
 ## 5. Công nghệ dự kiến
 - Frontend: HTML5, CSS3, JavaScript, Bootstrap 5.
