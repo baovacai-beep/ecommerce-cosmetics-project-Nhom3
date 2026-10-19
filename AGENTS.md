@@ -1,4 +1,4 @@
-PRỌECT INSTRUCTIONS FOR AI
+PROJECT INSTRUCTIONS FOR AI
 I. Project context
 Đây là dự án website thương mại điện tử của sinh viên.
 II. Scope
