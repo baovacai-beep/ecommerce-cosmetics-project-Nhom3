@@ -2,11 +2,11 @@
 ## 1. Mục tiêu dự án
 BakeMate là website thương mại điện tử chuyên bán nguyên liệu và dụng cụ làm bánh, kết hợp kho công thức làm bánh với chức năng hỗ trợ khách hàng chuẩn bị danh sách mua sắm theo từng công thức.
 ## Mục tiêu kinh doanh
-Cung cấp một địa điểm mua sắm trực tuyến tập trung các nguyên liệu và dụng cụ làm bánh.
-Giúp khách hàng, đặc biệt là người mới học làm bánh, xác định các nguyên liệu và dụng cụ cần thiết cho từng công thức.
-Giảm thời gian tìm kiếm từng sản phẩm và hạn chế tình trạng mua thiếu hoặc mua dư nguyên liệu.
-Giúp khách hàng ước tính chi phí nguyên liệu và dụng cụ trước khi đặt hàng.
-Tạo sự khác biệt thông qua quy trình chuyển đổi từ công thức làm bánh thành giỏ hàng mua sắm.
+- Cung cấp một địa điểm mua sắm trực tuyến tập trung các nguyên liệu và dụng cụ làm bánh.
+- Giúp khách hàng, đặc biệt là người mới học làm bánh, xác định các nguyên liệu và dụng cụ cần thiết cho từng công thức.
+- Giảm thời gian tìm kiếm từng sản phẩm và hạn chế tình trạng mua thiếu hoặc mua dư nguyên liệu.
+- Giúp khách hàng ước tính chi phí nguyên liệu và dụng cụ trước khi đặt hàng.
+- Tạo sự khác biệt thông qua quy trình chuyển đổi từ công thức làm bánh thành giỏ hàng mua sắm.
 ## Giá trị mang lại cho khách hàng
 Dễ lựa chọn: Công thức được trình bày kèm nguyên liệu, định lượng và dụng cụ cần thiết.
 Dễ tính toán: Khách hàng có thể điều chỉnh số phần bánh và xem định lượng nguyên liệu được quy đổi tương ứng.
@@ -386,5 +386,3 @@ Phương thức COD được sử dụng làm phương thức thanh toán cơ b�
 Phí vận chuyển được xử lý theo quy tắc đơn giản do nhóm thống nhất; việc tích hợp API vận chuyển chưa được mặc định là bắt buộc.
 Công nghệ cuối cùng cần được các thành viên xác nhận. WordPress/WooCommerce là phương án có thể xem xét để tận dụng chức năng thương mại điện tử có sẵn; Laravel là phương án thay thế nếu nhóm thống nhất phát triển theo hướng tự xây dựng nhiều thành phần.
 Việc triển khai và nghiệm thu từng chức năng phụ thuộc vào kết quả phân công, tích hợp và kiểm thử của nhóm.
-Danh sách chức năng nâng cao sẽ thực hiện nếu còn thời gian sau khi hoàn thành các chức năng Must.
-
