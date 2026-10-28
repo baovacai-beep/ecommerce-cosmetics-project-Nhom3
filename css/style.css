@@ -784,3 +784,528 @@ input:focus-visible {
     gap: 14px;
   }
 }
+/* ==================================================
+   BAKEMATE - ABOUT PAGE
+   Dùng chung bảng màu và button của website hiện tại
+   ================================================== */
+
+.about-page {
+  --about-primary: var(--primary-color, #70452b);
+  --about-accent: var(--accent-cta, #b96f3b);
+  --about-bg: var(--bg-color, #fff8ed);
+  --about-text: #4c392d;
+  --about-muted: #75665b;
+  --about-border: #eadfd2;
+
+  color: var(--about-text);
+  background: var(--about-bg);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.about-page *,
+.about-page *::before,
+.about-page *::after {
+  box-sizing: border-box;
+}
+
+.about-page img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-page h1,
+.about-page h2,
+.about-page h3,
+.about-page p,
+.about-page figure {
+  margin-top: 0;
+}
+
+.about-page h2 {
+  margin-bottom: 18px;
+  color: var(--about-primary);
+  font-size: clamp(26px, 3vw, 36px);
+  line-height: 1.3;
+}
+
+.about-page h3 {
+  color: var(--about-primary);
+  line-height: 1.4;
+}
+
+.about-page p {
+  margin-bottom: 16px;
+}
+
+.about-page a:focus-visible {
+  outline: 3px solid var(--about-accent);
+  outline-offset: 4px;
+}
+
+.about-page .about-eyebrow {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--about-accent);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+/* 1. HERO */
+
+.about-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+  align-items: center;
+  gap: 48px;
+  max-width: var(--max-width, 1200px);
+  margin: 0 auto;
+  padding: 64px 24px 72px;
+}
+
+.about-hero__content {
+  min-width: 0;
+}
+
+.about-hero__title {
+  margin-bottom: 22px;
+  color: var(--about-primary);
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.7px;
+}
+
+.about-hero__desc {
+  max-width: 540px;
+  margin-bottom: 28px;
+  color: var(--about-muted);
+  font-size: 16px;
+}
+
+.about-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.about-page .about-hero__secondary {
+  border-color: var(--about-primary);
+  color: var(--about-primary);
+}
+
+.about-page .about-hero__secondary:hover {
+  background: var(--about-primary);
+  color: #fff;
+}
+
+.about-hero__visual {
+  position: relative;
+  min-width: 0;
+  height: 400px;
+  margin-bottom: 0;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #f0e2d2;
+}
+
+.about-hero__visual img {
+  border-radius: inherit;
+}
+
+.about-hero__visual figcaption {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(60, 39, 26, 0.78);
+  color: #fff;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* 2. STORY */
+
+.about-section {
+  padding: 76px 24px;
+}
+
+.about-story {
+  background: #f5eadc;
+}
+
+.about-story__heading {
+  max-width: 720px;
+  margin: 0 auto 26px;
+  text-align: center;
+}
+
+.about-story__body {
+  max-width: 850px;
+  margin: 0 auto;
+  color: var(--about-muted);
+  font-size: 16px;
+}
+
+.about-story__body p:last-child {
+  margin-bottom: 0;
+}
+
+/* 3. DIFFERENCE */
+
+.about-difference {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: 56px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.about-difference__visual {
+  height: 520px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #f0e2d2;
+}
+
+.about-difference__content {
+  min-width: 0;
+}
+
+.about-difference__content > p {
+  color: var(--about-muted);
+}
+
+.about-benefits {
+  display: grid;
+  gap: 22px;
+  margin-top: 28px;
+}
+
+.about-benefit {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.about-benefit__number {
+  display: flex;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: #f3e4d2;
+  color: var(--about-accent);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.about-benefit h3 {
+  margin-bottom: 5px;
+  font-size: 17px;
+}
+
+.about-benefit p {
+  margin-bottom: 0;
+  color: var(--about-muted);
+  font-size: 14px;
+}
+
+/* 4. AUDIENCE */
+
+.about-audience {
+  background: #f5eadc;
+}
+
+.about-section__heading {
+  max-width: 760px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.about-section__heading > p {
+  max-width: 660px;
+  margin: 0 auto;
+  color: var(--about-muted);
+}
+
+.about-audience__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.about-audience-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--about-border);
+  border-radius: 14px;
+  background: var(--about-bg);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-audience-card > img {
+  height: 230px;
+  background: #ead9c7;
+}
+
+.about-audience-card__body {
+  padding: 22px;
+}
+
+.about-audience-card__label {
+  display: inline-block;
+  margin-bottom: 9px;
+  color: var(--about-accent);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.about-audience-card h3 {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.about-audience-card p {
+  margin-bottom: 0;
+  color: var(--about-muted);
+  font-size: 14px;
+}
+
+/* 5. PROCESS */
+
+.about-process__grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.about-process__item {
+  min-width: 0;
+  padding: 24px 20px;
+  border: 1px solid var(--about-border);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.about-process__number {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: var(--about-accent);
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.about-process__item h3 {
+  margin-bottom: 10px;
+  font-size: 17px;
+}
+
+.about-process__item p {
+  margin-bottom: 0;
+  color: var(--about-muted);
+  font-size: 14px;
+}
+
+/* 6. CTA */
+
+.about-cta {
+  padding: 68px 24px;
+  background: var(--about-primary);
+  color: #fff;
+  text-align: center;
+}
+
+.about-cta__inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.about-cta .about-eyebrow {
+  color: #f6d7b7;
+}
+
+.about-cta h2 {
+  color: #fff;
+}
+
+.about-cta p {
+  margin-bottom: 26px;
+  color: #f6e9db;
+}
+
+.about-cta .btn {
+  display: inline-block;
+}
+
+/* ACCESSIBILITY: LABEL CHO FORM TÌM KIẾM */
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .about-hero {
+    gap: 28px;
+    padding: 48px 20px 56px;
+  }
+
+  .about-hero__visual {
+    height: 330px;
+  }
+
+  .about-difference {
+    gap: 30px;
+  }
+
+  .about-difference__visual {
+    height: 440px;
+  }
+
+  .about-audience__grid {
+    gap: 16px;
+  }
+
+  .about-audience-card > img {
+    height: 190px;
+  }
+
+  .about-audience-card__body {
+    padding: 17px;
+  }
+
+  .about-process__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .about-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 26px;
+    padding: 38px 18px 44px;
+  }
+
+  .about-hero__title {
+    font-size: 32px;
+    letter-spacing: -0.4px;
+  }
+
+  .about-hero__desc {
+    font-size: 15px;
+  }
+
+  .about-hero__visual {
+    height: 260px;
+  }
+
+  .about-hero__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .about-hero__actions .btn {
+    width: 100%;
+    max-width: none;
+    text-align: center;
+  }
+
+  .about-section {
+    padding: 48px 18px;
+  }
+
+  .about-page h2 {
+    font-size: 26px;
+  }
+
+  .about-section__heading {
+    margin-bottom: 28px;
+  }
+
+  .about-story__body {
+    font-size: 15px;
+  }
+
+  .about-difference {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+
+  .about-difference__visual {
+    height: 260px;
+  }
+
+  .about-benefits {
+    gap: 20px;
+  }
+
+  .about-audience__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+
+  .about-audience-card > img {
+    height: 230px;
+  }
+
+  .about-audience-card__body {
+    padding: 20px;
+  }
+
+  .about-process__grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .about-process__item {
+    padding: 20px;
+  }
+
+  .about-process__number {
+    margin-bottom: 12px;
+  }
+
+  .about-cta {
+    padding: 48px 20px;
+  }
+}
+
+/* GIẢM CHUYỂN ĐỘNG THEO THIẾT LẬP THIẾT BỊ */
+
+@media (prefers-reduced-motion: reduce) {
+  .about-audience-card {
+    transition: none;
+  }
+}
