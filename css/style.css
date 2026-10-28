@@ -1,0 +1,310 @@
+/* ================= THIẾT LẬP BIẾN MÀU DESIGN TOKENS (MỤC 4.2) ================= */
+:root {
+  --primary-color: #70452b;       /* Nâu bánh nướng - Màu chủ đạo */
+  --bg-color: #fff8ed;            /* Kem sáng - Màu nền chính */
+  --secondary-color: #f2d9a6;     /* Vàng kem - Màu phụ trợ */
+  --accent-sub: #c88b52;          /* Caramel - Điểm nhấn phụ */
+  --accent-cta: #f59e0b;          /* Vàng mật ong - Điểm nhấn chính và nút CTA */
+  --font-main: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --max-width: 1200px;
+}
+
+/* ================= RESET CSS CƠ BẢN ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  line-height: 1.5;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Hiệu ứng Focus hỗ trợ thao tác bàn phím (Accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent-cta);
+  outline-offset: 2px;
+}
+
+/* ================= 1. HEADER (DÙNG FLEXBOX) ================= */
+.site-header {
+  background-color: var(--primary-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.header-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Logo */
+.site-header__logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-header__logo-img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+.site-header__logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--bg-color);
+  letter-spacing: 0.5px;
+}
+
+.site-header__logo-text span {
+  color: var(--accent-cta);
+}
+
+/* Menu điều hướng */
+.site-header__menu {
+  display: flex;
+  list-style: none;
+  gap: 15px;
+}
+
+.site-header__menu-link {
+  color: var(--bg-color);
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 6px;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+.site-header__menu-link:hover,
+.site-header__menu-link.active {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+}
+
+/* Khối tìm kiếm & Giỏ hàng */
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.site-header__search {
+  display: flex;
+  align-items: center;
+}
+
+.site-header__search-input {
+  padding: 8px 12px;
+  border: 1px solid var(--secondary-color);
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  outline: none;
+  font-size: 14px;
+  font-family: inherit;
+  width: 180px;
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+}
+
+.site-header__search-input:focus {
+  border-color: var(--accent-cta);
+}
+
+.site-header__search-btn {
+  padding: 8px 14px;
+  background-color: var(--accent-cta);
+  color: #ffffff;
+  border: 1px solid var(--accent-cta);
+  border-radius: 0 6px 6px 0;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.site-header__search-btn:hover {
+  background-color: var(--accent-sub);
+  border-color: var(--accent-sub);
+}
+
+.site-header__cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(255, 248, 237, 0.15);
+  font-size: 18px;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.site-header__cart:hover {
+  background-color: var(--accent-cta);
+  transform: translateY(-2px);
+}
+
+/* ================= 2. HERO BANNER TRANG CHỦ ================= */
+.hero-banner {
+  position: relative;
+  background: linear-gradient(rgba(112, 69, 43, 0.78), rgba(112, 69, 43, 0.85)), 
+              url('../images/banner.jpg') center/cover no-repeat;
+  min-height: 450px;
+  padding: 80px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+}
+
+.hero-banner__content {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.hero-banner__badge {
+  display: inline-block;
+  background-color: var(--accent-cta);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+}
+
+.hero-banner__title {
+  font-size: 36px;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  color: var(--bg-color);
+}
+
+.hero-banner__desc {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 26px;
+  color: var(--secondary-color);
+}
+
+.hero-banner__actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Nút bấm dùng chung */
+.btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.btn--primary {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+  border: 1px solid var(--accent-cta);
+}
+
+.btn--primary:hover {
+  background-color: var(--accent-sub);
+  border-color: var(--accent-sub);
+  transform: translateY(-2px);
+}
+
+.btn--outline {
+  background-color: transparent;
+  color: var(--bg-color);
+  border: 1px solid var(--bg-color);
+}
+
+.btn--outline:hover {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* ================= 3. RESPONSIVE MÀN HÌNH NHỎ ================= */
+@media (max-width: 768px) {
+  .header-container {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .site-header__nav {
+    order: 3;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 248, 237, 0.1);
+  }
+
+  .site-header__menu {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .site-header__menu-link {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .site-header__actions {
+    order: 2;
+  }
+
+  .site-header__search-input {
+    width: 130px;
+    font-size: 13px;
+  }
+
+  .hero-banner {
+    min-height: 380px;
+    padding: 50px 16px;
+  }
+
+  .hero-banner__title {
+    font-size: 24px;
+  }
+
+  .hero-banner__desc {
+    font-size: 14px;
+  }
+
+  .hero-banner__actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 260px;
+  }
+}
