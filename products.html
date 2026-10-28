@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sản phẩm - BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link">
+        <img src="images/logo.jpg" alt="Logo BakeMate"
+             class="site-header__logo-img">
+        <span class="site-header__logo-text">Bake<span>Mate</span></span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item">
+            <a href="index.html" class="site-header__menu-link">Trang chủ</a>
+          </li>
+          <li class="site-header__menu-item">
+            <a href="products.html"
+               class="site-header__menu-link active">Sản phẩm</a>
+          </li>
+          <li class="site-header__menu-item">
+            <a href="about.html" class="site-header__menu-link">Giới thiệu</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <div class="site-header__search">
+          <input type="text"
+                 placeholder="Tìm nguyên liệu, công thức..."
+                 class="site-header__search-input">
+          <button type="button" class="site-header__search-btn">Tìm</button>
+        </div>
+        <a href="products.html" class="site-header__cart"
+           aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon">🛒</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- DANH SÁCH SẢN PHẨM -->
+  <!-- Dán phần danh sách 9 sản phẩm từ index.html vào đây -->
+  <main class="site-main">
+    <section class="products-section" id="san-pham-noi-bat">
+      <h2 class="products-section__title">Danh sách nguyên liệu làm bánh</h2>
+      <p class="products-section__desc">
+        Lựa chọn nguyên liệu phù hợp cho những chiếc bánh thơm ngon tại nhà.
+      </p>
+
+      <div class="product-grid">
+
+        <!-- 1. BỘT BẮP -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-bap" class="product-card__image-link" aria-label="Xem chi tiết bột bắp">
+            <div class="product-card__image-wrap">
+              <img src="https://cdn.tgdd.vn/Products/Images/2388/83408/bhx/bot-bap-taky-150gam-2-700x467.jpg"
+                   alt="Bột bắp Taky" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Bột bắp</h3>
+            <p class="product-card__price">12.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-bap" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 2. BỘT MÌ -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-mi" class="product-card__image-link" aria-label="Xem chi tiết bột mì">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShjLSTAzRXo0GT2Vyzvzb-07Dnvvo8S4nUe0NmLQ6fxA&s=10"
+                   alt="Bột mì làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Bột mì</h3>
+            <p class="product-card__price">27.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-mi" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 3. BỘT TARTAR -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-tartar" class="product-card__image-link" aria-label="Xem chi tiết bột Tartar">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAOYp2XPUcXtA62FN5_gtl8R-Yhm1Xr1LVuhm2woK5dQ&s=10"
+                   alt="Bột Tartar" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Bột Tartar</h3>
+            <p class="product-card__price">17.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-tartar" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 4. BỘT VANI -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-vani" class="product-card__image-link" aria-label="Xem chi tiết bột vani">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS5jZPAEicyF5TcHbOFIStD4qNjOrKNH6R2NCgAjYm03w&s=10"
+                   alt="Bột vani" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Bột vani</h3>
+            <p class="product-card__price">6.600&nbsp;₫</p>
+            <a href="product-detail.html#bot-vani" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 5. DẦU ĂN -->
+        <article class="product-card">
+          <a href="product-detail.html#dau-an" class="product-card__image-link" aria-label="Xem chi tiết dầu ăn">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR8vX4eFt59mQrzGd8N6fdkSX89_PyxWaI3YPskb6ZrKQ&s=10"
+                   alt="Dầu ăn dùng trong làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Dầu ăn</h3>
+            <p class="product-card__price">54.000&nbsp;₫</p>
+            <a href="product-detail.html#dau-an" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 6. ĐƯỜNG -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-duong" class="product-card__image-link" aria-label="Xem chi tiết đường">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5kLPcK9GGsqLCmVhNY-p0XqoDj0cFMGM5ODkrG6K8vA&s=10"
+                   alt="Đường dùng làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Đường</h3>
+            <p class="product-card__price">39.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-duong" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 7. MUỐI -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-muoi" class="product-card__image-link" aria-label="Xem chi tiết muối">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxAWX7hXD1_jNvpOZIogR29D8DFc8cENQG_vs27zdtKg&s=10"
+                   alt="Muối dùng trong làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Muối</h3>
+            <p class="product-card__price">7.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-muoi" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 8. SỮA TƯƠI -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-sua-tuoi" class="product-card__image-link" aria-label="Xem chi tiết sữa tươi">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUecET1as-yTrGEYBA_WbbajgYhba0VuE8El-ljUprAQ&s=10"
+                   alt="Sữa tươi dùng làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Sữa tươi</h3>
+            <p class="product-card__price">41.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-sua-tuoi" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+        <!-- 9. TRỨNG -->
+        <article class="product-card">
+          <a href="product-detail.html#bot-trung" class="product-card__image-link" aria-label="Xem chi tiết trứng">
+            <div class="product-card__image-wrap">
+              <img src="https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcQ1swmBva3-KwUOUNsc0m_8sTIXapCjER34ltT9Mdv6qJm12Ti2eijOeS7IQp1WyKRQg--ttjPBFYGa16l2ctzxhokg4Vk0fg7-exO2rstB_jpplDemrVucNQ"
+                   alt="Trứng dùng làm bánh" class="product-card__image" loading="lazy">
+            </div>
+          </a>
+          <div class="product-card__content">
+            <h3 class="product-card__title">Trứng</h3>
+            <p class="product-card__price">28.000&nbsp;₫</p>
+            <a href="product-detail.html#bot-trung" class="btn btn--primary product-card__btn">Xem chi tiết</a>
+          </div>
+        </article>
+
+      </div>
+
+    </section>
+  </main>
+
+</body>
+</html>
