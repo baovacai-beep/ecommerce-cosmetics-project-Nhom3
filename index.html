@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BakeMate - Làm bánh chuẩn vị, nguyên liệu chuẩn tay</title>
+  
+  <!-- Favicon tab trình duyệt -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  
+  <!-- Font Be Vietnam Pro chuẩn thiết kế Mục 4.2 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- File CSS dùng chung -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ================= 1. HEADER CHUNG (BƯỚC 4) ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <!-- Logo thương hiệu điều hướng về trang chủ -->
+      <a href="index.html" class="site-header__logo-link">
+        <img src="images/logo.png" alt="Logo BakeMate" class="site-header__logo-img">
+        <span class="site-header__logo-text">Bake<span>Mate</span></span>
+      </a>
+
+      <!-- Menu điều hướng chính trỏ đến các trang HTML của nhóm -->
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link active">Trang chủ</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
+        </ul>
+      </nav>
+
+      <!-- Ô tìm kiếm và biểu tượng giỏ hàng -->
+      <div class="site-header__actions">
+        <div class="site-header__search">
+          <input type="text" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+          <button type="button" class="site-header__search-btn" aria-label="Tìm kiếm">Tìm</button>
+        </div>
+        <a href="products.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon">🛒</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= 2. BANNER GIỚI THIỆU TRANG CHỦ (BƯỚC 4) ================= -->
+  <section class="hero-banner">
+    <div class="hero-banner__content">
+      <span class="hero-banner__badge">Lấy công thức làm trung tâm</span>
+      <h1 class="hero-banner__title">Làm bánh chuẩn vị<br>Nguyên liệu chuẩn tay</h1>
+      <p class="hero-banner__desc">
+        Chọn công thức yêu thích, tự động quy đổi định lượng chuẩn xác và nhận trọn gói nguyên liệu, dụng cụ vừa đủ dùng tận cửa nhà.
+      </p>
+      <div class="hero-banner__actions">
+        <a href="products.html" class="btn btn--primary">Khám phá sản phẩm</a>
+        <a href="about.html" class="btn btn--outline">Về BakeMate</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= VÙNG NỘI DUNG CỦA BƯỚC 5 TRỞ ĐI ================= -->
+  <main class="site-main">
+    <div style="max-width: 1200px; margin: 40px auto; padding: 0 20px; text-align: center; color: var(--primary-color);">
+      <!-- Chỗ này để dành cho các bạn làm Bước 5 ghép danh sách sản phẩm vào -->
+      <p><em>(Khu vực công thức nổi bật và sản phẩm bán chạy đang được hoàn thiện...)</em></p>
+    </div>
+  </main>
+
+</body>
+</html>
