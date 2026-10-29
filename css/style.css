@@ -1489,3 +1489,158 @@ input:focus-visible,
 .thumb-btn.active {
   border-color: var(--primary-color);
 }
+/* ================= LIEN HE BAKEMATE ================= */
+
+.contact-section {
+    width: 100%;
+    padding: 32px 24px 44px;
+    background-color: #fbefd9;
+    color: var(--primary-color, #70452b);
+}
+
+.contact-container {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.95fr);
+    align-items: center;
+    gap: 48px;
+}
+
+/* Nội dung liên hệ */
+
+.contact-content {
+    min-width: 0;
+}
+
+.contact-title {
+    position: relative;
+    margin: 0 0 26px;
+    padding-bottom: 13px;
+    color: #70452b;
+    font-size: 29px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.contact-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 52px;
+    height: 4px;
+    border-radius: 4px;
+    background-color: #f59e0b;
+}
+
+.contact-description {
+    margin: 0 0 16px;
+    color: #70452b;
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+/* Danh sách thông tin */
+
+.contact-info {
+    width: 100%;
+}
+
+.contact-row {
+    display: grid;
+    grid-template-columns: 120px minmax(0, 1fr);
+    gap: 0;
+    align-items: start;
+    padding: 10px 0;
+    border-bottom: 1px solid #c88b52;
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.contact-label {
+    font-weight: 600;
+    color: #70452b;
+}
+
+.contact-value {
+    min-width: 0;
+    color: #70452b;
+    overflow-wrap: anywhere;
+    text-decoration: none;
+}
+
+a.contact-value:hover {
+    color: #a65e20;
+    text-decoration: underline;
+}
+
+/* Khung ảnh bên phải */
+
+.contact-image {
+    width: 100%;
+    height: 414px;
+    overflow: hidden;
+    border-radius: 13px;
+    background-color: #f2d9a6;
+    box-shadow: 0 8px 18px rgba(112, 69, 43, 0.12);
+}
+
+.contact-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Responsive cho máy tính bảng */
+
+@media (max-width: 768px) {
+    .contact-container {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+    }
+
+    .contact-section {
+        padding: 36px 20px;
+    }
+
+    .contact-title {
+        font-size: 26px;
+    }
+
+    .contact-image {
+        height: 300px;
+    }
+}
+
+/* Responsive cho điện thoại */
+
+@media (max-width: 480px) {
+    .contact-section {
+        padding: 30px 16px;
+    }
+
+    .contact-container {
+        gap: 22px;
+    }
+
+    .contact-title {
+        font-size: 24px;
+    }
+
+    .contact-description {
+        font-size: 14px;
+    }
+
+    .contact-row {
+        grid-template-columns: 100px minmax(0, 1fr);
+        font-size: 13px;
+        padding: 9px 0;
+    }
+
+    .contact-image {
+        height: 230px;
+    }
+}
