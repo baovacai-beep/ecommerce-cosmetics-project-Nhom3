@@ -1,60 +1,183 @@
-/* BAKEMATE – Bài 8.2 / Prompt 7
-   Thêm đoạn này vào CUỐI file css/style.css, sau các quy tắc hiện có.
-   Dựa trên CSS nhóm cung cấp ngày 30/10/2026.
-   Không dùng JavaScript hoặc framework CSS.
-*/
-
-/* 1. Tablet: menu được phép xuống dòng thay vì tràn ngang. */
-@media (max-width: 768px) {
-  .site-header__menu {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .site-header__nav,
-  .header-container,
-  .site-header__actions {
-    min-width: 0;
-  }
+transition: none;
+}
 }
 
-/* 2. Mobile: ưu tiên tính dễ đọc và thao tác ở 390px. */
-@media (max-width: 480px) {
-  .header-container {
-    justify-content: center;
-  }
+/* ==========================================================================
+   BƯỚC 8: BỔ SUNG HIỆU ỨNG HOVER, FOCUS VÀ TƯƠNG TÁC NGƯỜI DÙNG (CSS3)
+   Dự án: BakeMate - Nhóm 3 (Phụ trách: Gia Bảo & Nguyễn Thương)
+   ========================================================================== */
 
-  .site-header__actions {
-    max-width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
+/* 1. ĐỊNH DẠNG TIÊU CHUẨN FOCUS PHỤC VỤ TIẾP CẬN (ACCESSIBILITY) */
+/* Xóa viền mặc định cho chuột nhưng giữ viền sắc nét khi bấm phím Tab */
+a:focus,
+button:focus,
+input:focus,
+select:focus {
+  outline: none;
+}
 
-  .site-header__menu {
-    gap: 6px;
-  }
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+.thumb-btn:focus-visible,
+.pill-radio input:focus-visible + .pill-radio__btn {
+  outline: 2px solid var(--accent-cta);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);
+}
 
-  .site-header__menu-link {
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: 8px 9px;
-  }
+/* 2. HIỆU ỨNG LIÊN KẾT MENU VÀ ĐIỀU HƯỚNG HEADER */
+.site-header__menu-link {
+  position: relative;
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
 
-  /* Ghi đè quy tắc 2 cột xuất hiện sau trong CSS gốc.
-     Nếu nhóm muốn giữ 2 cột, có thể bỏ riêng đoạn này. */
-  .product-grid {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 16px;
-  }
+.site-header__menu-link:hover {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+}
 
-  .product-card__image-wrap {
-    height: 220px;
-  }
+.site-header__menu-link.active {
+  background-color: rgba(245, 158, 11, 0.2);
+  color: #ffffff;
+  font-weight: 700;
+}
 
-  .product-card__btn {
-    max-width: none;
-    padding: 12px 16px;
-    font-size: 14px;
-  }
+.site-header__cart {
+  transition: transform 0.2s ease, background-color 0.25s ease;
+}
+
+.site-header__cart:hover {
+  background-color: var(--accent-cta);
+  transform: translateY(-2px);
+}
+
+/* 3. HIỆU ỨNG THẺ SẢN PHẨM & THẺ CÔNG THỨC (CARD HOVER) */
+/* Dùng translateY và box-shadow để không làm xô lệch các thẻ xung quanh */
+.product-card,
+.recipe-card {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  will-change: transform, box-shadow;
+}
+
+.product-card:hover,
+.recipe-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 24px rgba(112, 69, 43, 0.12);
+  border-color: var(--accent-cta);
+}
+
+/* Zoom nhẹ hình ảnh bên trong khung mà không tràn viền nhờ overflow: hidden */
+.product-card .product-media img,
+.recipe-card__media img {
+  transition: transform 0.35s ease;
+}
+
+.product-card:hover .product-media img,
+.recipe-card:hover .recipe-card__media img {
+  transform: scale(1.04);
+}
+
+/* 4. HIỆU ỨNG NÚT BẤM KÊU GỌI HÀNH ĐỘNG (BUTTON INTERACTIONS) */
+.btn {
+  position: relative;
+  transition: background-color 0.2s ease, border-color 0.2s ease,
+               color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Nút CTA chính (Vàng mật ong) */
+.btn--buy,
+.btn--primary {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+  border: 1.5px solid var(--accent-cta);
+}
+
+.btn--buy:hover,
+.btn--primary:hover {
+  background-color: #d97706; /* Làm đậm tông màu 10% */
+  border-color: #d97706;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.btn--buy:active,
+.btn--primary:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(217, 119, 6, 0.2);
+}
+
+/* Nút Thêm vào giỏ (Viền nâu nền kem) */
+.btn--cart {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+}
+
+.btn--cart:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(112, 69, 43, 0.2);
+}
+
+.btn--cart:active {
+  transform: translateY(0);
+}
+
+/* 5. HIỆU ỨNG TƯƠNG TÁC FORM VÀ BỘ CHỌN QUY CÁCH */
+.site-header__search-input {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.site-header__search-input:focus {
+  border-color: var(--accent-cta);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+
+/* Radio Button quy cách đóng gói (Gói 500g, 1kg) */
+.pill-radio__btn {
+  transition: all 0.2s ease;
+}
+
+.pill-radio:hover .pill-radio__btn {
+  border-color: var(--accent-cta);
+  background-color: #fffdfa;
+}
+
+.pill-radio input:checked + .pill-radio__btn {
+  border-color: var(--primary-color);
+  background-color: var(--secondary-color);
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(112, 69, 43, 0.15);
+}
+
+/* Nút tăng giảm số lượng */
+.qty-btn {
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.qty-btn:hover {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+
+.qty-btn:active {
+  background-color: var(--accent-sub);
+}
+
+/* Thumbnail Gallery */
+.thumb-btn {
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.thumb-btn:hover {
+  border-color: var(--accent-cta);
+  transform: translateY(-2px);
+}
+
+.thumb-btn.active {
+  border-color: var(--primary-color);
 }
