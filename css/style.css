@@ -1122,6 +1122,7 @@ img {
   max-width: var(--max-width);
   margin: 0 auto;
   padding: 24px 20px 60px;
+  background-color: #fff9f2;
 }
 
 .about-eyebrow {
@@ -1144,7 +1145,7 @@ img {
   grid-template-columns: 1.1fr 0.9fr;
   gap: 40px;
   align-items: center;
-  background-color: #ffffff;
+  background-color: #fffaf5;
   padding: 40px;
   border-radius: 12px;
   border: 1px solid var(--secondary-color);
