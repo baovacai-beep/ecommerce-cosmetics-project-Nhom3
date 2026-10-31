@@ -1,21 +1,25 @@
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Thông tin chi tiết nguyên liệu làm bánh tại BakeMate.">
-  <title>Chi tiết sản phẩm | BakeMate</title>
+  <meta name="description" content="Chi tiết sản phẩm Bột Mì Số 13 Baker's Choice chuyên dụng làm bánh mì tại BakeMate.">
+  <title>Bột Mì Số 13 Baker's Choice Làm Bánh Mì - BakeMate</title>
 
+  <!-- Favicon tab trình duyệt -->
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+
+  <!-- Font chữ chuẩn Be Vietnam Pro (Mục 4.2) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- File CSS dùng chung -->
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="detail-page">
 
-  <!-- HEADER CHUNG -->
+  <!-- ================= 1. HEADER DÙNG CHUNG ================= -->
   <header class="site-header">
     <div class="header-container">
       <a href="index.html" class="site-header__logo-link">
@@ -25,330 +29,276 @@
 
       <nav class="site-header__nav" aria-label="Điều hướng chính">
         <ul class="site-header__menu">
-          <li><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
-          <li><a href="products.html" class="site-header__menu-link active" aria-current="page">Sản phẩm</a></li>
-          <li><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link active">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
         </ul>
       </nav>
 
       <div class="site-header__actions">
-        <form class="site-header__search" action="products.html" method="get" role="search">
-          <input
-            type="search"
-            name="q"
-            placeholder="Tìm nguyên liệu, công thức..."
-            class="site-header__search-input"
-            aria-label="Tìm kiếm sản phẩm"
-          >
-          <button type="submit" class="site-header__search-btn">Tìm</button>
-        </form>
-
-        <a href="products.html" class="site-header__cart" aria-label="Xem sản phẩm">
-          <span aria-hidden="true">🛒</span>
+        <div class="site-header__search">
+          <input type="text" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input" aria-label="Tìm kiếm sản phẩm">
+          <button type="button" class="site-header__search-btn" aria-label="Tìm kiếm">Tìm</button>
+        </div>
+        <a href="products.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">&#128722;</span>
         </a>
       </div>
     </div>
   </header>
 
-  <main class="detail-main">
+  <!-- ================= 2. NỘI DUNG CHÍNH (MAIN) ================= -->
+  <main class="page-container">
+    
+    <!-- 1. Thanh điều hướng Breadcrumb (Bảng 7.1.2 - Mục 1) -->
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item"><a href="products.html">Danh mục</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item"><a href="products.html">Bột làm bánh</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active" aria-current="page">Bột Mì Số 13 Baker's Choice</li>
+      </ul>
+    </nav>
 
-    <!-- HIỂN THỊ KHI CHƯA CHỌN SẢN PHẨM -->
-    <section class="detail-intro">
-      <span class="detail-eyebrow">BAKEMATE • NGUYÊN LIỆU LÀM BÁNH</span>
-      <h1 class="detail-intro__title">Chi tiết sản phẩm</h1>
-      <p>
-        Bạn chưa chọn sản phẩm cần xem. Hãy quay lại danh sách để khám phá
-        thông tin và giá của từng nguyên liệu.
-      </p>
-      <a href="index.html#san-pham-noi-bat" class="btn btn--primary">
-        Quay lại danh sách sản phẩm
-      </a>
-    </section>
-
-    <!-- 1. BỘT BẮP -->
-    <section id="bot-bap" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-1.jpg"
-          alt="Bột bắp Taky"
-          class="detail-item__image"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU LÀM BÁNH</span>
-        <h1 class="detail-item__title">Bột bắp</h1>
-        <p class="detail-item__price">12.000 ₫</p>
-        <p class="detail-item__description">
-          Bột bắp là nguyên liệu thường dùng trong làm bánh và chế biến món ăn.
-          Bột có thể hỗ trợ tạo độ mềm mịn hoặc điều chỉnh kết cấu tùy công thức.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Dùng trong một số công thức bánh bông lan và bánh quy.</li>
-            <li>Có thể dùng để tạo độ sánh cho kem hoặc hỗn hợp nấu.</li>
-            <li>Định lượng theo công thức để đạt kết cấu mong muốn.</li>
-          </ul>
+    <!-- Khu vực Chi tiết sản phẩm chính (CSS Grid 2 cột) -->
+    <article id="bot-mi" class="product-detail">
+      
+      <!-- Cột trái: Media Gallery (Bảng 7.1.2 - Mục 2 & 3) -->
+      <div class="product-detail__gallery">
+        <div class="gallery__main-wrap">
+          <span class="badge badge--discount">-20%</span>
+          <span class="badge badge--authentic">Chính hãng</span>
+          <img src="images/product-2.jpg" alt="Bột Mì Số 13 Chuyên Dụng Làm Bánh Mì" class="gallery__main-img">
         </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
+        <div class="gallery__thumbs">
+          <button type="button" class="thumb-btn active" aria-label="Xem ảnh mặt trước bao bì">
+            <img src="images/product-2.jpg" alt="Bột mì số 13 mặt trước">
+          </button>
+          <button type="button" class="thumb-btn" aria-label="Xem ảnh chi tiết thớ bột">
+            <img src="images/product-1.jpg" alt="Chi tiết thớ bột trắng mịn">
+          </button>
+          <button type="button" class="thumb-btn" aria-label="Xem ảnh mặt sau bao bì">
+            <img src="images/product-3.jpg" alt="Mặt sau và bảng dinh dưỡng">
+          </button>
+          <button type="button" class="thumb-btn" aria-label="Xem chứng nhận an toàn thực phẩm">
+            <img src="images/product-4.jpg" alt="Chứng nhận vệ sinh an toàn thực phẩm">
+          </button>
+        </div>
+      </div>
+
+      <!-- Cột phải: Thông tin sản phẩm & Khối mua hàng (Bảng 7.1.2 - Mục 4, 5, 6, 7, 8) -->
+      <div class="product-detail__info">
+        <!-- 4. Heading & Meta -->
+        <span class="product-detail__brand">Thương hiệu: <strong>Baker's Choice</strong> | Xuất xứ: Việt Nam</span>
+        <h1 class="product-detail__title">Bột Mì Số 13 Chuyên Dụng Làm Bánh Mì (Bread Flour)</h1>
+        
+        <div class="product-detail__meta">
+          <span class="meta__rating">★★★★★ <strong>4.9</strong> (142 đánh giá)</span>
+          <span class="meta__divider">|</span>
+          <span class="meta__sold">Đã bán <strong>1.2k</strong> gói</span>
+          <span class="meta__divider">|</span>
+          <span class="meta__stock in-stock">Còn hàng</span>
+        </div>
+
+        <!-- 5. Price Box -->
+        <div class="price-box">
+          <div class="price-box__row">
+            <span class="price-box__current">32.000₫</span>
+            <del class="price-box__original">40.000₫</del>
+            <span class="price-box__tag">Tiết kiệm 8.000₫</span>
+          </div>
+          <p class="price-box__note">Đơn giá đã bao gồm VAT. Đảm bảo date mới trong vòng 30 ngày từ ngày sản xuất.</p>
+        </div>
+
+        <!-- 6. Option Pills (Chọn quy cách đóng gói) -->
+        <div class="option-group">
+          <label class="option-group__label">Quy cách đóng gói:</label>
+          <div class="option-group__pills">
+            <label class="pill-radio">
+              <input type="radio" name="packaging" value="500g" checked>
+              <span class="pill-radio__btn">Gói 500g - 32.000₫</span>
+            </label>
+            <label class="pill-radio">
+              <input type="radio" name="packaging" value="1kg">
+              <span class="pill-radio__btn">Gói 1kg - 58.000₫</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 7. Quantity Input (Điều chỉnh số lượng) -->
+        <div class="quantity-group">
+          <label class="quantity-group__label" for="product-qty">Số lượng:</label>
+          <div class="quantity-group__control">
+            <button type="button" class="qty-btn" aria-label="Giảm số lượng">-</button>
+            <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99">
+            <button type="button" class="qty-btn" aria-label="Tăng số lượng">+</button>
+          </div>
+          <span class="quantity-group__hint">Kho còn 150 gói sẵn sàng giao</span>
+        </div>
+
+        <!-- 8. CTA Buttons -->
+        <div class="product-detail__actions">
+          <button type="button" class="btn btn--cart">
+            <span class="btn__icon">&#128722;</span> Thêm vào giỏ hàng
+          </button>
+          <button type="button" class="btn btn--buy">Mua ngay</button>
+        </div>
+
+        <!-- Cam kết dịch vụ khách hàng -->
+        <div class="policy-box">
+          <div class="policy-item">
+            <span class="policy-item__icon">&#128666;</span>
+            <span class="policy-item__text">Giao hàng hỏa tốc nội thành trong 2 giờ</span>
+          </div>
+          <div class="policy-item">
+            <span class="policy-item__icon">&#128260;</span>
+            <span class="policy-item__text">Đổi trả miễn phí trong 48h nếu bao bì ẩm rách</span>
+          </div>
+        </div>
+
+      </div>
+    </article>
+
+    <!-- 9. Tabs / Sections (Thông số kỹ thuật & Bảo quản) (Bảng 7.1.2 - Mục 9) -->
+    <section class="product-specs-section">
+      <h2 class="section-heading">Thông số kỹ thuật & Hướng dẫn bảo quản</h2>
+      <div class="specs-table-wrap">
+        <table class="specs-table">
+          <tbody>
+            <tr><th>Hàm lượng Protein</th><td>13.0% – 14.0% (Tạo cấu trúc mạng gluten dẻo dai)</td></tr>
+            <tr><th>Độ ẩm tối đa</th><td>13.8% (Bột khô tơi xốp, không vón cục)</td></tr>
+            <tr><th>Thành phần</th><td>100% lúa mì nguyên chất chọn lọc, không chất tẩy trắng</td></tr>
+            <tr><th>Ứng dụng phù hợp</th><td>Bánh mì hoa cúc (Brioche), Baguette Pháp, Bánh gối Sandwich, Đế Pizza</td></tr>
+            <tr><th>Quy cách bảo quản</th><td>Bảo quản nơi khô ráo, thoáng mát. Sau khi mở túi nên kẹp kín miệng bao hoặc trữ ngăn mát tủ lạnh</td></tr>
+          </tbody>
+        </table>
       </div>
     </section>
 
-    <!-- 2. BỘT MÌ -->
-    <section id="bot-mi" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-2.jpg"
-          alt="Bột mì làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU CƠ BẢN</span>
-        <h1 class="detail-item__title">Bột mì</h1>
-        <p class="detail-item__price">27.000 ₫</p>
-        <p class="detail-item__description">
-          Bột mì là nguyên liệu cơ bản trong nhiều công thức bánh.
-          Tùy loại bột và tỷ lệ phối trộn, thành phẩm có thể đạt kết cấu
-          mềm, xốp hoặc dai.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Phù hợp với nhiều loại bánh như bánh quy và bánh bông lan.</li>
-            <li>Chọn loại bột phù hợp với yêu cầu của công thức.</li>
-            <li>Bảo quản kín, để nơi khô ráo và thoáng mát.</li>
-          </ul>
+    <!-- 10. Recipe Cross-link (Khối UVP đặc trưng của BakeMate) (Bảng 7.1.2 - Mục 10) -->
+    <section class="recipe-crosslink-section">
+      <div class="section-header-flex">
+        <div>
+          <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
+          <h2 class="section-heading">Sản phẩm này dùng cho công thức nào?</h2>
+          <p class="section-desc">Khám phá các công thức làm bánh chuẩn vị và tự động gom trọn bộ nguyên liệu cần mua chỉ với 1 click:</p>
         </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
+        <a href="index.html" class="link-more">Xem tất cả công thức &rarr;</a>
+      </div>
+
+      <div class="recipe-grid">
+        <!-- Thẻ công thức 1: Bánh mì hoa cúc -->
+        <div class="recipe-card">
+          <div class="recipe-card__media">
+            <img src="images/about-young-bakers.jpg" alt="Bánh mì hoa cúc Brioche" class="recipe-card__img">
+            <span class="recipe-card__tag">Độ khó: Vừa</span>
+          </div>
+          <div class="recipe-card__body">
+            <h3 class="recipe-card__title">Bánh Mì Hoa Cúc (Brioche) Thơm Lừng Bơ Sữa</h3>
+            <p class="recipe-card__info">&#9201; 90 phút | &#128100; Chuẩn 4 phần ăn</p>
+            <p class="recipe-card__usage">Công thức dùng: <strong>260g</strong> Bột mì số 13</p>
+            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
+          </div>
+        </div>
+
+        <!-- Thẻ công thức 2: Baguette kiểu Pháp -->
+        <div class="recipe-card">
+          <div class="recipe-card__media">
+            <img src="images/banner.jpg" alt="Bánh mì Baguette Pháp vỏ giòn" class="recipe-card__img">
+            <span class="recipe-card__tag">Độ khó: Dễ</span>
+          </div>
+          <div class="recipe-card__body">
+            <h3 class="recipe-card__title">Bánh Mì Baguette Kiểu Pháp Vỏ Giòn Ruột Xốp</h3>
+            <p class="recipe-card__info">&#9201; 60 phút | &#128100; Chuẩn 2 ổ lớn</p>
+            <p class="recipe-card__usage">Công thức dùng: <strong>300g</strong> Bột mì số 13</p>
+            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
+          </div>
+        </div>
+
+        <!-- Thẻ công thức 3: Đế bánh Pizza -->
+        <div class="recipe-card">
+          <div class="recipe-card__media">
+            <img src="images/about-baking.jpg" alt="Đế bánh Pizza kiểu Ý" class="recipe-card__img">
+            <span class="recipe-card__tag">Độ khó: Dễ</span>
+          </div>
+          <div class="recipe-card__body">
+            <h3 class="recipe-card__title">Đế Bánh Pizza Nướng Chảo Dai Giòn Chuẩn Ý</h3>
+            <p class="recipe-card__info">&#9201; 45 phút | &#128100; Chuẩn 3 đế bánh (22cm)</p>
+            <p class="recipe-card__usage">Công thức dùng: <strong>200g</strong> Bột mì số 13</p>
+            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- 3. BỘT TARTAR -->
-    <section id="bot-tartar" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-3.jpg"
-          alt="Bột Tartar"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU LÀM BÁNH</span>
-        <h1 class="detail-item__title">Bột Tartar</h1>
-        <p class="detail-item__price">17.000 ₫</p>
-        <p class="detail-item__description">
-          Cream of tartar là nguyên liệu có tính axit thường được sử dụng
-          trong làm bánh, đặc biệt ở những công thức cần hỗ trợ ổn định
-          lòng trắng trứng đã đánh bông.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Có thể sử dụng trong một số công thức bánh cần đánh bông lòng trắng trứng.</li>
-            <li>Dùng đúng liều lượng ghi trong công thức.</li>
-            <li>Đóng kín bao bì sau khi sử dụng.</li>
-          </ul>
+    <!-- 11. Related Products (Sản phẩm thường mua kèm) (Bảng 7.1.2 - Mục 11) -->
+    <section class="related-products-section">
+      <h2 class="section-heading">Thường được mua cùng bột mì số 13</h2>
+      <div class="products-mini-grid">
+        <div class="mini-card">
+          <img src="images/product-4.jpg" alt="Men nở Instant Saf-Instant" class="mini-card__img">
+          <div class="mini-card__body">
+            <h3 class="mini-card__title">Men Nở Khô Làm Bánh Mì Saf-Instant (Gói 11g)</h3>
+            <span class="mini-card__price">15.000₫</span>
+          </div>
+          <button type="button" class="btn-add-mini">+ Thêm</button>
         </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
+        <div class="mini-card">
+          <img src="images/product-5.jpg" alt="Bơ lạt Anchor New Zealand" class="mini-card__img">
+          <div class="mini-card__body">
+            <h3 class="mini-card__title">Bơ Lạt Tự Nhiên Anchor New Zealand (Khối 227g)</h3>
+            <span class="mini-card__price">78.000₫</span>
+          </div>
+          <button type="button" class="btn-add-mini">+ Thêm</button>
+        </div>
+        <div class="mini-card">
+          <img src="images/product-6.jpg" alt="Khuôn nướng bánh Loaf chống dính" class="mini-card__img">
+          <div class="mini-card__body">
+            <h3 class="mini-card__title">Khuôn Nướng Bánh Mì Gối Loaf Thép Carbon Chống Dính</h3>
+            <span class="mini-card__price">85.000₫</span>
+          </div>
+          <button type="button" class="btn-add-mini">+ Thêm</button>
+        </div>
       </div>
     </section>
 
-    <!-- 4. BỘT VANI -->
-    <section id="bot-vani" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-4.jpg"
-          alt="Bột vani"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">TẠO HƯƠNG THƠM</span>
-        <h1 class="detail-item__title">Bột vani</h1>
-        <p class="detail-item__price">6.600 ₫</p>
-        <p class="detail-item__description">
-          Vani thường được dùng để tạo hương thơm cho bánh và các món tráng miệng.
-          Lượng sử dụng tùy thuộc vào loại sản phẩm và công thức chế biến.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Dùng trong công thức bánh, kem hoặc món tráng miệng phù hợp.</li>
-            <li>Không sử dụng quá nhiều để tránh ảnh hưởng hương vị.</li>
-            <li>Bảo quản theo hướng dẫn trên bao bì.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
-
-    <!-- 5. DẦU ĂN -->
-    <section id="dau-an" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-5.jpg"
-          alt="Dầu ăn dùng trong làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU CHẾ BIẾN</span>
-        <h1 class="detail-item__title">Dầu ăn</h1>
-        <p class="detail-item__price">54.000 ₫</p>
-        <p class="detail-item__description">
-          Dầu ăn được sử dụng trong nhiều công thức bánh để bổ sung chất béo
-          và góp phần tạo độ mềm ẩm cho thành phẩm.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Dùng trong các công thức bánh có thành phần dầu thực vật.</li>
-            <li>Đong lượng dầu theo hướng dẫn của công thức.</li>
-            <li>Đậy kín nắp và bảo quản theo hướng dẫn trên sản phẩm.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
-
-    <!-- 6. ĐƯỜNG -->
-    <section id="bot-duong" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-6.jpg"
-          alt="Đường dùng làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU CƠ BẢN</span>
-        <h1 class="detail-item__title">Đường</h1>
-        <p class="detail-item__price">39.000 ₫</p>
-        <p class="detail-item__description">
-          Đường góp phần tạo vị ngọt, màu sắc và kết cấu cho nhiều loại bánh.
-          Lượng đường sử dụng phụ thuộc vào khẩu vị và yêu cầu của từng công thức.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Sử dụng trong bánh quy, bánh bông lan và nhiều món tráng miệng.</li>
-            <li>Cân đong chính xác để đảm bảo tỷ lệ nguyên liệu.</li>
-            <li>Bảo quản ở nơi khô ráo, tránh hơi ẩm.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
-
-    <!-- 7. MUỐI -->
-    <section id="bot-muoi" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-7.jpg"
-          alt="Muối dùng trong làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU PHỤ TRỢ</span>
-        <h1 class="detail-item__title">Muối</h1>
-        <p class="detail-item__price">7.000 ₫</p>
-        <p class="detail-item__description">
-          Muối được sử dụng với lượng nhỏ trong một số công thức bánh để
-          cân bằng vị và làm nổi bật hương vị của các nguyên liệu khác.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Thêm theo đúng định lượng của công thức.</li>
-            <li>Phân bố đều trong hỗn hợp nguyên liệu.</li>
-            <li>Giữ bao bì kín để tránh ẩm.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
-
-    <!-- 8. SỮA TƯƠI -->
-    <section id="bot-sua-tuoi" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-8.jpg"
-          alt="Sữa tươi dùng làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU LÀM BÁNH</span>
-        <h1 class="detail-item__title">Sữa tươi</h1>
-        <p class="detail-item__price">41.000 ₫</p>
-        <p class="detail-item__description">
-          Sữa tươi bổ sung độ ẩm và hương vị cho nhiều công thức bánh,
-          đồng thời được sử dụng trong các loại kem và món tráng miệng.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Dùng theo lượng sữa được yêu cầu trong công thức.</li>
-            <li>Kiểm tra hạn sử dụng và tình trạng bao bì.</li>
-            <li>Bảo quản theo hướng dẫn của nhà sản xuất.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
-
-    <!-- 9. TRỨNG -->
-    <section id="bot-trung" class="detail-item">
-      <div class="detail-item__image-wrap">
-        <img
-          src="images/product-9.jpg"
-          alt="Trứng dùng làm bánh"
-          class="detail-item__image"
-          loading="lazy"
-        >
-      </div>
-      <div class="detail-item__content">
-        <span class="detail-eyebrow">NGUYÊN LIỆU CƠ BẢN</span>
-        <h1 class="detail-item__title">Trứng</h1>
-        <p class="detail-item__price">28.000 ₫</p>
-        <p class="detail-item__description">
-          Trứng là nguyên liệu quan trọng trong nhiều công thức bánh,
-          góp phần tạo cấu trúc, độ ẩm và độ xốp cho thành phẩm.
-        </p>
-        <div class="detail-item__info">
-          <h2>Gợi ý sử dụng</h2>
-          <ul>
-            <li>Sử dụng theo số lượng và kích cỡ trứng trong công thức.</li>
-            <li>Đảm bảo trứng còn tươi và có nguồn gốc phù hợp.</li>
-            <li>Bảo quản và xử lý thực phẩm an toàn.</li>
-          </ul>
-        </div>
-        <a href="index.html#san-pham-noi-bat" class="btn btn--primary">Quay lại danh sách sản phẩm</a>
-      </div>
-    </section>
+    <!-- Điều hướng quay lại danh mục sản phẩm -->
+    <div class="back-navigation">
+      <a href="products.html" class="btn btn--outline-dark">&larr; Quay lại danh sách sản phẩm</a>
+    </div>
 
   </main>
 
-  <!-- FOOTER -->
+  <!-- ================= 3. FOOTER DÙNG CHUNG ================= -->
   <footer class="site-footer">
-    <div class="site-footer__inner">
-      <a href="index.html" class="site-footer__brand">BakeMate</a>
-      <p>Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
-      <nav class="site-footer__links" aria-label="Liên kết cuối trang">
-        <a href="index.html">Trang chủ</a>
-        <a href="products.html">Sản phẩm</a>
-        <a href="about.html">Giới thiệu</a>
-      </nav>
-      <p class="site-footer__copyright">© BakeMate. All rights reserved.</p>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h4 class="footer-col__title">BakeMate Store</h4>
+        <p class="footer-col__desc">Nền tảng cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu dành cho người trẻ tại Việt Nam.</p>
+        <p class="footer-col__contact">Hotline: 1900 6868 | Email: cskh@bakemate.vn</p>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col__title">Lối tắt nhanh</h4>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Danh mục sản phẩm</a></li>
+          <li><a href="about.html">Về chúng tôi</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4 class="footer-col__title">Chính sách</h4>
+        <ul class="footer-col__list">
+          <li>Chính sách giao hàng 2h</li>
+          <li>Đổi trả nguyên liệu trong 48h</li>
+          <li>Cam kết an toàn vệ sinh thực phẩm</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 BakeMate. Đồ án môn học Phát triển ứng dụng TMĐT – UEH. Nhóm 3.</p>
     </div>
   </footer>
 
