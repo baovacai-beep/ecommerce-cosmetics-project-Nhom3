@@ -406,6 +406,7 @@ img {
   margin-bottom: 8px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.4;
@@ -724,7 +725,7 @@ img {
   background-color: #ffffff;
 }
 
-.qty-btn {
+ qty-btn {
   width: 36px;
   height: 36px;
   background-color: var(--bg-color);
@@ -736,16 +737,16 @@ img {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.qty-btn:hover {
+ qty-btn:hover {
   background-color: var(--secondary-color);
   color: var(--primary-color);
 }
 
-.qty-btn:active {
+ qty-btn:active {
   background-color: var(--accent-sub);
 }
 
-.qty-input {
+ qty-input {
   width: 50px;
   height: 36px;
   border: none;
@@ -1222,16 +1223,19 @@ img {
 
 .about-story__body,
 .about-story_body {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
+  margin: 0;
+  text-align: left;
 }
 
 .about-story__body p,
 .about-story_body p {
+  max-width: none;
   font-size: 15.5px;
   line-height: 1.8;
   color: var(--primary-color);
-  margin-bottom: 16px;
+  margin: 0 0 16px;
 }
 
 /* Difference Section (Khác biệt) */
@@ -1560,6 +1564,43 @@ a.contact-value:hover {
 .site-footer a:hover {
   color: var(--accent-cta);
   text-decoration: underline;
+}
+
+.footer-container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 32px;
+  text-align: left;
+}
+
+.footer-col__title {
+  margin-bottom: 12px;
+  color: var(--bg-color);
+  font-size: 16px;
+}
+
+.footer-col__desc,
+.footer-col__contact {
+  margin-bottom: 8px;
+  line-height: 1.7;
+}
+
+.footer-col__list {
+  list-style: none;
+}
+
+.footer-col__list li {
+  margin-bottom: 7px;
+  line-height: 1.5;
+}
+
+.footer-bottom {
+  max-width: var(--max-width);
+  margin: 24px auto 0;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 248, 237, 0.2);
 }
 
 /* ================= 10. TIÊU CHUẨN ACCESSIBILITY & FOCUS-VISIBLE ================= */
