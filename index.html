@@ -38,10 +38,10 @@
 
       <!-- Ô tìm kiếm và biểu tượng giỏ hàng -->
       <div class="site-header__actions">
-        <div class="site-header__search">
-          <input type="text" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
-          <button type="button" class="site-header__search-btn" aria-label="Tìm kiếm">Tìm</button>
-        </div>
+        <form class="site-header__search" action="products.html" method="get" role="search">
+      <input type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+      <button type="submit" class="site-header__search-btn">Tìm</button>
+          </form>
         <a href="products.html" class="site-header__cart" aria-label="Giỏ hàng">
           <span class="site-header__cart-icon">🛒</span>
         </a>

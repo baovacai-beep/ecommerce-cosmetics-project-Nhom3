@@ -39,12 +39,10 @@
       </nav>
 
       <div class="site-header__actions">
-        <div class="site-header__search">
-          <input type="text"
-                 placeholder="Tìm nguyên liệu, công thức..."
-                 class="site-header__search-input">
-          <button type="button" class="site-header__search-btn">Tìm</button>
-        </div>
+          <form class="site-header__search" action="products.html" method="get" role="search">
+           <input type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+           <button type="submit" class="site-header__search-btn">Tìm</button>
+          </form>
         <a href="products.html" class="site-header__cart"
            aria-label="Giỏ hàng">
           <span class="site-header__cart-icon">🛒</span>
@@ -57,7 +55,7 @@
   <!-- Dán phần danh sách 9 sản phẩm từ index.html vào đây -->
   <main class="site-main">
     <section class="products-section" id="san-pham-noi-bat">
-      <h2 class="products-section__title">Danh sách nguyên liệu làm bánh</h2>
+      <h1 class="products-section__title">Danh sách nguyên liệu làm bánh</h1>
       <p class="products-section__desc">
         Lựa chọn nguyên liệu phù hợp cho những chiếc bánh thơm ngon tại nhà.
       </p>
