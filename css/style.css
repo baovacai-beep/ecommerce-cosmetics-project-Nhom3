@@ -1801,3 +1801,66 @@ input:focus-visible,
     font-size: 13px;
   }
 }
+/* ================= KHẮC PHỤC LỖI THANH SỐ LƯỢNG (MỤC 4) ================= */
+/* Ẩn hoàn toàn mũi tên spinner mặc định của trình duyệt cho input number */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.qty-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+/* ================= HIỆU ỨNG HOVER SẢN PHẨM MUA KÈM (MỤC 5) ================= */
+.mini-card {
+  background-color: #ffffff;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid var(--secondary-color);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  cursor: pointer;
+}
+
+.mini-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(112, 69, 43, 0.15);
+  border-color: var(--accent-cta);
+}
+
+.mini-card__img {
+  width: 65px;
+  height: 65px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.mini-card:hover .mini-card__img {
+  transform: scale(1.08);
+}
+
+.btn-add-mini {
+  background-color: var(--bg-color);
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-add-mini:hover {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+  border-color: var(--accent-cta);
+}

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Chi tiết sản phẩm Bột Mì Số 13 Baker's Choice chuyên dụng làm bánh mì tại BakeMate.">
-  <title>Bột Mì Số 13 Baker's Choice Làm Bánh Mì - BakeMate</title>
+  <meta name="description" content="Chi tiết nguyên liệu và dụng cụ làm bánh theo công thức tại BakeMate.">
+  <title id="page-title">Chi tiết sản phẩm | BakeMate</title>
 
   <!-- Favicon tab trình duyệt -->
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -30,116 +30,99 @@
       <nav class="site-header__nav" aria-label="Điều hướng chính">
         <ul class="site-header__menu">
           <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
-          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link active">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link active" aria-current="page">Sản phẩm</a></li>
           <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
         </ul>
       </nav>
 
       <div class="site-header__actions">
         <form class="site-header__search" action="products.html" method="get" role="search">
-           <input type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
-            <button type="submit" class="site-header__search-btn">Tìm</button>
+          <label class="visually-hidden" for="site-search">Tìm kiếm</label>
+          <input id="site-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
-        <a href="products.html" class="site-header__cart" aria-label="Giỏ hàng">
-          <span class="site-header__cart-icon" aria-hidden="true">&#128722;</span>
+        <a href="products.html" class="site-header__cart" aria-label="Xem sản phẩm">
+          <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
         </a>
       </div>
     </div>
   </header>
 
-  <!-- ================= 2. NỘI DUNG CHÍNH (MAIN) ================= -->
+  <!-- ================= 2. NỘI DUNG CHÍNH (PRODUCT DETAIL) ================= -->
   <main class="page-container">
     
-    <!-- 1. Thanh điều hướng Breadcrumb (Bảng 7.1.2 - Mục 1) -->
+    <!-- Thanh điều hướng Breadcrumb -->
     <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
       <ul class="breadcrumb__list">
         <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
         <li class="breadcrumb__separator">/</li>
-        <li class="breadcrumb__item"><a href="products.html">Danh mục</a></li>
+        <li class="breadcrumb__item"><a href="products.html">Sản phẩm</a></li>
         <li class="breadcrumb__separator">/</li>
-        <li class="breadcrumb__item"><a href="products.html">Bột làm bánh</a></li>
-        <li class="breadcrumb__separator">/</li>
-        <li class="breadcrumb__item active" aria-current="page">Bột Mì Số 13 Baker's Choice</li>
+        <li class="breadcrumb__item active" id="breadcrumb-current">Chi tiết sản phẩm</li>
       </ul>
     </nav>
 
     <!-- Khu vực Chi tiết sản phẩm chính (CSS Grid 2 cột) -->
-    <article id="bot-mi" class="product-detail">
+    <article id="product-detail-box" class="product-detail">
       
-      <!-- Cột trái: Media Gallery (Bảng 7.1.2 - Mục 2 & 3) -->
+      <!-- Cột trái: Media Gallery -->
       <div class="product-detail__gallery">
         <div class="gallery__main-wrap">
-          <span class="badge badge--discount">-20%</span>
+          <span class="badge badge--discount" id="badge-discount">-20%</span>
           <span class="badge badge--authentic">Chính hãng</span>
-          <img src="images/product-2.jpg" alt="Bột Mì Số 13 Chuyên Dụng Làm Bánh Mì" class="gallery__main-img">
+          <img id="main-product-img" src="images/product-2.jpg" alt="Chi tiết sản phẩm" class="gallery__main-img">
         </div>
-        <div class="gallery__thumbs">
-          <button type="button" class="thumb-btn active" aria-label="Xem ảnh mặt trước bao bì">
-            <img src="images/product-2.jpg" alt="Bột mì số 13 mặt trước">
-          </button>
-          <button type="button" class="thumb-btn" aria-label="Xem ảnh chi tiết thớ bột">
-            <img src="images/product-1.jpg" alt="Chi tiết thớ bột trắng mịn">
-          </button>
-          <button type="button" class="thumb-btn" aria-label="Xem ảnh mặt sau bao bì">
-            <img src="images/product-3.jpg" alt="Mặt sau và bảng dinh dưỡng">
-          </button>
-          <button type="button" class="thumb-btn" aria-label="Xem chứng nhận an toàn thực phẩm">
-            <img src="images/product-4.jpg" alt="Chứng nhận vệ sinh an toàn thực phẩm">
+        <!-- Thumbnails chỉ hiện ảnh đúng của sản phẩm đó -->
+        <div class="gallery__thumbs" id="gallery-thumbs-container">
+          <button type="button" class="thumb-btn active" aria-label="Ảnh chính sản phẩm">
+            <img id="thumb-img-1" src="images/product-2.jpg" alt="Ảnh thu nhỏ">
           </button>
         </div>
       </div>
 
-      <!-- Cột phải: Thông tin sản phẩm & Khối mua hàng (Bảng 7.1.2 - Mục 4, 5, 6, 7, 8) -->
+      <!-- Cột phải: Thông tin sản phẩm & Khối mua hàng -->
       <div class="product-detail__info">
-        <!-- 4. Heading & Meta -->
-        <span class="product-detail__brand">Thương hiệu: <strong>Baker's Choice</strong> | Xuất xứ: Việt Nam</span>
-        <h1 class="product-detail__title">Bột Mì Số 13 Chuyên Dụng Làm Bánh Mì (Bread Flour)</h1>
+        <span class="product-detail__brand" id="product-brand">Thương hiệu: <strong>MEIZAN</strong> | Xuất xứ: Việt Nam</span>
+        <h1 class="product-detail__title" id="product-title">Bột mì Meizan Cao Cấp Đa Dụng</h1>
         
         <div class="product-detail__meta">
-          <span class="meta__rating">★★★★★ <strong>4.9</strong> (142 đánh giá)</span>
+          <span class="meta__rating" id="product-rating">★★★★★ <strong>4.9</strong> (185 đánh giá)</span>
           <span class="meta__divider">|</span>
-          <span class="meta__sold">Đã bán <strong>1.2k</strong> gói</span>
+          <span class="meta__sold" id="product-sold">Đã bán <strong>1.5k</strong></span>
           <span class="meta__divider">|</span>
           <span class="meta__stock in-stock">Còn hàng</span>
         </div>
 
-        <!-- 5. Price Box -->
+        <!-- Khung giá -->
         <div class="price-box">
           <div class="price-box__row">
-            <span class="price-box__current">32.000₫</span>
-            <del class="price-box__original">40.000₫</del>
-            <span class="price-box__tag">Tiết kiệm 8.000₫</span>
+            <span class="price-box__current" id="product-price">27.000₫</span>
+            <del class="price-box__original" id="product-old-price">34.000₫</del>
+            <span class="price-box__tag" id="product-save-tag">Tiết kiệm 7.000₫</span>
           </div>
           <p class="price-box__note">Đơn giá đã bao gồm VAT. Đảm bảo date mới trong vòng 30 ngày từ ngày sản xuất.</p>
         </div>
 
-        <!-- 6. Option Pills (Chọn quy cách đóng gói) -->
+        <!-- Chọn quy cách đóng gói -->
         <div class="option-group">
           <label class="option-group__label">Quy cách đóng gói:</label>
-          <div class="option-group__pills">
-            <label class="pill-radio">
-              <input type="radio" name="packaging" value="500g" checked>
-              <span class="pill-radio__btn">Gói 500g - 32.000₫</span>
-            </label>
-            <label class="pill-radio">
-              <input type="radio" name="packaging" value="1kg">
-              <span class="pill-radio__btn">Gói 1kg - 58.000₫</span>
-            </label>
+          <div class="option-group__pills" id="packaging-options">
+            <!-- Render động theo sản phẩm -->
           </div>
         </div>
 
-        <!-- 7. Quantity Input (Điều chỉnh số lượng) -->
+        <!-- Số lượng (Đã ẩn spinner mũi tên và kết nối nút bấm +/-) -->
         <div class="quantity-group">
           <label class="quantity-group__label" for="product-qty">Số lượng:</label>
           <div class="quantity-group__control">
-            <button type="button" class="qty-btn" aria-label="Giảm số lượng">-</button>
-            <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99">
-            <button type="button" class="qty-btn" aria-label="Tăng số lượng">+</button>
+            <button type="button" class="qty-btn" id="btn-qty-minus" aria-label="Giảm số lượng">-</button>
+            <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99" readonly>
+            <button type="button" class="qty-btn" id="btn-qty-plus" aria-label="Tăng số lượng">+</button>
           </div>
-          <span class="quantity-group__hint">Kho còn 150 gói sẵn sàng giao</span>
+          <span class="quantity-group__hint" id="stock-hint">Kho còn 150 gói sẵn sàng giao</span>
         </div>
 
-        <!-- 8. CTA Buttons -->
+        <!-- Nút CTA -->
         <div class="product-detail__actions">
           <button type="button" class="btn btn--cart">
             <span class="btn__icon">&#128722;</span> Thêm vào giỏ hàng
@@ -147,7 +130,7 @@
           <button type="button" class="btn btn--buy">Mua ngay</button>
         </div>
 
-        <!-- Cam kết dịch vụ khách hàng -->
+        <!-- Cam kết chính sách -->
         <div class="policy-box">
           <div class="policy-item">
             <span class="policy-item__icon">&#128666;</span>
@@ -162,110 +145,43 @@
       </div>
     </article>
 
-    <!-- 9. Tabs / Sections (Thông số kỹ thuật & Bảo quản) (Bảng 7.1.2 - Mục 9) -->
+    <!-- Thông số kỹ thuật & Hướng dẫn bảo quản -->
     <section class="product-specs-section">
       <h2 class="section-heading">Thông số kỹ thuật & Hướng dẫn bảo quản</h2>
       <div class="specs-table-wrap">
         <table class="specs-table">
-          <tbody>
-            <tr><th>Hàm lượng Protein</th><td>13.0% – 14.0% (Tạo cấu trúc mạng gluten dẻo dai)</td></tr>
-            <tr><th>Độ ẩm tối đa</th><td>13.8% (Bột khô tơi xốp, không vón cục)</td></tr>
-            <tr><th>Thành phần</th><td>100% lúa mì nguyên chất chọn lọc, không chất tẩy trắng</td></tr>
-            <tr><th>Ứng dụng phù hợp</th><td>Bánh mì hoa cúc (Brioche), Baguette Pháp, Bánh gối Sandwich, Đế Pizza</td></tr>
-            <tr><th>Quy cách bảo quản</th><td>Bảo quản nơi khô ráo, thoáng mát. Sau khi mở túi nên kẹp kín miệng bao hoặc trữ ngăn mát tủ lạnh</td></tr>
+          <tbody id="specs-table-body">
+            <!-- Render bảng thông số chuẩn cho từng món -->
           </tbody>
         </table>
       </div>
     </section>
 
-    <!-- 10. Recipe Cross-link (Khối UVP đặc trưng của BakeMate) (Bảng 7.1.2 - Mục 10) -->
+    <!-- Khối UVP Công thức áp dụng -->
     <section class="recipe-crosslink-section">
       <div class="section-header-flex">
         <div>
           <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
-          <h2 class="section-heading">Sản phẩm này dùng cho công thức nào?</h2>
+          <h2 class="section-heading" id="recipe-section-title">Sản phẩm này dùng cho công thức nào?</h2>
           <p class="section-desc">Khám phá các công thức làm bánh chuẩn vị và tự động gom trọn bộ nguyên liệu cần mua chỉ với 1 click:</p>
         </div>
         <a href="index.html" class="link-more">Xem tất cả công thức &rarr;</a>
       </div>
 
-      <div class="recipe-grid">
-        <!-- Thẻ công thức 1: Bánh mì hoa cúc -->
-        <div class="recipe-card">
-          <div class="recipe-card__media">
-            <img src="images/about-young-bakers.jpg" alt="Bánh mì hoa cúc Brioche" class="recipe-card__img">
-            <span class="recipe-card__tag">Độ khó: Vừa</span>
-          </div>
-          <div class="recipe-card__body">
-            <h3 class="recipe-card__title">Bánh Mì Hoa Cúc (Brioche) Thơm Lừng Bơ Sữa</h3>
-            <p class="recipe-card__info">&#9201; 90 phút | &#128100; Chuẩn 4 phần ăn</p>
-            <p class="recipe-card__usage">Công thức dùng: <strong>260g</strong> Bột mì số 13</p>
-            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
-          </div>
-        </div>
-
-        <!-- Thẻ công thức 2: Baguette kiểu Pháp -->
-        <div class="recipe-card">
-          <div class="recipe-card__media">
-            <img src="images/banner.jpg" alt="Bánh mì Baguette Pháp vỏ giòn" class="recipe-card__img">
-            <span class="recipe-card__tag">Độ khó: Dễ</span>
-          </div>
-          <div class="recipe-card__body">
-            <h3 class="recipe-card__title">Bánh Mì Baguette Kiểu Pháp Vỏ Giòn Ruột Xốp</h3>
-            <p class="recipe-card__info">&#9201; 60 phút | &#128100; Chuẩn 2 ổ lớn</p>
-            <p class="recipe-card__usage">Công thức dùng: <strong>300g</strong> Bột mì số 13</p>
-            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
-          </div>
-        </div>
-
-        <!-- Thẻ công thức 3: Đế bánh Pizza -->
-        <div class="recipe-card">
-          <div class="recipe-card__media">
-            <img src="images/about-baking.jpg" alt="Đế bánh Pizza kiểu Ý" class="recipe-card__img">
-            <span class="recipe-card__tag">Độ khó: Dễ</span>
-          </div>
-          <div class="recipe-card__body">
-            <h3 class="recipe-card__title">Đế Bánh Pizza Nướng Chảo Dai Giòn Chuẩn Ý</h3>
-            <p class="recipe-card__info">&#9201; 45 phút | &#128100; Chuẩn 3 đế bánh (22cm)</p>
-            <p class="recipe-card__usage">Công thức dùng: <strong>200g</strong> Bột mì số 13</p>
-            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
-          </div>
-        </div>
+      <div class="recipe-grid" id="recipe-cards-container">
+        <!-- Render thẻ công thức theo từng sản phẩm -->
       </div>
     </section>
 
-    <!-- 11. Related Products (Sản phẩm thường mua kèm) (Bảng 7.1.2 - Mục 11) -->
+    <!-- Khối Sản phẩm thường mua kèm -->
     <section class="related-products-section">
-      <h2 class="section-heading">Thường được mua cùng bột mì số 13</h2>
-      <div class="products-mini-grid">
-        <div class="mini-card">
-          <img src="images/product-4.jpg" alt="Men nở Instant Saf-Instant" class="mini-card__img">
-          <div class="mini-card__body">
-            <h3 class="mini-card__title">Men Nở Khô Làm Bánh Mì Saf-Instant (Gói 11g)</h3>
-            <span class="mini-card__price">15.000₫</span>
-          </div>
-          <button type="button" class="btn-add-mini">+ Thêm</button>
-        </div>
-        <div class="mini-card">
-          <img src="images/product-5.jpg" alt="Bơ lạt Anchor New Zealand" class="mini-card__img">
-          <div class="mini-card__body">
-            <h3 class="mini-card__title">Bơ Lạt Tự Nhiên Anchor New Zealand (Khối 227g)</h3>
-            <span class="mini-card__price">78.000₫</span>
-          </div>
-          <button type="button" class="btn-add-mini">+ Thêm</button>
-        </div>
-        <div class="mini-card">
-          <img src="images/product-6.jpg" alt="Khuôn nướng bánh Loaf chống dính" class="mini-card__img">
-          <div class="mini-card__body">
-            <h3 class="mini-card__title">Khuôn Nướng Bánh Mì Gối Loaf Thép Carbon Chống Dính</h3>
-            <span class="mini-card__price">85.000₫</span>
-          </div>
-          <button type="button" class="btn-add-mini">+ Thêm</button>
-        </div>
+      <h2 class="section-heading" id="related-section-title">Thường được mua cùng</h2>
+      <div class="products-mini-grid" id="related-products-container">
+        <!-- Render sản phẩm mua kèm -->
       </div>
     </section>
 
-    <!-- Điều hướng quay lại danh mục sản phẩm -->
+    <!-- Điều hướng quay lại -->
     <div class="back-navigation">
       <a href="products.html" class="btn btn--outline-dark">&larr; Quay lại danh sách sản phẩm</a>
     </div>
@@ -276,31 +192,506 @@
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-col">
-        <h4 class="footer-col__title">BakeMate Store</h4>
-        <p class="footer-col__desc">Nền tảng cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu dành cho người trẻ tại Việt Nam.</p>
-        <p class="footer-col__contact">Hotline: 1900 6868 | Email: cskh@bakemate.vn</p>
+        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
       </div>
       <div class="footer-col">
-        <h4 class="footer-col__title">Lối tắt nhanh</h4>
+        <h3 class="footer-col__title">Lối tắt</h3>
         <ul class="footer-col__list">
           <li><a href="index.html">Trang chủ</a></li>
-          <li><a href="products.html">Danh mục sản phẩm</a></li>
-          <li><a href="about.html">Về chúng tôi</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4 class="footer-col__title">Chính sách</h4>
-        <ul class="footer-col__list">
-          <li>Chính sách giao hàng 2h</li>
-          <li>Đổi trả nguyên liệu trong 48h</li>
-          <li>Cam kết an toàn vệ sinh thực phẩm</li>
-        </ul>
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>© 2026 BakeMate. Đồ án môn học Phát triển ứng dụng TMĐT – UEH. Nhóm 3.</p>
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
     </div>
   </footer>
 
+  <!-- ================= 4. SCRIPT XỬ LÝ CHI TIẾT SẢN PHẨM ================= -->
+  <script>
+    // Dữ liệu chuẩn xác 100% của 9 sản phẩm bám sát tên trên products.html
+    const productsData = {
+      "bot-bap": {
+        shortName: "Bột bắp",
+        fullName: "Bột bắp Taky Food Cao Cấp (Cornstarch)",
+        brand: "Taky Food",
+        origin: "Việt Nam",
+        img: "images/product-1.jpg",
+        rating: "4.9",
+        reviews: "142",
+        sold: "1.8k",
+        basePrice: "12.000₫",
+        oldPrice: "15.000₫",
+        saveText: "Tiết kiệm 3.000₫",
+        discountBadge: "-20%",
+        stock: "180",
+        unit: "gói",
+        options: [
+          { label: "Gói 150g - 12.000₫", price: "12.000₫", old: "15.000₫", save: "Tiết kiệm 3.000₫" },
+          { label: "Gói 500g - 32.000₫", price: "32.000₫", old: "40.000₫", save: "Tiết kiệm 8.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Taky Food (Tài Ký)" },
+          { k: "Thành phần", v: "100% tinh bột bắp nguyên chất chọn lọc, không biến đổi gen" },
+          { k: "Độ ẩm tối đa", v: "Dưới 13.5% (bột trắng mịn màng, tơi xốp, không vón cục)" },
+          { k: "Ứng dụng phù hợp", v: "Làm mềm xốp bánh bông lan, bánh Chiffon, tạo độ sánh mịn cho nhân kem su kem, pudding, sốt custard" },
+          { k: "Quy cách bảo quản", v: "Bảo quản nơi khô ráo, thoáng mát, tránh ánh nắng mặt trời. Buộc kín miệng túi sau mỗi lần sử dụng." }
+        ],
+        recipes: [
+          { title: "Bánh Bông Lan Chiffon Mềm Tan", time: "50 phút", usage: "30g Bột bắp Taky", diff: "Dễ", img: "images/about-baking.jpg" },
+          { title: "Nhân Kem Custard Su Kem Béo Ngậy", time: "30 phút", usage: "25g Bột bắp Taky", diff: "Dễ", img: "images/about-young-bakers.jpg" },
+          { title: "Bánh Quy Bơ Thơm Giòn Tan", time: "45 phút", usage: "40g Bột bắp Taky", diff: "Vừa", img: "images/banner.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Sữa tươi Vinamilk 100%", price: "41.000₫", img: "images/product-8.jpg", hash: "#bot-sua-tuoi" },
+          { name: "Đường Biên Hòa Pure", price: "39.000₫", img: "images/product-6.jpg", hash: "#bot-duong" }
+        ]
+      },
+      "bot-mi": {
+        shortName: "Bột mì",
+        fullName: "Bột mì Meizan Đa Dụng Cao Cấp (All-Purpose Flour)",
+        brand: "MEIZAN",
+        origin: "Việt Nam",
+        img: "images/product-2.jpg",
+        rating: "4.9",
+        reviews: "215",
+        sold: "2.8k",
+        basePrice: "27.000₫",
+        oldPrice: "34.000₫",
+        saveText: "Tiết kiệm 7.000₫",
+        discountBadge: "-21%",
+        stock: "150",
+        unit: "gói",
+        options: [
+          { label: "Gói 500g - 27.000₫", price: "27.000₫", old: "34.000₫", save: "Tiết kiệm 7.000₫" },
+          { label: "Gói 1kg - 48.000₫", price: "48.000₫", old: "60.000₫", save: "Tiết kiệm 12.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "MEIZAN (Tập đoàn FFM Berhad & Wilmar)" },
+          { k: "Hàm lượng Protein", v: "9.5% – 11.5% (Đạt độ đàn hồi dẻo dai chuẩn đa dụng cao cấp)" },
+          { k: "Thành phần", v: "100% lúa mì hảo hạng nhập khẩu, bổ sung vi chất sắt và kẽm" },
+          { k: "Ứng dụng phù hợp", v: "Bánh bông lan, bánh quy bơ, bánh muffin, pancake, bánh bao, há cảo và mì sợi tươi" },
+          { k: "Quy cách bảo quản", v: "Bảo quản nơi khô ráo, sạch sẽ, thoáng mát, tránh để gần hóa chất hay nơi có mùi nồng." }
+        ],
+        recipes: [
+          { title: "Bánh Mì Hoa Cúc Thơm Lừng Bơ Sữa", time: "90 phút", usage: "260g Bột mì Meizan", diff: "Vừa", img: "images/about-young-bakers.jpg" },
+          { title: "Bánh Muffin Chocolate Hạnh Nhân", time: "40 phút", usage: "150g Bột mì Meizan", diff: "Dễ", img: "images/banner.jpg" },
+          { title: "Bánh Pancake Mật Ong Cho Bữa Sáng", time: "25 phút", usage: "120g Bột mì Meizan", diff: "Dễ", img: "images/about-baking.jpg" }
+        ],
+        related: [
+          { name: "Bột vani Vianco Bướm", price: "6.600₫", img: "images/product-4.jpg", hash: "#bot-vani" },
+          { name: "Trứng gà tươi sạch", price: "28.000₫", img: "images/product-9.jpg", hash: "#bot-trung" },
+          { name: "Bột Tartar Baker's Choice", price: "17.000₫", img: "images/product-3.jpg", hash: "#bot-tartar" }
+        ]
+      },
+      "bot-tartar": {
+        shortName: "Bột Tartar",
+        fullName: "Bột Tartar Baker's Choice Ổn Định Lòng Trắng Trứng",
+        brand: "Baker's Choice",
+        origin: "Việt Nam",
+        img: "images/product-3.jpg",
+        rating: "4.8",
+        reviews: "96",
+        sold: "850",
+        basePrice: "17.000₫",
+        oldPrice: "22.000₫",
+        saveText: "Tiết kiệm 5.000₫",
+        discountBadge: "-23%",
+        stock: "95",
+        unit: "hũ",
+        options: [
+          { label: "Hũ 45g - 17.000₫", price: "17.000₫", old: "22.000₫", save: "Tiết kiệm 5.000₫" },
+          { label: "Hũ 100g - 32.000₫", price: "32.000₫", old: "40.000₫", save: "Tiết kiệm 8.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Baker's Choice (Cream of Tartar)" },
+          { k: "Thành phần", v: "Potassium Hydrogen Tartrate (E336i) 100% tinh khiết đạt chuẩn thực phẩm" },
+          { k: "Công dụng chính", v: "Tạo môi trường axit nhẹ giúp bọt khí lòng trắng trứng bền vững, chống xẹp bánh khi nướng, làm trắng mịn ruột bánh" },
+          { k: "Ứng dụng phù hợp", v: "Bánh bông lan Chiffon, Macaron, Meringue kẹo đường, Souffle, Angel Food Cake" },
+          { k: "Quy cách bảo quản", v: "Vặn chặt nắp sau khi mở. Bảo quản nơi khô ráo, tránh nhiệt độ cao và độ ẩm cao." }
+        ],
+        recipes: [
+          { title: "Bánh Bông Lan Chiffon Phô Mai", time: "60 phút", usage: "2g Bột Tartar", diff: "Vừa", img: "images/about-young-bakers.jpg" },
+          { title: "Bánh Meringue Kẹo Đường Xốp", time: "70 phút", usage: "1.5g Bột Tartar", diff: "Dễ", img: "images/banner.jpg" },
+          { title: "Bánh Macaron Kiểu Pháp Vỏ Mịn", time: "90 phút", usage: "2g Bột Tartar", diff: "Khó", img: "images/about-baking.jpg" }
+        ],
+        related: [
+          { name: "Trứng gà tươi sạch", price: "28.000₫", img: "images/product-9.jpg", hash: "#bot-trung" },
+          { name: "Đường Biên Hòa Pure", price: "39.000₫", img: "images/product-6.jpg", hash: "#bot-duong" },
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" }
+        ]
+      },
+      "bot-vani": {
+        shortName: "Bột vani",
+        fullName: "Bột Vani Vianco Hiệu Bướm Bướm Thơm Lừng",
+        brand: "Vianco",
+        origin: "Việt Nam",
+        img: "images/product-4.jpg",
+        rating: "4.9",
+        reviews: "180",
+        sold: "3.2k",
+        basePrice: "6.600₫",
+        oldPrice: "8.500₫",
+        saveText: "Tiết kiệm 1.900₫",
+        discountBadge: "-22%",
+        stock: "350",
+        unit: "lốc",
+        options: [
+          { label: "Lốc 10 gói (5g/gói) - 6.600₫", price: "6.600₫", old: "8.500₫", save: "Tiết kiệm 1.900₫" },
+          { label: "Hộp 50g tiện lợi - 25.000₫", price: "25.000₫", old: "30.000₫", save: "Tiết kiệm 5.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Vianco (Hiệu Bướm Bướm - Hãng gia vị truyền thống từ 1958)" },
+          { k: "Thành phần", v: "Vanillin tổng hợp nguyên chất 100%, đường dextrose" },
+          { k: "Đặc điểm mùi vị", v: "Mùi vani ngọt ngào quyến rũ, khử tanh trứng cực tốt, giữ hương thơm bền sau khi nướng nhiệt cao" },
+          { k: "Ứng dụng phù hợp", v: "Bánh bông lan, bánh flan caramel, chè khúc bạch, kem lạnh, bánh quy bơ" },
+          { k: "Quy cách bảo quản", v: "Để nơi khô ráo, thoáng mát, bọc kín sau khi dùng để tránh bay hương." }
+        ],
+        recipes: [
+          { title: "Bánh Flan Caramen Mềm Mịn", time: "40 phút", usage: "1 gói Vani Vianco", diff: "Dễ", img: "images/about-baking.jpg" },
+          { title: "Bánh Bông Lan Vani Nướng Nồi Cơm", time: "45 phút", usage: "1 gói Vani Vianco", diff: "Dễ", img: "images/about-young-bakers.jpg" },
+          { title: "Kem Custard Trứng Sữa Thơm Lừng", time: "30 phút", usage: "1 gói Vani Vianco", diff: "Dễ", img: "images/banner.jpg" }
+        ],
+        related: [
+          { name: "Sữa tươi Vinamilk 100%", price: "41.000₫", img: "images/product-8.jpg", hash: "#bot-sua-tuoi" },
+          { name: "Trứng gà tươi sạch", price: "28.000₫", img: "images/product-9.jpg", hash: "#bot-trung" },
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" }
+        ]
+      },
+      "dau-an": {
+        shortName: "Dầu ăn",
+        fullName: "Dầu Ăn Tường An Cooking Oil Chuyên Dụng Làm Bánh",
+        brand: "Tường An",
+        origin: "Việt Nam",
+        img: "images/product-5.jpg",
+        rating: "4.9",
+        reviews: "110",
+        sold: "940",
+        basePrice: "54.000₫",
+        oldPrice: "65.000₫",
+        saveText: "Tiết kiệm 11.000₫",
+        discountBadge: "-17%",
+        stock: "120",
+        unit: "chai",
+        options: [
+          { label: "Chai 1 Lít - 54.000₫", price: "54.000₫", old: "65.000₫", save: "Tiết kiệm 11.000₫" },
+          { label: "Can 2 Lít - 102.000₫", price: "102.000₫", old: "120.000₫", save: "Tiết kiệm 18.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Tường An (Cooking Oil Đỏ)" },
+          { k: "Thành phần", v: "Dầu olein cọ tinh luyện, dầu đậu nành, dầu hạt cải, Vitamin A" },
+          { k: "Đặc điểm làm bánh", v: "Màu dầu sáng trong, mùi vị thanh dịu không nồng ngấy, giúp bánh xốp ẩm lâu ngày không bị khô cứng khi trữ lạnh" },
+          { k: "Ứng dụng phù hợp", v: "Bánh bông lan cuộn, bánh chiffon, bánh chuối nướng, bánh mì hoa cúc, quét chống dính khuôn nướng" },
+          { k: "Quy cách bảo quản", v: "Bảo quản nơi thoáng mát, tránh ánh nắng trực tiếp, đậy kín nắp sau khi rót." }
+        ],
+        recipes: [
+          { title: "Bánh Bông Lan Cuộn Mứt Dâu", time: "45 phút", usage: "40ml Dầu Tường An", diff: "Vừa", img: "images/about-young-bakers.jpg" },
+          { title: "Bánh Bông Lan Đài Loan Mềm Ẩm", time: "55 phút", usage: "50ml Dầu Tường An", diff: "Vừa", img: "images/banner.jpg" },
+          { title: "Bánh Chuối Nướng Thơm Lừng", time: "50 phút", usage: "30ml Dầu Tường An", diff: "Dễ", img: "images/about-baking.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Bột bắp Taky Food", price: "12.000₫", img: "images/product-1.jpg", hash: "#bot-bap" },
+          { name: "Trứng gà tươi sạch", price: "28.000₫", img: "images/product-9.jpg", hash: "#bot-trung" }
+        ]
+      },
+      "bot-duong": {
+        shortName: "Đường",
+        fullName: "Đường Tinh Luyện Biên Hòa Pure (Pure Sugar)",
+        brand: "Biên Hòa Pure",
+        origin: "Việt Nam",
+        img: "images/product-6.jpg",
+        rating: "5.0",
+        reviews: "320",
+        sold: "4.1k",
+        basePrice: "39.000₫",
+        oldPrice: "46.000₫",
+        saveText: "Tiết kiệm 7.000₫",
+        discountBadge: "-15%",
+        stock: "260",
+        unit: "gói",
+        options: [
+          { label: "Gói 1kg - 39.000₫", price: "39.000₫", old: "46.000₫", save: "Tiết kiệm 7.000₫" },
+          { label: "Túi 500g - 21.000₫", price: "21.000₫", old: "25.000₫", save: "Tiết kiệm 4.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Đường Biên Hòa (TTC Sugar)" },
+          { k: "Thành phần", v: "100% đường mía tinh luyện cao cấp tự nhiên, độ tinh khiết > 99.8%" },
+          { k: "Đặc tính hạt đường", v: "Hạt đường trắng trong óng ánh, kích thước hạt đều, tan cực nhanh trong bột và bơ sữa" },
+          { k: "Ứng dụng phù hợp", v: "Cốt bánh sinh nhật gato, bánh quy bơ, nấu caramen flan, siro hoa quả, kem whipping" },
+          { k: "Quy cách bảo quản", v: "Đựng trong hộp kín nắp hoặc hũ thủy tinh, để nơi khô ráo, tránh kiến và côn trùng." }
+        ],
+        recipes: [
+          { title: "Cốt Bánh Gato Sinh Nhật Chuẩn Xốp", time: "50 phút", usage: "80g Đường Biên Hòa", diff: "Vừa", img: "images/banner.jpg" },
+          { title: "Bánh Quy Bơ Danisa Giòn Rụm", time: "40 phút", usage: "60g Đường Biên Hòa", diff: "Dễ", img: "images/about-baking.jpg" },
+          { title: "Bánh Mousse Dâu Tây Thanh Mát", time: "60 phút", usage: "50g Đường Biên Hòa", diff: "Vừa", img: "images/about-young-bakers.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Sữa tươi Vinamilk 100%", price: "41.000₫", img: "images/product-8.jpg", hash: "#bot-sua-tuoi" },
+          { name: "Bột Tartar Baker's Choice", price: "17.000₫", img: "images/product-3.jpg", hash: "#bot-tartar" }
+        ]
+      },
+      "bot-muoi": {
+        shortName: "Muối",
+        fullName: "Muối I-ốt Bạc Liêu Basalco Hạt Mịn Làm Bánh",
+        brand: "Basalco",
+        origin: "Việt Nam",
+        img: "images/product-7.jpg",
+        rating: "4.9",
+        reviews: "85",
+        sold: "1.1k",
+        basePrice: "7.000₫",
+        oldPrice: "9.000₫",
+        saveText: "Tiết kiệm 2.000₫",
+        discountBadge: "-22%",
+        stock: "300",
+        unit: "gói",
+        options: [
+          { label: "Gói 500g - 7.000₫", price: "7.000₫", old: "9.000₫", save: "Tiết kiệm 2.000₫" },
+          { label: "Gói 1kg - 12.000₫", price: "12.000₫", old: "15.000₫", save: "Tiết kiệm 3.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Basalco (Muối Bạc Liêu nổi tiếng)" },
+          { k: "Thành phần", v: "Muối biển Bạc Liêu sấy sạch tự nhiên (NaCl ≥ 97%), bổ sung hàm lượng vi chất I-ốt an toàn" },
+          { k: "Vai trò trong làm bánh", v: "Cân bằng vị ngọt, làm nổi bật mùi bơ sữa, củng cố sợi gluten giúp bột bánh mì dẻo dai hơn" },
+          { k: "Ứng dụng phù hợp", v: "Bánh mì Baguette, bánh bông lan trứng muối, sốt caramel muối biển, bánh quy mặn" },
+          { k: "Quy cách bảo quản", v: "Để nơi khô ráo, tránh ẩm ướt, đậy kín sau khi mở bao bì." }
+        ],
+        recipes: [
+          { title: "Bánh Bông Lan Trứng Muối Chà Bông", time: "60 phút", usage: "2g Muối Basalco", diff: "Vừa", img: "images/about-young-bakers.jpg" },
+          { title: "Sốt Caramel Muối Mặn Béo", time: "20 phút", usage: "3g Muối Basalco", diff: "Dễ", img: "images/banner.jpg" },
+          { title: "Bánh Mì Baguette Vỏ Giòn Rụm", time: "80 phút", usage: "5g Muối Basalco", diff: "Vừa", img: "images/about-baking.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Dầu ăn Tường An", price: "54.000₫", img: "images/product-5.jpg", hash: "#dau-an" },
+          { name: "Đường Biên Hòa Pure", price: "39.000₫", img: "images/product-6.jpg", hash: "#bot-duong" }
+        ]
+      },
+      "bot-sua-tuoi": {
+        shortName: "Sữa tươi",
+        fullName: "Sữa Tươi Tiệt Trùng Vinamilk 100% Không Đường",
+        brand: "Vinamilk",
+        origin: "Việt Nam",
+        img: "images/product-8.jpg",
+        rating: "5.0",
+        reviews: "290",
+        sold: "3.5k",
+        basePrice: "41.000₫",
+        oldPrice: "48.000₫",
+        saveText: "Tiết kiệm 7.000₫",
+        discountBadge: "-15%",
+        stock: "140",
+        unit: "hộp",
+        options: [
+          { label: "Hộp 1 Lít - 41.000₫", price: "41.000₫", old: "48.000₫", save: "Tiết kiệm 7.000₫" },
+          { label: "Lốc 4 hộp 180ml - 34.000₫", price: "34.000₫", old: "39.000₫", save: "Tiết kiệm 5.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Vinamilk 100% Sữa Tươi Tiệt Trùng" },
+          { k: "Thành phần", v: "100% sữa bò tươi nguyên chất tiệt trùng, không chất bảo quản, không đường" },
+          { k: "Đặc điểm hương vị", v: "Vị thanh ngậy tự nhiên, thơm mát, bổ sung canxi và khoáng chất cho cấu trúc bánh" },
+          { k: "Công dụng làm bánh", v: "Cung cấp độ ẩm mịn, làm bánh xốp mềm và tạo mùi thơm đặc trưng của bơ sữa" },
+          { k: "Quy cách bảo quản", v: "Bảo quản nơi khô ráo thoáng mát. Sau khi mở nắp hộp 1L bắt buộc bảo quản lạnh (2 - 4°C) và dùng trong 3 ngày." }
+        ],
+        recipes: [
+          { title: "Bánh Mì Ngọt Hokkaido Xé Sợi", time: "90 phút", usage: "150ml Sữa Vinamilk", diff: "Vừa", img: "images/about-baking.jpg" },
+          { title: "Bánh Flan Trứng Sữa Caramen", time: "45 phút", usage: "500ml Sữa Vinamilk", diff: "Dễ", img: "images/about-young-bakers.jpg" },
+          { title: "Bánh Crepe Ngàn Lớp Vani Sữa", time: "60 phút", usage: "400ml Sữa Vinamilk", diff: "Vừa", img: "images/banner.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Trứng gà tươi sạch", price: "28.000₫", img: "images/product-9.jpg", hash: "#bot-trung" },
+          { name: "Bột vani Vianco Bướm", price: "6.600₫", img: "images/product-4.jpg", hash: "#bot-vani" }
+        ]
+      },
+      "bot-trung": {
+        shortName: "Trứng",
+        fullName: "Trứng Gà Tươi Sạch Khay 10 Quả Tiệt Trùng",
+        brand: "Ba Huân / Nông Trại Sạch",
+        origin: "Việt Nam",
+        img: "images/product-9.jpg",
+        rating: "4.9",
+        reviews: "195",
+        sold: "2.4k",
+        basePrice: "28.000₫",
+        oldPrice: "35.000₫",
+        saveText: "Tiết kiệm 7.000₫",
+        discountBadge: "-20%",
+        stock: "110",
+        unit: "vỉ",
+        options: [
+          { label: "Vỉ 10 quả - 28.000₫", price: "28.000₫", old: "35.000₫", save: "Tiết kiệm 7.000₫" },
+          { label: "Vỉ 6 quả - 18.000₫", price: "18.000₫", old: "22.000₫", save: "Tiết kiệm 4.000₫" }
+        ],
+        specs: [
+          { k: "Thương hiệu", v: "Nông Trại Trứng Gà Sạch Ba Huân / V.Food" },
+          { k: "Quy chuẩn chất lượng", v: "Trứng gà tươi mới loại 1 (trọng lượng đều 60g - 65g/quả), tiệt trùng tia UV khử khuẩn vỏ" },
+          { k: "Vai trò trong làm bánh", v: "Lòng trắng đánh bông tạo độ phồng nở; lòng đỏ tạo màu vàng ươm óng ả và độ béo ngậy đặc trưng" },
+          { k: "Ứng dụng phù hợp", v: "Cốt bánh Gato, Chiffon, Su kem, Tart trứng, bánh bông lan cuộn, bánh mì hoa cúc" },
+          { k: "Quy cách bảo quản", v: "Bảo quản trong ngăn mát tủ lạnh (4 - 8°C) để giữ lòng trắng đậm đặc dễ đánh bông nhất. Hạn dùng 30 ngày." }
+        ],
+        recipes: [
+          { title: "Bánh Gato Sinh Nhật Trứng Sữa", time: "60 phút", usage: "4 quả Trứng gà tươi", diff: "Vừa", img: "images/banner.jpg" },
+          { title: "Bánh Tart Trứng Kiểu Hồng Kông", time: "45 phút", usage: "3 quả Trứng gà tươi", diff: "Dễ", img: "images/about-baking.jpg" },
+          { title: "Bánh Su Kem Vỏ Giòn Craquelin", time: "50 phút", usage: "3 quả Trứng gà tươi", diff: "Vừa", img: "images/about-young-bakers.jpg" }
+        ],
+        related: [
+          { name: "Bột mì Meizan Cao Cấp", price: "27.000₫", img: "images/product-2.jpg", hash: "#bot-mi" },
+          { name: "Bột Tartar Baker's Choice", price: "17.000₫", img: "images/product-3.jpg", hash: "#bot-tartar" },
+          { name: "Đường Biên Hòa Pure", price: "39.000₫", img: "images/product-6.jpg", hash: "#bot-duong" }
+        ]
+      }
+    };
+
+    // Hàm render toàn diện dữ liệu sản phẩm lên giao diện
+    function renderProductDetail() {
+      // Lấy hash từ URL (ví dụ: #bot-bap hoặc #dau-an)
+      let hash = window.location.hash.replace("#", "").trim();
+      if (!hash || !productsData[hash]) {
+        hash = "bot-mi"; // Mặc định nếu không có hash thì hiển thị Bột mì Meizan
+      }
+
+      const p = productsData[hash];
+
+      // 1. Cập nhật Tiêu đề trang & Breadcrumb
+      document.title = p.fullName + " - BakeMate";
+      document.getElementById("breadcrumb-current").textContent = p.shortName + " " + p.brand;
+
+      // 2. Cập nhật ảnh chính & Badges
+      const mainImg = document.getElementById("main-product-img");
+      mainImg.src = p.img;
+      mainImg.alt = p.fullName;
+      document.getElementById("badge-discount").textContent = p.discountBadge;
+
+      // 3. Xử lý thumbnails: CHỈ hiển thị đúng ảnh của sản phẩm này
+      const thumbsContainer = document.getElementById("gallery-thumbs-container");
+      thumbsContainer.innerHTML = `
+        <button type="button" class="thumb-btn active" aria-label="Xem ảnh sản phẩm">
+          <img src="${p.img}" alt="${p.shortName}">
+        </button>
+      `;
+
+      // 4. Cập nhật Thương hiệu, Tên sản phẩm, Đánh giá, Lượt bán
+      document.getElementById("product-brand").innerHTML = `Thương hiệu: <strong>${p.brand}</strong> | Xuất xứ: ${p.origin}`;
+      document.getElementById("product-title").textContent = p.fullName;
+      document.getElementById("product-rating").innerHTML = `★★★★★ <strong>${p.rating}</strong> (${p.reviews} đánh giá)`;
+      document.getElementById("product-sold").innerHTML = `Đã bán <strong>${p.sold}</strong> ${p.unit}`;
+
+      // 5. Cập nhật Giá bán & Quy cách đóng gói
+      document.getElementById("product-price").textContent = p.basePrice;
+      document.getElementById("product-old-price").textContent = p.oldPrice;
+      document.getElementById("product-save-tag").textContent = p.saveText;
+      document.getElementById("stock-hint").textContent = `Kho còn ${p.stock} ${p.unit} sẵn sàng giao`;
+
+      const pillsContainer = document.getElementById("packaging-options");
+      pillsContainer.innerHTML = "";
+      p.options.forEach((opt, idx) => {
+        const label = document.createElement("label");
+        label.className = "pill-radio";
+        label.innerHTML = `
+          <input type="radio" name="packaging" value="${opt.price}" ${idx === 0 ? "checked" : ""}>
+          <span class="pill-radio__btn">${opt.label}</span>
+        `;
+        // Sự kiện khi chọn quy cách khác nhau thì cập nhật giá ngay lập tức
+        label.querySelector("input").addEventListener("change", function() {
+          document.getElementById("product-price").textContent = opt.price;
+          document.getElementById("product-old-price").textContent = opt.old;
+          document.getElementById("product-save-tag").textContent = opt.save;
+        });
+        pillsContainer.appendChild(label);
+      });
+
+      // 6. Cập nhật Bảng Thông số kỹ thuật & Bảo quản đúng chuẩn từng món
+      const tbody = document.getElementById("specs-table-body");
+      tbody.innerHTML = "";
+      p.specs.forEach(s => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<th>${s.k}</th><td>${s.v}</td>`;
+        tbody.appendChild(tr);
+      });
+
+      // 7. Cập nhật Khối công thức UVP
+      document.getElementById("recipe-section-title").textContent = `Sản phẩm này dùng cho công thức nào?`;
+      const recipeBox = document.getElementById("recipe-cards-container");
+      recipeBox.innerHTML = "";
+      p.recipes.forEach(r => {
+        const div = document.createElement("div");
+        div.className = "recipe-card";
+        div.innerHTML = `
+          <div class="recipe-card__media">
+            <img src="${r.img}" alt="${r.title}" class="recipe-card__img">
+            <span class="recipe-card__tag">Độ khó: ${r.diff}</span>
+          </div>
+          <div class="recipe-card__body">
+            <h3 class="recipe-card__title">${r.title}</h3>
+            <p class="recipe-card__info">&#9201; ${r.time} | &#128100; Chuẩn phần bánh</p>
+            <p class="recipe-card__usage">Công thức dùng: <strong>${r.usage}</strong></p>
+            <a href="index.html" class="btn btn--recipe">Xem công thức & Quy đổi</a>
+          </div>
+        `;
+        recipeBox.appendChild(div);
+      });
+
+      // 8. Cập nhật Khối Sản phẩm thường mua kèm
+      document.getElementById("related-section-title").textContent = `Thường được mua cùng ${p.shortName.toLowerCase()}`;
+      const relBox = document.getElementById("related-products-container");
+      relBox.innerHTML = "";
+      p.related.forEach(rel => {
+        const div = document.createElement("div");
+        div.className = "mini-card";
+        div.innerHTML = `
+          <img src="${rel.img}" alt="${rel.name}" class="mini-card__img">
+          <div class="mini-card__body">
+            <h3 class="mini-card__title">${rel.name}</h3>
+            <span class="mini-card__price">${rel.price}</span>
+          </div>
+          <button type="button" class="btn-add-mini">+ Thêm</button>
+        `;
+        // Cho phép click vào thẻ mua kèm để chuyển ngay sang xem chi tiết món đó
+        div.addEventListener("click", function(e) {
+          if (!e.target.classList.contains("btn-add-mini")) {
+            window.location.hash = rel.hash;
+          }
+        });
+        relBox.appendChild(div);
+      });
+
+      // Đặt lại số lượng về 1
+      document.getElementById("product-qty").value = 1;
+    }
+
+    // Xử lý nút tăng giảm số lượng (+ / -) chuẩn mực, không lỗi
+    document.addEventListener("DOMContentLoaded", function() {
+      renderProductDetail();
+
+      const qtyInput = document.getElementById("product-qty");
+      document.getElementById("btn-qty-minus").addEventListener("click", function() {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val > 1) {
+          qtyInput.value = val - 1;
+        }
+      });
+
+      document.getElementById("btn-qty-plus").addEventListener("click", function() {
+        let val = parseInt(qtyInput.value) || 1;
+        if (val < 99) {
+          qtyInput.value = val + 1;
+        }
+      });
+    });
+
+    // Lắng nghe khi URL hash thay đổi (người dùng bấm nút Back hoặc chọn sản phẩm mua kèm)
+    window.addEventListener("hashchange", renderProductDetail);
+  </script>
 </body>
 </html>
