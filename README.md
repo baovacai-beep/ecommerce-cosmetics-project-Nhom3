@@ -1,80 +1,96 @@
-# BakeMate - Nguyên liệu và dụng cụ làm bánh theo công thức
+# BakeMate – Website Thương Mại Điện Tử Nguyên Liệu & Dụng Cụ Làm Bánh
 
-## 1. Giới thiệu
-BakeMate là website thương mại điện tử chuyên kinh doanh nguyên liệu làm bánh (bột mì, đường, bột cacao, chocolate, bơ, kem tươi...) và dụng cụ làm bánh (khuôn bánh, phới lồng, cân điện tử, spatula, giấy nến...), kết hợp kho công thức làm bánh thông minh.
+> **Môn học:** Phát triển ứng dụng Web / Thương mại điện tử (UEH)
+> **Giảng viên hướng dẫn:** TS. Nguyễn Mạnh Tuấn (tuannm@ueh.edu.vn)
+> **Nhóm thực hiện:** Nhóm 3
+> **Giai đoạn:** Buổi 2 – Triển khai giao diện tĩnh (HTML5 & CSS3)
 
-Vấn đề kinh doanh cần giải quyết:
-Khách hàng, đặc biệt là người mới bắt đầu làm bánh tại nhà, thường gặp khó khăn khi xác định đầy đủ danh mục nguyên liệu và dụng cụ cần thiết cho từng món bánh. Khi muốn thay đổi số phần bánh, việc tự tính toán lại định lượng dễ gây nhầm lẫn khiến bánh không đạt chuẩn. Khách hàng cũng khó chọn quy cách đóng gói phù hợp với lượng cần dùng, dẫn đến việc mua thiếu hoặc mua dư gây lãng phí. Ngoài ra, việc tìm kiếm từng sản phẩm riêng lẻ tốn nhiều thời gian và gây khó khăn trong việc ước tính tổng chi phí trước khi làm bánh.
+---
 
-Website giải quyết vấn đề bằng cách cho phép khách hàng chọn công thức, điều chỉnh số phần bánh để hệ thống tự động tính lại định lượng nguyên liệu. Hệ thống đối chiếu lượng cần dùng với quy cách đóng gói thực tế đang bán, hiển thị số lượng cần mua và chi phí dự kiến. Khách hàng có thể bỏ chọn các món đã có sẵn tại nhà, chọn thêm dụng cụ cần thiết và đưa toàn bộ sản phẩm vào giỏ hàng để đặt mua trực tiếp.
+## 1. Giới thiệu dự án
+BakeMate là website thương mại điện tử chuyên kinh doanh nguyên liệu và dụng cụ làm bánh theo giải pháp cốt lõi "Lấy công thức làm trung tâm" (Recipe-to-Cart). Dự án giải quyết các rào cản thường gặp của người mới làm bánh:
+- Tiếp cận quy trình làm bánh từ món bánh muốn thực hiện thay vì tìm kiếm nguyên liệu rời rạc.
+- Đối chiếu công thức với quy cách đóng gói nhỏ nhất vừa đủ dùng, hạn chế tối đa việc mua thiếu hoặc dư thừa nguyên liệu gây lãng phí.
+- Tích hợp liên kết hai chiều giữa nguyên liệu và kho công thức làm bánh (UVP).
 
-## 2. Khách hàng mục tiêu
-- Người mới học làm bánh.
-- Sinh viên và người trẻ yêu thích tự làm bánh tại nhà.
-- Người thường xuyên tự làm bánh cho gia đình, bạn bè hoặc chuẩn bị cho các dịp đặc biệt.
+Trong khuôn khổ Buổi 2, nhóm đã hoàn thành toàn bộ khung giao diện tĩnh đa trang, đảm bảo tính nhất quán về thẩm mỹ, đúng chuẩn thẻ ngữ nghĩa HTML5 và tối ưu khả năng tương thích trên nhiều thiết bị.
 
-## 3. Chức năng chính
-1. Hiển thị trang chủ.
-2. Hiển thị danh mục sản phẩm.
-3. Tìm kiếm, lọc và sắp xếp sản phẩm.
-4. Hiển thị trang chi tiết sản phẩm.
-5. Hiển thị danh sách công thức làm bánh.
-6. Hiển thị chi tiết công thức.
-7. Điều chỉnh số phần bánh cần làm.
-8. Tự động tính toán định lượng nguyên liệu theo số phần bánh.
-9. Ghép nguyên liệu trong công thức với quy cách đóng gói sản phẩm.
-10. Gợi ý dụng cụ làm bánh phù hợp với công thức.
-11. Tạo giỏ hàng nguyên liệu trực tiếp từ công thức.
-12. Chỉnh sửa số lượng sản phẩm trong giỏ hàng.
-13. Đăng ký và đăng nhập tài khoản.
-14. Quản lý giỏ hàng.
-15. Đặt hàng và thanh toán (checkout).
-16. Áp dụng voucher và mã giảm giá.
-17. Tính phí vận chuyển.
-18. Hỗ trợ các phương thức thanh toán.
-19. Theo dõi và quản lý đơn hàng.
-20. Đánh giá sản phẩm.
-21. Quản trị sản phẩm, danh mục sản phẩm, công thức làm bánh, tồn kho, khách hàng, đơn hàng, khuyến mãi.
+---
 
-## 4. Thành viên và phân công công việc
+## 2. Cấu trúc thư mục dự án
+Hệ thống mã nguồn được tổ chức theo cấu trúc chuẩn web tĩnh:
 
-| STT | Họ và tên thành viên | Vai trò chính | Trách nhiệm và công việc được phân công | Sản phẩm / kết quả cần đạt |
-| :---: | :--- | :--- | :--- | :--- |
-| 1 | **Trần Thị Bảo Ngọc** | Project Manager (PM) | Điều phối hoạt động nhóm, phân công công việc, theo dõi tiến độ và thời hạn; hỗ trợ các thành viên phối hợp thực hiện dự án. | Kế hoạch dự án, bảng phân công công việc và báo cáo tiến độ thực hiện. |
-| 2 | **Trần Thị Bảo Ngọc, Trần Lê Như Hậu** | Business Analyst (BA) | Thu thập thông tin, tìm hiểu nhu cầu khách hàng, phân tích nghiệp vụ và xác định yêu cầu chức năng của BakeMate. | Tài liệu phân tích nghiệp vụ, nhu cầu khách hàng và bảng yêu cầu chức năng. |
-| 3 | **Phạm Hoài Thương** | Tester | Kiểm thử các chức năng website, phát hiện lỗi và kiểm tra kết quả sau khi lỗi được khắc phục. | Danh sách trường hợp kiểm thử và bảng ghi nhận kết quả, lỗi phát hiện. |
-| 4 | **Hồ Gia Bảo** | QA & Documentation | Theo dõi chất lượng phần mềm, hỗ trợ kiểm tra quy trình thực hiện và tổng hợp, hoàn thiện tài liệu dự án. | Báo cáo chất lượng, tài liệu dự án và tài liệu kiểm thử. |
-| 5 | **Vũ Ngọc Minh Thư, Siu Đen Ny** | UI/UX Designer | Thiết kế giao diện, đề xuất trải nghiệm người dùng và xây dựng giao diện website BakeMate. | Bản thiết kế giao diện, tài nguyên thiết kế và mã nguồn frontend. |
-| 6 | **Hồ Gia Bảo, Dương Thúy Hiền, Nguyễn Hoài Thương** | Developer | Thiết kế cơ sở dữ liệu, xử lý nghiệp vụ và phát triển các chức năng phía máy chủ; kết nối dữ liệu với frontend. | Cơ sở dữ liệu, mã nguồn backend và các chức năng xử lý dữ liệu theo yêu cầu. |
+* index.html: Trang chủ (Header sticky, Hero Banner, Khám phá thương hiệu)
+* products.html: Danh sách sản phẩm (Lưới 9 nguyên liệu làm bánh cơ bản)
+* product-detail.html: Chi tiết sản phẩm (Bột mì số 13, chọn quy cách, khối UVP)
+* about.html: Giới thiệu (Câu chuyện, điểm khác biệt, quy trình, thông tin liên hệ)
+* css/style.css: Tệp CSS dùng chung toàn hệ thống (Design tokens, Grid, Flexbox)
+* images/: Thư mục hình ảnh sản phẩm, banner, logo và hình minh họa
+* docs/: Tài liệu thiết kế giao diện (ui-design.md, wireframe)
+* README.md: Tài liệu hướng dẫn và mô tả dự án
 
-### Nguyên tắc phối hợp và thực hiện công việc:
-1. Mỗi công việc có một thành viên chịu trách nhiệm chính và có kết quả đầu ra cụ thể.
-2. Các thành viên phối hợp, hỗ trợ nhau trong quá trình phát triển, tích hợp và kiểm thử website.
-3. Vai trò được phân công là trách nhiệm chính, không giới hạn việc hỗ trợ các thành viên khác khi cần thiết.
-4. Không giao toàn bộ công việc lập trình cho một thành viên hoặc cho AI; mỗi thành viên phải hiểu và giải thích được phần việc mình phụ trách.
-5. Các công việc, thời hạn và trạng thái thực hiện được theo dõi xuyên suốt trong file PROJECT_PLAN.md và hệ thống GitHub Issues của nhóm.
+---
 
-## 5. Công nghệ dự kiến
-- Frontend: HTML5, CSS3, JavaScript, Bootstrap 5.
-- Backend: Laravel (PHP) hoặc ASP.NET Core MVC.
-- Cơ sở dữ liệu: MySQL hoặc SQL Server.
-- Quản lý phiên bản và tiến độ: Git, GitHub.
+## 3. Danh sách các trang giao diện
+1. Trang chủ (index.html):
+   - Thanh Header cố định (position: sticky) chứa Logo thương hiệu, Menu điều hướng 3 trang, Ô tìm kiếm và biểu tượng giỏ hàng.
+   - Khối Hero Banner với thông điệp "Làm bánh chuẩn vị - Nguyên liệu chuẩn tay" cùng 2 nút kêu gọi hành động (CTA: Khám phá sản phẩm / Về BakeMate).
+   - Khối giới thiệu định vị giải pháp mua nguyên liệu theo công thức bánh.
+2. Trang danh sách sản phẩm (products.html):
+   - Hiển thị 9 mặt hàng nguyên liệu làm bánh cơ bản (Bột bắp, Bột mì, Bột Tartar, Bột vani, Dầu ăn, Đường, Muối, Sữa tươi, Trứng).
+   - Bố cục lưới CSS Grid đồng bộ, mỗi thẻ bao gồm hình ảnh vuông chuẩn 1:1, tên sản phẩm, giá niêm yết và nút xem chi tiết.
+3. Trang chi tiết sản phẩm (product-detail.html):
+   - Bố cục 2 cột cân xứng: Media Gallery bên trái; thông tin sản phẩm, bộ chọn quy cách đóng gói (Gói 500g / 1kg), bộ điều chỉnh số lượng và nút mua hàng bên phải.
+   - Bảng thông số kỹ thuật và hướng dẫn bảo quản nguyên liệu.
+   - Khối UVP độc quyền BakeMate: Gợi ý các công thức bánh tương thích với nguyên liệu (Bánh mì hoa cúc, Baguette, Pizza).
+   - Khối danh sách sản phẩm mua kèm thường gặp.
+4. Trang giới thiệu cửa hàng (about.html):
+   - Banner giới thiệu sứ mệnh thương hiệu.
+   - Phân đoạn nội dung trực quan: Câu chuyện hình thành, 4 điểm khác biệt cốt lõi, 3 nhóm khách hàng mục tiêu, quy trình mua sắm 4 bước và thông tin liên hệ kèm bản đồ minh họa.
 
-## 6. Kế hoạch thực hiện
+---
 
-| Giai đoạn | Thời gian | Nội dung công việc chính |
-| :--- | :---: | :--- |
-| **Giai đoạn 1** | Tuần 1 | Khảo sát thị trường, lựa chọn đề tài, phân tích 3 website tương tự và khởi tạo tài liệu nền tảng trên GitHub. |
-| **Giai đoạn 2** | Tuần 2 - 3 | Thiết kế wireframe, prototype trên Figma và thiết kế mô hình thực thể quan hệ cơ sở dữ liệu (ERD). |
-| **Giai đoạn 3** | Tuần 4 - 5 | Xây dựng giao diện Frontend các trang chính; thiết lập Backend CRUD cho sản phẩm, danh mục và công thức. |
-| **Giai đoạn 4** | Tuần 6 | Hiện thực hóa thuật toán cốt lõi: Tính toán lại định lượng theo Servings và ghép nối SKU quy cách đóng gói vào giỏ hàng. |
-| **Giai đoạn 5** | Tuần 7 | Tích hợp hệ thống, kiểm thử luồng mua hàng (Functional Testing), kiểm tra bảo mật cơ bản và sửa lỗi. |
-| **Giai đoạn 6** | Tuần 8 | Triển khai website lên môi trường chạy thực tế, hoàn thiện báo cáo đồ án và chuẩn bị bảo vệ trước hội đồng. |
+## 4. Công nghệ và kỹ thuật sử dụng
+- HTML5 Semantic: Cấu trúc phân đoạn ngữ nghĩa rõ ràng bằng header, nav, main, section, article, figure, footer.
+- Hệ thống Design Tokens (CSS Variables):
+  - Màu chủ đạo (Primary): #70452B (Nâu bánh nướng).
+  - Màu nền chính (Background): #FFF8ED (Kem sáng dịu mắt).
+  - Màu phụ (Secondary): #F2D9A6 (Vàng kem).
+  - Điểm nhấn & CTA: #F59E0B (Vàng mật ong).
+  - Phông chữ chủ đạo: 'Be Vietnam Pro', sans-serif.
+- CSS Grid & Flexbox:
+  - Flexbox: Áp dụng cho các bố cục 1 chiều (Header, Navigation bar, Action buttons, Breadcrumb).
+  - CSS Grid: Áp dụng cho các bố cục 2 chiều đa cột (Lưới 4 cột danh sách sản phẩm, bố cục 2 cột trang chi tiết).
+- Trải nghiệm tương tác & Hỗ trợ tiếp cận:
+  - Hiệu ứng :hover nâng nhẹ thẻ (translateY(-4px)), chuyển màu nền mượt mà qua thuộc tính transition: 0.25s ease.
+  - Hỗ trợ duyệt phím Tab với :focus-visible (viền nổi bật màu vàng mật ong, cách mép 3px).
+- Responsive Web Design: Tương thích trên 3 độ rộng quy chuẩn:
+  - Máy tính: 1366px (bố cục đa cột dàn ngang đầy đủ).
+  - Máy tính bảng: 768px (menu điều hướng rớt dòng, danh sách sản phẩm chuyển về 2 cột).
+  - Điện thoại di động: 390px (tối ưu ô tìm kiếm co giãn, nút bấm mở rộng toàn màn hình).
 
-## 7. Liên kết
-- Bảng yêu cầu: [REQUIREMENTS.md](REQUIREMENTS.md)
-- Kế hoạch: [PROJECT_PLAN.md](PROJECT_PLAN.md)
-- Phân tích website: [docs/competitor-analysis.md](docs/competitor-analysis.md)
-- Quy tắc hướng dẫn AI: [AGENTS.md](AGENTS.md)
-- Nhật ký sử dụng AI: [AI_USAGE_LOG.md](AI_USAGE_LOG.md)
-- Quy trình nghiệp vụ: [docs/business-workflow.md](docs/business-workflow.md)
+---
+
+## 5. Cách mở và chạy website
+Dự án được xây dựng hoàn toàn bằng HTML5 và CSS3 tĩnh, không yêu cầu cài đặt môi trường server hay cấu hình cơ sở dữ liệu:
+- Cách 1 (Mở trực tiếp): Tải thư mục mã nguồn về máy hoặc giải nén tệp .zip, nhấp đúp vào tệp index.html để mở bằng trình duyệt web.
+- Cách 2 (Mở qua Live Server): Mở thư mục dự án trong Visual Studio Code, nhấp chuột phải vào index.html và chọn Open with Live Server.
+
+---
+
+## 6. Cách kiểm tra giao diện Responsive
+1. Mở trang web trên trình duyệt Google Chrome.
+2. Nhấn phím F12 để mở công cụ Chrome DevTools.
+3. Nhấn tổ hợp phím Ctrl + Shift + M để bật thanh công cụ giả lập thiết bị (Toggle Device Toolbar).
+4. Lựa chọn các độ rộng màn hình quy chuẩn để kiểm tra:
+   - 1366px: Kiểm tra hiển thị đầy đủ menu, banner và lưới 4 cột sản phẩm.
+   - 768px: Kiểm tra menu xuống hàng và lưới sản phẩm thu về 2 cột trên máy tính bảng.
+   - 390px: Kiểm tra ô tìm kiếm co giãn linh hoạt, các khối nội dung xếp dọc không bị lỗi tràn mép ngang (overflow-x).
+
+---
+
+## 7. Những hạn chế hiện tại
+- Chưa có mã JavaScript xử lý lọc sản phẩm thực tế theo từ khóa trên ô tìm kiếm.
+- Chưa có JavaScript để chuyển đổi ảnh lớn khi click vào ảnh thu nhỏ (thumbnails) trên trang chi tiết sản phẩm.
+- Các nút tăng giảm số lượng, chọn quy cách đóng gói và giỏ hàng mới dừng ở mức thể hiện giao diện tĩnh.
+- Chưa kết nối cơ sở dữ liệu backend và chưa có quy trình đặt hàng/thanh toán trực tuyến thực tế.
