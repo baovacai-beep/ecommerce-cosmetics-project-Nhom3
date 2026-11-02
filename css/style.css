@@ -1864,3 +1864,41 @@ input:focus-visible,
   color: #ffffff;
   border-color: var(--accent-cta);
 }
+/* ================= SỬA LỖI VÀ TỐI ƯU THUMBNAILS GALLERY ================= */
+.gallery__thumbs {
+  display: flex !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+  margin-top: 14px !important;
+}
+
+.thumb-btn {
+  width: 75px !important;
+  height: 75px !important;
+  flex: 0 0 75px !important; /* Khóa cứng kích thước 75px, không bao giờ bị phóng to */
+  aspect-ratio: 1 / 1 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  border: 2px solid #e7e5e4 !important;
+  background-color: #ffffff !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.thumb-btn img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+.thumb-btn:hover {
+  border-color: var(--accent-cta) !important;
+  transform: translateY(-2px) !important;
+}
+
+.thumb-btn.active {
+  border-color: var(--accent-cta) !important;
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important;
+}

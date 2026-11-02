@@ -72,11 +72,10 @@
           <span class="badge badge--authentic">Chính hãng</span>
           <img id="main-product-img" src="images/product-2.jpg" alt="Chi tiết sản phẩm" class="gallery__main-img">
         </div>
-        <!-- Thumbnails chỉ hiện ảnh đúng của sản phẩm đó -->
+        
+        <!-- Hàng Thumbnails chứa các ảnh con của riêng sản phẩm này -->
         <div class="gallery__thumbs" id="gallery-thumbs-container">
-          <button type="button" class="thumb-btn active" aria-label="Ảnh chính sản phẩm">
-            <img id="thumb-img-1" src="images/product-2.jpg" alt="Ảnh thu nhỏ">
-          </button>
+          <!-- Render tự động bằng JavaScript -->
         </div>
       </div>
 
@@ -111,7 +110,7 @@
           </div>
         </div>
 
-        <!-- Số lượng (Đã ẩn spinner mũi tên và kết nối nút bấm +/-) -->
+        <!-- Số lượng -->
         <div class="quantity-group">
           <label class="quantity-group__label" for="product-qty">Số lượng:</label>
           <div class="quantity-group__control">
@@ -216,14 +215,17 @@
 
   <!-- ================= 4. SCRIPT XỬ LÝ CHI TIẾT SẢN PHẨM ================= -->
   <script>
-    // Dữ liệu chuẩn xác 100% của 9 sản phẩm bám sát tên trên products.html
+    // Dữ liệu sản phẩm hỗ trợ mảng nhiều ảnh (images: [...])
     const productsData = {
       "bot-bap": {
         shortName: "Bột bắp",
         fullName: "Bột bắp Taky Food Cao Cấp (Cornstarch)",
         brand: "Taky Food",
         origin: "Việt Nam",
-        img: "images/product-1.jpg",
+        images: [
+          "images/product-1.jpg"
+          // Bạn có thể thêm ảnh tiếp theo vào đây, ví dụ: "images/product-1-back.jpg"
+        ],
         rating: "4.9",
         reviews: "142",
         sold: "1.8k",
@@ -260,7 +262,12 @@
         fullName: "Bột mì Meizan Đa Dụng Cao Cấp (All-Purpose Flour)",
         brand: "MEIZAN",
         origin: "Việt Nam",
-        img: "images/product-2.jpg",
+        images: [
+          "images/product-2.jpg",
+          // Muốn thêm ảnh cho Bột mì Meizan, bạn chỉ cần bỏ ảnh vào thư mục images/ và thêm đường dẫn vào đây:
+          "images/product-2-back.jpg",
+          "images/product-2-details.jpg"
+        ],
         rating: "4.9",
         reviews: "215",
         sold: "2.8k",
@@ -297,7 +304,9 @@
         fullName: "Bột Tartar Baker's Choice Ổn Định Lòng Trắng Trứng",
         brand: "Baker's Choice",
         origin: "Việt Nam",
-        img: "images/product-3.jpg",
+        images: [
+          "images/product-3.jpg"
+        ],
         rating: "4.8",
         reviews: "96",
         sold: "850",
@@ -334,7 +343,9 @@
         fullName: "Bột Vani Vianco Hiệu Bướm Bướm Thơm Lừng",
         brand: "Vianco",
         origin: "Việt Nam",
-        img: "images/product-4.jpg",
+        images: [
+          "images/product-4.jpg"
+        ],
         rating: "4.9",
         reviews: "180",
         sold: "3.2k",
@@ -371,7 +382,9 @@
         fullName: "Dầu Ăn Tường An Cooking Oil Chuyên Dụng Làm Bánh",
         brand: "Tường An",
         origin: "Việt Nam",
-        img: "images/product-5.jpg",
+        images: [
+          "images/product-5.jpg"
+        ],
         rating: "4.9",
         reviews: "110",
         sold: "940",
@@ -408,7 +421,9 @@
         fullName: "Đường Tinh Luyện Biên Hòa Pure (Pure Sugar)",
         brand: "Biên Hòa Pure",
         origin: "Việt Nam",
-        img: "images/product-6.jpg",
+        images: [
+          "images/product-6.jpg"
+        ],
         rating: "5.0",
         reviews: "320",
         sold: "4.1k",
@@ -445,7 +460,9 @@
         fullName: "Muối I-ốt Bạc Liêu Basalco Hạt Mịn Làm Bánh",
         brand: "Basalco",
         origin: "Việt Nam",
-        img: "images/product-7.jpg",
+        images: [
+          "images/product-7.jpg"
+        ],
         rating: "4.9",
         reviews: "85",
         sold: "1.1k",
@@ -482,7 +499,9 @@
         fullName: "Sữa Tươi Tiệt Trùng Vinamilk 100% Không Đường",
         brand: "Vinamilk",
         origin: "Việt Nam",
-        img: "images/product-8.jpg",
+        images: [
+          "images/product-8.jpg"
+        ],
         rating: "5.0",
         reviews: "290",
         sold: "3.5k",
@@ -519,7 +538,9 @@
         fullName: "Trứng Gà Tươi Sạch Khay 10 Quả Tiệt Trùng",
         brand: "Ba Huân / Nông Trại Sạch",
         origin: "Việt Nam",
-        img: "images/product-9.jpg",
+        images: [
+          "images/product-9.jpg"
+        ],
         rating: "4.9",
         reviews: "195",
         sold: "2.4k",
@@ -553,9 +574,8 @@
       }
     };
 
-    // Hàm render toàn diện dữ liệu sản phẩm lên giao diện
+    // Hàm render dữ liệu sản phẩm
     function renderProductDetail() {
-      // Lấy hash từ URL (ví dụ: #bot-bap hoặc #dau-an)
       let hash = window.location.hash.replace("#", "").trim();
       if (!hash || !productsData[hash]) {
         hash = "bot-mi"; // Mặc định nếu không có hash thì hiển thị Bột mì Meizan
@@ -569,17 +589,31 @@
 
       // 2. Cập nhật ảnh chính & Badges
       const mainImg = document.getElementById("main-product-img");
-      mainImg.src = p.img;
+      const imgList = (p.images && p.images.length > 0) ? p.images : [p.img];
+      mainImg.src = imgList[0];
       mainImg.alt = p.fullName;
       document.getElementById("badge-discount").textContent = p.discountBadge;
 
-      // 3. Xử lý thumbnails: CHỈ hiển thị đúng ảnh của sản phẩm này
+      // 3. Render Thumbnails ĐA ẢNH (Click ảnh nào đổi ảnh chính sang ảnh đó)
       const thumbsContainer = document.getElementById("gallery-thumbs-container");
-      thumbsContainer.innerHTML = `
-        <button type="button" class="thumb-btn active" aria-label="Xem ảnh sản phẩm">
-          <img src="${p.img}" alt="${p.shortName}">
-        </button>
-      `;
+      thumbsContainer.innerHTML = "";
+
+      imgList.forEach((src, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = `thumb-btn ${idx === 0 ? "active" : ""}`;
+        btn.setAttribute("aria-label", `Xem ảnh ${idx + 1} của ${p.shortName}`);
+        btn.innerHTML = `<img src="${src}" alt="${p.shortName} góc ${idx + 1}">`;
+
+        // Khi bấm vào ô thumbnail -> Đổi ảnh lớn và đánh dấu active
+        btn.addEventListener("click", function() {
+          mainImg.src = src;
+          thumbsContainer.querySelectorAll(".thumb-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+        });
+
+        thumbsContainer.appendChild(btn);
+      });
 
       // 4. Cập nhật Thương hiệu, Tên sản phẩm, Đánh giá, Lượt bán
       document.getElementById("product-brand").innerHTML = `Thương hiệu: <strong>${p.brand}</strong> | Xuất xứ: ${p.origin}`;
@@ -602,7 +636,6 @@
           <input type="radio" name="packaging" value="${opt.price}" ${idx === 0 ? "checked" : ""}>
           <span class="pill-radio__btn">${opt.label}</span>
         `;
-        // Sự kiện khi chọn quy cách khác nhau thì cập nhật giá ngay lập tức
         label.querySelector("input").addEventListener("change", function() {
           document.getElementById("product-price").textContent = opt.price;
           document.getElementById("product-old-price").textContent = opt.old;
@@ -611,7 +644,7 @@
         pillsContainer.appendChild(label);
       });
 
-      // 6. Cập nhật Bảng Thông số kỹ thuật & Bảo quản đúng chuẩn từng món
+      // 6. Cập nhật Bảng Thông số kỹ thuật & Bảo quản
       const tbody = document.getElementById("specs-table-body");
       tbody.innerHTML = "";
       p.specs.forEach(s => {
@@ -657,7 +690,6 @@
           </div>
           <button type="button" class="btn-add-mini">+ Thêm</button>
         `;
-        // Cho phép click vào thẻ mua kèm để chuyển ngay sang xem chi tiết món đó
         div.addEventListener("click", function(e) {
           if (!e.target.classList.contains("btn-add-mini")) {
             window.location.hash = rel.hash;
@@ -666,11 +698,11 @@
         relBox.appendChild(div);
       });
 
-      // Đặt lại số lượng về 1
+      // Reset số lượng về 1
       document.getElementById("product-qty").value = 1;
     }
 
-    // Xử lý nút tăng giảm số lượng (+ / -) chuẩn mực, không lỗi
+    // Nút tăng giảm số lượng (+ / -)
     document.addEventListener("DOMContentLoaded", function() {
       renderProductDetail();
 
@@ -690,7 +722,7 @@
       });
     });
 
-    // Lắng nghe khi URL hash thay đổi (người dùng bấm nút Back hoặc chọn sản phẩm mua kèm)
+    // Lắng nghe hashchange
     window.addEventListener("hashchange", renderProductDetail);
   </script>
 </body>
