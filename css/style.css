@@ -1929,3 +1929,78 @@ input:focus-visible,
   border-color: var(--accent-cta) !important;
   box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3) !important;
 }
+
+/* ========================================
+   BO SUNG TIM KIEM, LOC VA SAP XEP
+======================================== */
+
+.product-controls {
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0 auto 20px;
+}
+
+.product-controls__group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 220px;
+}
+
+    .product-controls__group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--primary-color);
+    }
+
+    .product-controls__group select {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1px solid var(--secondary-color);
+        border-radius: 8px;
+        background-color: #fff;
+        color: var(--primary-color);
+        font-family: inherit;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+        .product-controls__group select:focus {
+            outline: 2px solid var(--accent-cta);
+            outline-offset: 2px;
+        }
+
+.product-result-count {
+    margin: 0 0 20px;
+    color: var(--accent-sub);
+    font-size: 14px;
+}
+
+.no-products-message {
+    padding: 30px 15px;
+    text-align: center;
+    color: var(--accent-sub);
+    font-size: 16px;
+    background-color: #fff;
+    border: 1px solid var(--secondary-color);
+    border-radius: 10px;
+}
+
+    .no-products-message[hidden] {
+        display: none;
+    }
+
+@media (max-width: 480px) {
+    .product-controls {
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .product-controls__group {
+        width: 100%;
+        min-width: 0;
+    }
+}
