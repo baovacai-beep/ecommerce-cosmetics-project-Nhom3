@@ -41,8 +41,9 @@
           <input id="site-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
           <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
-        <a href="products.html" class="site-header__cart" aria-label="Xem sản phẩm">
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
           <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
         </a>
       </div>
     </div>
@@ -82,12 +83,16 @@
       <!-- Cột phải: Thông tin sản phẩm & Khối mua hàng -->
       <div class="product-detail__info">
         <span class="product-detail__brand" id="product-brand">Thương hiệu: <strong>MEIZAN</strong> | Xuất xứ: Việt Nam</span>
-        <h1 class="product-detail__title" id="product-title">Bột mì Meizan Cao Cấp Đa Dụng</h1>
+        <h1 class="product-detail__title" id="product-title">Bột mì đa dụng Meizan</h1>
         
         <div class="product-detail__meta">
           <span class="meta__rating" id="product-rating">★★★★★ <strong>4.9</strong> (185 đánh giá)</span>
           <span class="meta__divider">|</span>
-          <span class="meta__sold" id="product-sold">Đã bán <strong>1.5k</strong></span>
+          <span class="meta__sold" id="product-sold">Đã bán <strong>1.5k</strong> gói</span>
+          <span class="meta__divider">|</span>
+          <span class="meta__code" id="product-code-meta">Mã: <strong>#BM-003</strong></span>
+          <span class="meta__divider">|</span>
+          <span class="meta__category" id="product-category-meta">Danh mục: <strong>Nguyên liệu</strong></span>
           <span class="meta__divider">|</span>
           <span class="meta__stock in-stock">Còn hàng</span>
         </div>
@@ -95,15 +100,15 @@
         <!-- Khung giá -->
         <div class="price-box">
           <div class="price-box__row">
-            <span class="price-box__current" id="product-price">27.000₫</span>
-            <del class="price-box__original" id="product-old-price">34.000₫</del>
-            <span class="price-box__tag" id="product-save-tag">Tiết kiệm 7.000₫</span>
+            <span class="price-box__current" id="product-price">32.000 ₫</span>
+            <del class="price-box__original" id="product-old-price">40.000 ₫</del>
+            <span class="price-box__tag" id="product-save-tag">Tiết kiệm 8.000 ₫</span>
           </div>
           <p class="price-box__note">Đơn giá đã bao gồm VAT. Đảm bảo date mới trong vòng 30 ngày từ ngày sản xuất.</p>
         </div>
 
         <!-- Chọn quy cách đóng gói -->
-        <div class="option-group">
+        <div class="option-group" id="packaging-option-group">
           <label class="option-group__label">Quy cách đóng gói:</label>
           <div class="option-group__pills" id="packaging-options">
             <!-- Render động theo sản phẩm -->
@@ -115,7 +120,7 @@
           <label class="quantity-group__label" for="product-qty">Số lượng:</label>
           <div class="quantity-group__control">
             <button type="button" class="qty-btn" id="btn-qty-minus" aria-label="Giảm số lượng">-</button>
-            <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99" readonly>
+            <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99">
             <button type="button" class="qty-btn" id="btn-qty-plus" aria-label="Tăng số lượng">+</button>
           </div>
           <span class="quantity-group__hint" id="stock-hint">Kho còn 150 gói sẵn sàng giao</span>
@@ -123,10 +128,10 @@
 
         <!-- Nút CTA -->
         <div class="product-detail__actions">
-          <button type="button" class="btn btn--cart">
-            <span class="btn__icon">&#128722;</span> Thêm vào giỏ hàng
+          <button type="button" class="btn btn--cart" id="btn-add-to-cart">
+            <span class="btn__icon" aria-hidden="true">&#128722;</span> Thêm vào giỏ hàng
           </button>
-          <button type="button" class="btn btn--buy">Mua ngay</button>
+          <button type="button" class="btn btn--buy" id="btn-buy-now">Mua ngay</button>
         </div>
 
         <!-- Cam kết chính sách -->
@@ -199,6 +204,7 @@
         <ul class="footer-col__list">
           <li><a href="index.html">Trang chủ</a></li>
           <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="cart.html">Giỏ hàng</a></li>
           <li><a href="about.html">Giới thiệu</a></li>
         </ul>
       </div>
@@ -215,157 +221,7 @@
 
   <!-- ================= 4. SCRIPT XỬ LÝ CHI TIẾT SẢN PHẨM ================= -->
   <script src="js/products.js"></script>
-
-  <!-- ================= 4. SCRIPT XỬ LÝ CHI TIẾT SẢN PHẨM ================= -->
-  <!-- 1. Nạp file dữ liệu 11 sản phẩm dùng chung -->
-  <script src="js/products.js"></script>
-
-  <!-- 2. Logic nạp dữ liệu động theo ID sản phẩm -->
-  <script>
-    function renderProductDetail() {
-      const productList = window.products || [];
-
-      // Lấy tham số id từ URL (?id=1, ?id=2,...)
-      const urlParams = new URLSearchParams(window.location.search);
-      const productId = Number(urlParams.get("id"));
-
-      // Tìm sản phẩm tương ứng trong mảng 11 sản phẩm
-      const product = productList.find(p => p.id === productId);
-
-      const detailBox = document.getElementById("product-detail-box");
-
-      // Nếu KHÔNG tìm thấy sản phẩm (hoặc sai ID trên URL)
-      if (!product) {
-        if (detailBox) {
-          detailBox.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background-color: var(--bg-color, #fff8ed); border-radius: 8px; width: 100%;">
-              <h2 style="color: var(--primary-color, #70452b); margin-bottom: 16px;">Sản phẩm không tồn tại!</h2>
-              <p style="color: #666; margin-bottom: 24px;">Sản phẩm bạn đang tìm kiếm không có trong hệ thống hoặc đã bị gỡ bỏ.</p>
-              <a href="products.html" class="btn btn--primary" style="padding: 10px 20px; background: #70452b; color: #fff; text-decoration: none; border-radius: 4px;">Quay lại danh sách sản phẩm</a>
-            </div>
-          `;
-        }
-        return;
-      }
-
-      // 1. Tiêu đề trang & Breadcrumb
-      document.title = product.name + " - BakeMate";
-      const breadcrumb = document.getElementById("breadcrumb-current");
-      if (breadcrumb) breadcrumb.textContent = product.name;
-
-      // 2. Ảnh sản phẩm chính + Logic dự phòng onerror
-      const mainImg = document.getElementById("main-product-img");
-      if (mainImg) {
-        mainImg.src = product.image;
-        mainImg.alt = product.name;
-        // Nếu chưa bỏ file ảnh thật vào thư mục images/products/ -> Tự về ảnh mặc định bot-mi-so-8-1.jpg
-        mainImg.onerror = function () {
-          this.onerror = null;
-          this.src = "images/products/bot-mi-so-8-1.jpg";
-        };
-      }
-
-      // 3. Render danh sách Thumbnails ảnh con (nếu có)
-      const thumbsContainer = document.getElementById("gallery-thumbs-container");
-      if (thumbsContainer) {
-        thumbsContainer.innerHTML = `
-          <button type="button" class="thumb-btn active">
-            <img src="${product.image}" alt="${product.name}" onerror="this.onerror=null;this.src='images/products/bot-mi-so-8-1.jpg';">
-          </button>
-        `;
-      }
-
-      // 4. Thương hiệu & Tên sản phẩm
-      const brandElem = document.getElementById("product-brand");
-      if (brandElem) {
-        brandElem.innerHTML = `Thương hiệu: <strong>BakeMate</strong> | Danh mục: <strong>${product.category}</strong>`;
-      }
-
-      const titleElem = document.getElementById("product-title");
-      if (titleElem) titleElem.textContent = product.name;
-
-      // 5. Giá tiền
-      const priceElem = document.getElementById("product-price");
-      if (priceElem) {
-        priceElem.textContent = Number(product.price).toLocaleString("vi-VN") + " ₫";
-      }
-
-      // Ẩn các nhãn giảm giá / giá cũ cứng của template Meizan cũ
-      const oldPriceElem = document.getElementById("product-old-price");
-      const saveTagElem = document.getElementById("product-save-tag");
-      const badgeDiscount = document.getElementById("badge-discount");
-      if (oldPriceElem) oldPriceElem.style.display = "none";
-      if (saveTagElem) saveTagElem.style.display = "none";
-      if (badgeDiscount) badgeDiscount.style.display = "none";
-
-      // 6. Bảng Thông số kỹ thuật & Mô tả
-      const specsTableBody = document.getElementById("specs-table-body");
-      if (specsTableBody) {
-        specsTableBody.innerHTML = `
-          <tr>
-            <td style="font-weight: bold; width: 30%;">Tên sản phẩm</td>
-            <td>${product.name}</td>
-          </tr>
-          <tr>
-            <td style="font-weight: bold;">Danh mục</td>
-            <td>${product.category}</td>
-          </tr>
-          <tr>
-            <td style="font-weight: bold;">Mô tả sản phẩm</td>
-            <td>${product.description}</td>
-          </tr>
-        `;
-      }
-
-      // 7. Sản phẩm liên quan (Gợi ý cùng Danh mục)
-      const relatedContainer = document.getElementById("related-products-container");
-      if (relatedContainer) {
-        const relatedList = productList
-          .filter(p => p.category === product.category && p.id !== product.id)
-          .slice(0, 4);
-
-        if (relatedList.length > 0) {
-          relatedContainer.innerHTML = relatedList
-            .map(item => `
-              <article class="product-card">
-                <a href="product-detail.html?id=${item.id}" class="product-card__image-link">
-                  <div class="product-card__image-wrap">
-                    <img src="${item.image}" alt="${item.name}" class="product-card__image" onerror="this.onerror=null;this.src='images/products/bot-mi-so-8-1.jpg';">
-                  </div>
-                </a>
-                <div class="product-card__content">
-                  <h3 class="product-card__title">${item.name}</h3>
-                  <p class="product-card__price">${Number(item.price).toLocaleString("vi-VN")} ₫</p>
-                  <a href="product-detail.html?id=${item.id}" class="btn btn--primary product-card__btn">Xem chi tiết</a>
-                </div>
-              </article>
-            `)
-            .join("");
-        }
-      }
-    }
-
-    // Sự kiện khi trang nạp xong
-    document.addEventListener("DOMContentLoaded", function () {
-      renderProductDetail();
-
-      // Nút tăng / giảm số lượng
-      const btnMinus = document.getElementById("btn-qty-minus");
-      const btnPlus = document.getElementById("btn-qty-plus");
-      const qtyInput = document.getElementById("product-qty");
-
-      if (btnMinus && btnPlus && qtyInput) {
-        btnMinus.addEventListener("click", function () {
-          let currentQty = parseInt(qtyInput.value) || 1;
-          if (currentQty > 1) qtyInput.value = currentQty - 1;
-        });
-
-        btnPlus.addEventListener("click", function () {
-          let currentQty = parseInt(qtyInput.value) || 1;
-          if (currentQty < 99) qtyInput.value = currentQty + 1;
-        });
-      }
-    });
-  </script>
+  <script src="js/storage.js"></script>
+  <script src="js/product-detail.js"></script>
 </body>
 </html>

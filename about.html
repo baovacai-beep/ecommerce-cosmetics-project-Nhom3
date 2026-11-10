@@ -6,6 +6,9 @@
   <meta name="description" content="Tìm hiểu BakeMate - website kết nối công thức làm bánh với nguyên liệu, dụng cụ và giỏ hàng tiện lợi.">
   <title>Giới thiệu | BakeMate</title>
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <!-- Điều chỉnh đường dẫn CSS -->
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -39,8 +42,9 @@
           <input id="site-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
           <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
-        <a href="products.html" class="site-header__cart" aria-label="Xem sản phẩm và giỏ hàng">
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
           <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
         </a>
       </div>
     </div>
@@ -260,9 +264,31 @@
   <!-- ================= FOOTER DÙNG CHUNG ================= -->
   <footer class="site-footer">
     <div class="footer-container">
-      <p>&copy; 2026 BakeMate - Cửa hàng nguyên liệu & dụng cụ làm bánh theo công thức.</p>
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Lối tắt</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="cart.html">Giỏ hàng</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
     </div>
   </footer>
 
+  <script src="js/products.js"></script>
+  <script src="js/storage.js"></script>
 </body>
 </html>
