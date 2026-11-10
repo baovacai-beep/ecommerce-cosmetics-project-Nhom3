@@ -26,14 +26,16 @@ function normalizeText(text) {
 }
 
 // Tao mot the san pham
+// Tạo một thẻ sản phẩm có chứa URLSearchParams ID
 function createProductCard(product, index) {
     const article = document.createElement("article");
     article.className = "product-card";
 
+    // 1. Gắn ID động vào đường dẫn thẻ ảnh
     const imageLink = document.createElement("a");
-    imageLink.href = "product-detail.html";
+    imageLink.href = `product-detail.html?id=${product.id}`;
     imageLink.className = "product-card__image-link";
-    imageLink.setAttribute("aria-label", "Xem chi tiet " + product.name);
+    imageLink.setAttribute("aria-label", "Xem chi tiết " + product.name);
 
     const imageWrap = document.createElement("div");
     imageWrap.className = "product-card__image-wrap";
@@ -44,10 +46,10 @@ function createProductCard(product, index) {
     image.className = "product-card__image";
     image.loading = "lazy";
 
-    // Anh du phong neu duong dan anh trong du lieu chua ton tai
+    // Ảnh dự phòng nếu đường dẫn ảnh chưa tồn tại
     image.onerror = function () {
         this.onerror = null;
-        this.src = "images/product-1.jpg";
+        this.src = "images/products/bot-mi-so-8-1.jpg";
     };
 
     imageWrap.appendChild(image);
@@ -64,8 +66,9 @@ function createProductCard(product, index) {
     price.className = "product-card__price";
     price.textContent = Number(product.price).toLocaleString("vi-VN") + " ₫";
 
+    // 2. Gắn ID động vào nút Xem chi tiết
     const detailLink = document.createElement("a");
-    detailLink.href = "product-detail.html";
+    detailLink.href = `product-detail.html?id=${product.id}`;
     detailLink.className = "btn btn--primary product-card__btn";
     detailLink.textContent = "Xem chi tiết";
 
