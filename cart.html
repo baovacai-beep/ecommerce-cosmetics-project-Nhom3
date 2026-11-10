@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Giỏ hàng và đặt hàng thanh toán khi nhận hàng (COD) tại BakeMate.">
+  <title>Giỏ hàng | BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="cart-page-body">
+
+  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link">
+        <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
+        <span class="site-header__logo-text">Bake<span>Mate</span></span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" action="products.html" method="get" role="search">
+          <label class="visually-hidden" for="cart-header-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
+          <input id="cart-header-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
+        </form>
+        <a href="cart.html" class="site-header__cart active" aria-label="Giỏ hàng" aria-current="page">
+          <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NỘI DUNG CHÍNH TRANG GIỎ HÀNG ================= -->
+  <main class="page-container cart-page">
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active">Giỏ hàng</li>
+      </ul>
+    </nav>
+
+    <div class="cart-page__header">
+      <div>
+        <h1 class="cart-page__title">Giỏ hàng của bạn</h1>
+        <p class="cart-page__subtitle" id="cart-page-subtitle">Kiểm tra nguyên liệu, điều chỉnh số lượng và đặt hàng nhanh với hình thức COD.</p>
+      </div>
+      <span class="cart-page__count-pill" id="cart-page-count">0 sản phẩm</span>
+    </div>
+
+    <!-- Thông báo đặt hàng thành công (F13) -->
+    <section id="order-confirmation-box" class="order-confirmation" hidden aria-live="polite">
+      <!-- Render bằng JavaScript sau khi đặt hàng thành công -->
+    </section>
+
+    <!-- Trạng thái giỏ hàng trống -->
+    <section id="cart-empty-state" class="cart-empty" hidden>
+      <div class="cart-empty__icon" aria-hidden="true">🧁</div>
+      <h2 class="cart-empty__title">Giỏ hàng của bạn đang trống</h2>
+      <p class="cart-empty__desc">
+        Hãy khám phá các nguyên liệu và dụng cụ làm bánh chất lượng của BakeMate để bắt đầu công thức yêu thích của bạn.
+      </p>
+      <a href="products.html" class="btn btn--primary">Khám phá sản phẩm ngay</a>
+    </section>
+
+    <!-- Bố cục 2 cột: Danh sách sản phẩm + Tóm tắt & Đặt hàng COD -->
+    <section id="cart-content-layout" class="cart-layout" hidden>
+      <!-- Cột trái: Bảng sản phẩm trong giỏ -->
+      <div class="cart-items-panel">
+        <div class="cart-panel__head">
+          <h2 class="cart-panel__title">Danh sách sản phẩm</h2>
+          <button type="button" id="btn-clear-cart" class="btn-clear-cart">Xóa toàn bộ giỏ hàng</button>
+        </div>
+
+        <div class="cart-table-wrap">
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th scope="col">Sản phẩm</th>
+                <th scope="col">Đơn giá</th>
+                <th scope="col">Số lượng</th>
+                <th scope="col">Thành tiền</th>
+                <th scope="col">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="cart-items-body">
+              <!-- Render động bằng js/cart.js -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="cart-panel__footer">
+          <a href="products.html" class="btn btn--outline-dark">&larr; Tiếp tục mua sắm</a>
+        </div>
+      </div>
+
+      <!-- Cột phải: Tóm tắt đơn hàng & Form đặt hàng COD (F13) -->
+      <aside class="cart-summary-panel" aria-label="Tóm tắt giỏ hàng và đặt hàng">
+        <div class="cart-summary-card">
+          <h2 class="cart-summary-card__title">Tóm tắt giỏ hàng</h2>
+          <div class="cart-summary-row">
+            <span>Tổng số lượng</span>
+            <strong id="cart-summary-count">0 sản phẩm</strong>
+          </div>
+          <div class="cart-summary-row">
+            <span>Tạm tính</span>
+            <strong id="cart-summary-subtotal">0 ₫</strong>
+          </div>
+          <div class="cart-summary-row">
+            <span>Phí vận chuyển</span>
+            <strong id="cart-summary-shipping">Miễn phí (0 ₫)</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-row--total">
+            <span>Tổng thanh toán</span>
+            <strong id="cart-summary-total">0 ₫</strong>
+          </div>
+        </div>
+
+        <div class="checkout-card">
+          <h2 class="checkout-card__title">Thông tin giao hàng &amp; Đặt hàng (COD)</h2>
+          <p class="checkout-card__note">Vui lòng điền đầy đủ thông tin nhận hàng bên dưới. Đơn hàng sẽ được thanh toán bằng tiền mặt khi nhận hàng.</p>
+
+          <form id="cod-checkout-form" class="checkout-form" novalidate>
+            <div id="checkout-form-alert" class="checkout-form__alert" role="alert" hidden></div>
+
+            <div class="form-group">
+              <label for="customer-name" class="form-label">Họ và tên người nhận <span class="required-mark">*</span></label>
+              <input type="text" id="customer-name" name="fullName" class="form-input" placeholder="Ví dụ: Nguyễn Văn An" autocomplete="name" required>
+              <p class="form-error" id="error-name" aria-live="polite"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-phone" class="form-label">Số điện thoại <span class="required-mark">*</span></label>
+              <input type="tel" id="customer-phone" name="phone" class="form-input" placeholder="Ví dụ: 0912345678" autocomplete="tel" required>
+              <p class="form-error" id="error-phone" aria-live="polite"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-email" class="form-label">Email (không bắt buộc)</label>
+              <input type="email" id="customer-email" name="email" class="form-input" placeholder="Ví dụ: khachhang@email.com" autocomplete="email">
+              <p class="form-error" id="error-email" aria-live="polite"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-address" class="form-label">Địa chỉ nhận hàng <span class="required-mark">*</span></label>
+              <textarea id="customer-address" name="address" class="form-textarea" rows="2" placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố" autocomplete="street-address" required></textarea>
+              <p class="form-error" id="error-address" aria-live="polite"></p>
+            </div>
+
+            <div class="form-group">
+              <label for="customer-note" class="form-label">Ghi chú đơn hàng</label>
+              <input type="text" id="customer-note" name="note" class="form-input" placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao">
+            </div>
+
+            <div class="payment-method-box">
+              <span class="form-label">Phương thức thanh toán</span>
+              <label class="payment-option">
+                <input type="radio" name="paymentMethod" value="COD" checked>
+                <span>
+                  <strong>Thanh toán khi nhận hàng (COD)</strong>
+                  <small>Kiểm tra hàng trước khi thanh toán tiền mặt cho nhân viên giao hàng.</small>
+                </span>
+              </label>
+            </div>
+
+            <button type="submit" id="btn-submit-order" class="btn btn--primary checkout-submit-btn">
+              Xác nhận đặt hàng (COD)
+            </button>
+          </form>
+        </div>
+      </aside>
+    </section>
+
+    <!-- Danh sách đơn hàng vừa đặt (lưu trong localStorage - F13) -->
+    <section id="order-history-section" class="order-history" hidden>
+      <div class="order-history__head">
+        <div>
+          <h2 class="section-heading">Đơn hàng đã đặt gần đây</h2>
+          <p class="section-desc">Đơn hàng thử nghiệm được lưu trực tiếp trong trình duyệt (localStorage).</p>
+        </div>
+        <button type="button" id="btn-clear-orders" class="btn-clear-cart">Xóa lịch sử đơn</button>
+      </div>
+      <div id="order-history-list" class="order-history__list">
+        <!-- Render động bằng js/cart.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER DÙNG CHUNG ================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Lối tắt</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="cart.html">Giỏ hàng</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+    </div>
+  </footer>
+
+  <!-- Nạp theo đúng thứ tự: Dữ liệu -> Lưu trữ dùng chung -> Giao diện & xử lý Giỏ hàng -->
+  <script src="js/products.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/cart.js"></script>
+</body>
+</html>

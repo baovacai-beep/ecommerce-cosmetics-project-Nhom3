@@ -17,7 +17,8 @@ const products = [
         name: "Bột mì Baker's Choice số 8",
         price: 52000,
         category: "Nguyên liệu",
-        image: "images/products/bot-mi-so-8-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/bot-mi-so-8-1.jpg"
+        image: "images/product-2.jpg",
         description: "Bột mì số 8 có hàm lượng protein thấp, thích hợp làm bánh bông lan, cupcake, muffin và các loại bánh mềm xốp."
     },
 
@@ -27,7 +28,8 @@ const products = [
         name: "Bột mì Baker's Choice số 11",
         price: 45000,
         category: "Nguyên liệu",
-        image: "images/products/bot-mi-so-11-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/bot-mi-so-11-1.jpg"
+        image: "images/product-1.jpg",
         description: "Bột mì số 11 phù hợp làm bánh mì và các loại bánh cần độ dai, đàn hồi."
     },
 
@@ -37,7 +39,8 @@ const products = [
         name: "Bột mì đa dụng Meizan",
         price: 32000,
         category: "Nguyên liệu",
-        image: "images/products/bot-mi-meizan-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/bot-mi-meizan-1.jpg"
+        image: "images/product-2.jpg",
         description: "Bột mì đa dụng có thể sử dụng trong nhiều công thức làm bánh và chế biến thực phẩm."
     },
 
@@ -47,7 +50,8 @@ const products = [
         name: "Bột cacao nguyên chất Hershey's",
         price: 65000,
         category: "Nguyên liệu",
-        image: "images/products/bot-cacao-hershey-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/bot-cacao-hershey-1.jpg"
+        image: "images/about-ingredients.jpg",
         description: "Bột cacao dùng tạo hương vị chocolate và màu sắc đặc trưng cho bánh brownie, bánh quy và các món tráng miệng."
     },
 
@@ -57,7 +61,8 @@ const products = [
         name: "Bột Matcha làm bánh",
         price: 75000,
         category: "Nguyên liệu",
-        image: "images/products/matcha-lam-banh-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/matcha-lam-banh-1.jpg"
+        image: "images/product-3.jpg",
         description: "Bột matcha dùng làm bánh cupcake, bánh quy và các món tráng miệng có hương vị trà xanh."
     },
 
@@ -67,7 +72,8 @@ const products = [
         name: "Whipping Cream",
         price: 45000,
         category: "Nguyên liệu",
-        image: "images/products/whipping-cream-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/whipping-cream-1.jpg"
+        image: "images/product-8.jpg",
         description: "Kem tươi dùng để đánh bông, trang trí bánh kem, làm mousse và các món tráng miệng."
     },
 
@@ -77,7 +83,8 @@ const products = [
         name: "Cân điện tử nhà bếp",
         price: 120000,
         category: "Dụng cụ",
-        image: "images/products/can-dien-tu-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/can-dien-tu-1.jpg"
+        image: "images/about-baking.jpg",
         description: "Cân điện tử hỗ trợ cân đo chính xác khối lượng bột, đường, bơ và các nguyên liệu làm bánh."
     },
 
@@ -87,7 +94,8 @@ const products = [
         name: "Ca đong nguyên liệu",
         price: 45000,
         category: "Dụng cụ",
-        image: "images/products/ca-dong-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/ca-dong-1.jpg"
+        image: "images/about-beginner.jpg",
         description: "Ca đong có vạch chia giúp đo lường lượng nước, sữa và các nguyên liệu dạng lỏng trong công thức."
     },
 
@@ -97,7 +105,8 @@ const products = [
         name: "Thìa đong định lượng",
         price: 35000,
         category: "Dụng cụ",
-        image: "images/products/thia-dong-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/thia-dong-1.jpg"
+        image: "images/about-ingredients.jpg",
         description: "Bộ thìa đong hỗ trợ định lượng các nguyên liệu có khối lượng nhỏ như bột nở, muối và vani."
     },
 
@@ -107,7 +116,8 @@ const products = [
         name: "Nhiệt kế điện tử nhà bếp",
         price: 95000,
         category: "Dụng cụ",
-        image: "images/products/nhiet-ke-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/nhiet-ke-1.jpg"
+        image: "images/about-baking.jpg",
         description: "Nhiệt kế điện tử hỗ trợ kiểm tra nhiệt độ nguyên liệu trong quá trình chế biến và làm bánh."
     },
 
@@ -117,7 +127,8 @@ const products = [
         name: "Túi bắt kem dùng một lần",
         price: 25000,
         category: "Dụng cụ",
-        image: "images/products/tui-bat-kem-1.jpg",
+        // Tạm dùng ảnh có sẵn trong images/; sau bổ sung: "images/products/tui-bat-kem-1.jpg"
+        image: "images/about-sharing-cakes.jpg",
         description: "Túi bắt kem hỗ trợ tạo hình và trang trí bánh kem, cupcake cùng nhiều loại bánh khác."
     }
 ];

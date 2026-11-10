@@ -40,6 +40,7 @@
 
             <div class="site-header__actions">
                 <form class="site-header__search" id="product-search-form" role="search">
+                    <label class="visually-hidden" for="product-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
                     <input type="search"
                            id="product-search"
                            name="q"
@@ -47,9 +48,10 @@
                            class="site-header__search-input">
                     <button type="submit" class="site-header__search-btn">Tìm</button>
                 </form>
-                <a href="products.html" class="site-header__cart"
+                <a href="cart.html" class="site-header__cart"
                    aria-label="Giỏ hàng">
-                    <span class="site-header__cart-icon">🛒</span>
+                    <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+                    <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
                 </a>
             </div>
         </div>
@@ -84,6 +86,12 @@
                     </select>
                 </div>
 
+                <div class="product-controls__group product-controls__group--reset">
+                    <button type="button" id="reset-filters-btn" class="btn btn--outline-dark product-controls__reset">
+                        Đặt lại bộ lọc
+                    </button>
+                </div>
+
             </div>
 
             <p id="product-result-count" class="product-result-count"
@@ -96,13 +104,38 @@
             <p id="no-products-message" class="no-products-message" hidden>
                 Không tìm thấy sản phẩm phù hợp.
             </p>
-            </article>
-
-            </div>
-
         </section>
     </main>
+
+    <!-- FOOTER DÙNG CHUNG -->
+    <footer class="site-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+                <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-col__title">Lối tắt</h3>
+                <ul class="footer-col__list">
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="products.html">Sản phẩm</a></li>
+                    <li><a href="cart.html">Giỏ hàng</a></li>
+                    <li><a href="about.html">Giới thiệu</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+                <p class="footer-col__contact">Hotline: 1900 8888</p>
+                <p class="footer-col__contact">Email: support@bakemate.vn</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+        </div>
+    </footer>
+
     <script src="js/products.js"></script>
+    <script src="js/storage.js"></script>
     <script src="js/search-filter.js"></script>
 </body>
 </html>
