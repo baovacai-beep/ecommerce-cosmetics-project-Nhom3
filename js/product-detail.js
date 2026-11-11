@@ -617,6 +617,48 @@ document.addEventListener("DOMContentLoaded", function () {
         { recipeGroupId: "recipe-hoa-cuc", title: "Hộp Mang Tặng Bánh Mì Hoa Cúc", time: "90 phút", usage: "Giữ bánh sạch sẽ khi di chuyển xa", diff: "Vừa", img: "images/about-young-bakers.jpg" }
       ],
       relatedIds: [17, 19, 11]
+    },
+    22: {
+      shortName: "Bộ khuôn Tart mini",
+      brand: "BakeMate Bakeware",
+      origin: "Nhập khẩu",
+      rating: "4.9",
+      reviews: "18",
+      sold: "Sắp mở bán",
+      unit: "bộ",
+      stock: "0",
+      images: ["images/categories/cat-tools.jpg"],
+      specs: [
+        { k: "Thương hiệu", v: "BakeMate Bakeware" },
+        { k: "Chất liệu", v: "Thép carbon phủ chống dính cao cấp, viền gợn sóng cổ điển" },
+        { k: "Quy cách", v: "Bộ 6 khuôn Tart mini đường kính 8cm × cao 2.2cm" },
+        { k: "Trạng thái", v: "Sản phẩm sắp mở bán — thêm vào Yêu thích để nhận thông báo sớm" }
+      ],
+      recipes: [
+        { recipeGroupId: "recipe-banh-quy-bo", title: "Đế Tart Bơ Trứng Giòn Xốp", time: "35 phút", usage: "Nướng vỏ tart đều màu dễ tách khuôn", diff: "Trung bình", img: "images/about-beginner.jpg" }
+      ],
+      relatedIds: [17, 12, 1]
+    },
+    23: {
+      shortName: "Bột trộn sẵn Bông Lan",
+      brand: "Baker's Choice",
+      origin: "Việt Nam",
+      rating: "4.8",
+      reviews: "24",
+      sold: "Sắp mở bán",
+      unit: "gói",
+      stock: "0",
+      images: ["images/about-ingredients.jpg"],
+      specs: [
+        { k: "Thương hiệu", v: "Baker's Choice" },
+        { k: "Thành phần", v: "Bột mì số 8, đường xay mịn, bột nở và hương vani tự nhiên" },
+        { k: "Quy cách", v: "Gói 500g tiện lợi (nướng được 2 ổ bánh tròn 18cm)" },
+        { k: "Trạng thái", v: "Sản phẩm sắp mở bán — thêm vào Yêu thích để nhận thông báo sớm" }
+      ],
+      recipes: [
+        { recipeGroupId: "recipe-bong-lan", title: "Bánh Bông Lan Cơ Bản Cấp Tốc", time: "55 phút", usage: "Chỉ cần thêm trứng gà và bơ lạt", diff: "Dễ", img: "images/about-baking.jpg" }
+      ],
+      relatedIds: [15, 17, 12]
     }
   };
 
@@ -627,27 +669,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     return {
       shortName: product.name,
-      brand: "BakeMate",
+      brand: product.brand || "BakeMate",
       origin: "Việt Nam",
       rating: "4.8",
-      reviews: "50",
-      sold: "320",
-      unit: "sản phẩm",
-      stock: "100",
-      images: [product.image],
+      reviews: "0",
+      sold: product.stockStatus === "coming_soon" ? "Sắp mở bán" : "Mới lên kệ",
+      unit: product.packagingLabel || "sản phẩm",
+      stock: product.stockStatus === "coming_soon" ? "0" : "50",
+      images: [product.image || FALLBACK_IMG],
       specs: [
-        { k: "Thương hiệu", v: "BakeMate" },
+        { k: "Thương hiệu", v: product.brand || "BakeMate" },
         { k: "Danh mục", v: product.category },
-        { k: "Mô tả sản phẩm", v: product.description }
+        { k: "Quy cách đóng gói", v: product.packagingLabel || "Tiêu chuẩn" },
+        { k: "Mô tả sản phẩm", v: product.description || "Sản phẩm chất lượng cao cho người làm bánh." }
       ],
       recipes: [
-        { recipeGroupId: "recipe-bong-lan", title: "Bánh Bông Lan Cơ Bản Tại Nhà", time: "50 phút", usage: product.name, diff: "Dễ", img: "images/about-baking.jpg" }
+        { recipeGroupId: "recipe-bong-lan", title: "Bánh Bông Lan Cơ Bản Tại Nhà", time: "55 phút", usage: product.name, diff: "Dễ", img: "images/about-baking.jpg" }
       ],
       relatedIds: []
     };
   }
 
-  const productList = window.products || [];
+  const productList =
+    typeof window.buildMergedProducts === "function"
+      ? window.buildMergedProducts()
+      : window.products || [];
   const urlParams = new URLSearchParams(window.location.search);
   const productIdStr = urlParams.get("id");
   const productId = Number(productIdStr);
@@ -663,6 +709,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const productSold = document.getElementById("product-sold");
   const productCodeMeta = document.getElementById("product-code-meta");
   const productCategoryMeta = document.getElementById("product-category-meta");
+  const productStockPill = document.getElementById("product-stock-pill");
   const productPrice = document.getElementById("product-price");
   const productOldPrice = document.getElementById("product-old-price");
   const productSaveTag = document.getElementById("product-save-tag");
@@ -675,16 +722,23 @@ document.addEventListener("DOMContentLoaded", function () {
   const recipeContainer = document.getElementById("recipe-cards-container");
   const relatedTitle = document.getElementById("related-section-title");
   const relatedContainer = document.getElementById("related-products-container");
+  const reviewsContainer = document.getElementById("product-reviews-container");
+  const reviewsSection = document.getElementById("product-reviews-section");
 
   const specsSection = document.querySelector(".product-specs-section");
   const recipeSection = document.querySelector(".recipe-crosslink-section");
   const relatedSection = document.querySelector(".related-products-section");
+  const perishableNotice = document.getElementById("pd-perishable-notice");
+  const recentSection = document.getElementById("pd-recent-viewed-section");
+  const recentGrid = document.getElementById("pd-recent-viewed-grid");
+  const btnClearRecent = document.getElementById("btn-clear-recent-pd");
 
   const btnMinus = document.getElementById("btn-qty-minus");
   const btnPlus = document.getElementById("btn-qty-plus");
   const qtyInput = document.getElementById("product-qty");
   const btnAddToCart = document.getElementById("btn-add-to-cart");
   const btnBuyNow = document.getElementById("btn-buy-now");
+  const btnWishlistDetail = document.getElementById("btn-wishlist-detail");
 
   const product = productList.find((item) => Number(item.id) === productId);
 
@@ -709,12 +763,27 @@ document.addEventListener("DOMContentLoaded", function () {
       `;
     }
     if (specsSection) specsSection.hidden = true;
+    if (reviewsSection) reviewsSection.hidden = true;
     if (recipeSection) recipeSection.hidden = true;
     if (relatedSection) relatedSection.hidden = true;
+    if (recentSection) recentSection.hidden = true;
     return;
   }
 
+  if (typeof window.addRecentProduct === "function") {
+    window.addRecentProduct(product.id);
+  }
+
+  const isPerishable =
+    typeof window.isProductPerishable === "function"
+      ? window.isProductPerishable(product)
+      : Boolean(product.isPerishable);
+  if (perishableNotice) {
+    perishableNotice.hidden = !isPerishable;
+  }
+
   const meta = getDetailMeta(product);
+  const isComingSoon = product.stockStatus === "coming_soon";
   const codeText = `#BM-${String(product.id).padStart(3, "0")}`;
 
   document.title = `${product.name} | BakeMate`;
@@ -726,12 +795,20 @@ document.addEventListener("DOMContentLoaded", function () {
     productBrand.innerHTML = `Thương hiệu: <strong>${escapeHtml(meta.brand)}</strong> | Xuất xứ: ${escapeHtml(meta.origin)}`;
   }
 
-  if (productRating) {
-    productRating.innerHTML = `★★★★★ <strong>${escapeHtml(meta.rating)}</strong> (${escapeHtml(meta.reviews)} đánh giá)`;
+  function updateRatingSummaryDisplay() {
+    const userReviews =
+      typeof window.getReviews === "function" ? window.getReviews("product", product.id) : [];
+    const totalCount = Number(meta.reviews || 0) + userReviews.length;
+    if (productRating) {
+      productRating.innerHTML = `★★★★★ <strong>${escapeHtml(meta.rating)}</strong> (${escapeHtml(totalCount)} đánh giá)`;
+    }
   }
+  updateRatingSummaryDisplay();
 
   if (productSold) {
-    productSold.innerHTML = `Đã bán <strong>${escapeHtml(meta.sold)}</strong> ${escapeHtml(meta.unit)}`;
+    productSold.innerHTML = isComingSoon
+      ? `Trạng thái: <strong>Sắp mở bán</strong>`
+      : `Đã bán <strong>${escapeHtml(meta.sold)}</strong> ${escapeHtml(meta.unit)}`;
   }
 
   if (productCodeMeta) {
@@ -742,8 +819,36 @@ document.addEventListener("DOMContentLoaded", function () {
     productCategoryMeta.innerHTML = `Danh mục: <strong>${escapeHtml(product.category)}</strong>`;
   }
 
+  if (productStockPill) {
+    if (isComingSoon) {
+      productStockPill.textContent = "Sắp có hàng";
+      productStockPill.classList.remove("in-stock");
+      productStockPill.style.backgroundColor = "#4a2e19";
+      productStockPill.style.color = "#f2d9a6";
+    } else {
+      productStockPill.textContent = "Còn hàng";
+    }
+  }
+
   if (stockHint) {
-    stockHint.textContent = `Kho còn ${meta.stock} ${meta.unit} sẵn sàng giao`;
+    stockHint.textContent = isComingSoon
+      ? "Sản phẩm sắp về kho BakeMate — lưu Yêu thích để nhận thông báo sớm"
+      : `Kho còn ${meta.stock} ${meta.unit} sẵn sàng giao`;
+  }
+
+  if (isComingSoon) {
+    if (btnAddToCart) {
+      btnAddToCart.disabled = true;
+      btnAddToCart.style.opacity = "0.6";
+      btnAddToCart.style.cursor = "not-allowed";
+      const lbl = btnAddToCart.querySelector(".js-add-cart-label");
+      if (lbl) lbl.textContent = "Sắp có hàng";
+    }
+    if (btnBuyNow) {
+      btnBuyNow.disabled = true;
+      btnBuyNow.style.opacity = "0.6";
+      btnBuyNow.style.cursor = "not-allowed";
+    }
   }
 
   // Gallery 3 ảnh theo từng sản phẩm
@@ -914,7 +1019,7 @@ document.addEventListener("DOMContentLoaded", function () {
               <button type="button" class="btn btn--recipe js-add-recipe-combo" data-recipe-group-id="${escapeHtml(r.recipeGroupId || "recipe-bong-lan")}">
                 + Thêm combo công thức vào giỏ
               </button>
-              <a href="blog.html#${escapeHtml(r.recipeGroupId || "recipe-bong-lan")}" class="recipe-card__blog-link">
+              <a href="recipe-detail.html?id=${escapeHtml(r.recipeGroupId || "recipe-bong-lan")}" class="recipe-card__blog-link">
                 Xem công thức &amp; Quy đổi &rarr;
               </a>
             </div>
@@ -1004,6 +1109,217 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  if (btnWishlistDetail) {
+    function syncWishBtn() {
+      const wished =
+        typeof window.isProductWishlisted === "function" &&
+        window.isProductWishlisted(product.id);
+      btnWishlistDetail.classList.toggle("is-active", wished);
+      btnWishlistDetail.setAttribute("aria-pressed", wished ? "true" : "false");
+      const lbl = btnWishlistDetail.querySelector(".js-wish-detail-label");
+      if (lbl) lbl.textContent = wished ? "Đã thích" : "Yêu thích";
+    }
+    syncWishBtn();
+
+    btnWishlistDetail.addEventListener("click", function () {
+      if (typeof window.toggleWishlistProduct !== "function") return;
+      const res = window.toggleWishlistProduct(product.id);
+      syncWishBtn();
+      if (typeof window.showCartToast === "function") {
+        window.showCartToast(res.message, { type: "success" });
+      }
+    });
+
+    window.addEventListener("bakemate:wishlistChanged", syncWishBtn);
+  }
+
+  // Khối Đánh giá sản phẩm (dưới Thông số kỹ thuật)
+  function renderProductReviews() {
+    if (!reviewsContainer) return;
+    const list =
+      typeof window.getReviews === "function" ? window.getReviews("product", product.id) : [];
+    const currentUser =
+      typeof window.BakeAuth === "object" && typeof window.BakeAuth.getCurrentUser === "function"
+        ? window.BakeAuth.getCurrentUser()
+        : null;
+
+    let selectedRating = 5;
+
+    let reviewsHtml = "";
+    if (list.length > 0) {
+      reviewsHtml = `
+        <div class="reviews-list">
+          ${list
+            .map((rev) => {
+              const stars = "★".repeat(rev.rating) + "☆".repeat(Math.max(0, 5 - rev.rating));
+              const dateLabel = rev.createdAt
+                ? new Date(rev.createdAt).toLocaleDateString("vi-VN")
+                : "";
+              return `
+                <article class="review-item">
+                  <div class="review-item__head">
+                    <strong>${escapeHtml(rev.userName)}</strong>
+                    <span class="review-item__stars" aria-label="${rev.rating} sao">${stars} · <small style="color: var(--accent-sub); font-weight: 500;">${escapeHtml(dateLabel)}</small></span>
+                  </div>
+                  <p style="font-size: 14px; color: #5c402d; line-height: 1.55;">${escapeHtml(rev.comment)}</p>
+                  ${
+                    rev.imageDataUrl
+                      ? `<div style="margin-top:8px;"><img src="${escapeHtml(rev.imageDataUrl)}" alt="Ảnh thành phẩm từ ${escapeHtml(rev.userName)}" class="review-photo-preview-img"></div>`
+                      : ""
+                  }
+                </article>
+              `;
+            })
+            .join("")}
+        </div>
+      `;
+    }
+
+    if (!currentUser) {
+      if (list.length === 0) {
+        reviewsContainer.innerHTML = `
+          <div class="reviews-empty-card">
+            <strong>Chưa có đánh giá</strong>
+            <p>Hãy chia sẻ trải nghiệm của bạn sau khi sử dụng sản phẩm.</p>
+            <a href="login.html?redirect=${encodeURIComponent(window.location.pathname.split("/").pop() + window.location.search)}" class="btn btn--outline-dark">
+              Đăng nhập để đánh giá
+            </a>
+          </div>
+        `;
+      } else {
+        reviewsContainer.innerHTML = `
+          <div class="reviews-empty-card" style="margin-bottom: 16px;">
+            <p style="margin-bottom: 10px;">Bạn đã sử dụng sản phẩm này? Đăng nhập để gửi đánh giá mới.</p>
+            <a href="login.html?redirect=${encodeURIComponent(window.location.pathname.split("/").pop() + window.location.search)}" class="btn btn--outline-dark">
+              Đăng nhập để đánh giá
+            </a>
+          </div>
+          ${reviewsHtml}
+        `;
+      }
+      return;
+    }
+
+    reviewsContainer.innerHTML = `
+      <form id="product-review-form" class="review-form-box">
+        <p style="font-size: 14px; font-weight: 700; color: #4a2e19; margin-bottom: 8px;">
+          Gửi đánh giá với tên: ${escapeHtml(currentUser.fullName)}
+        </p>
+        <div class="review-stars-input" role="group" aria-label="Chọn số sao đánh giá">
+          ${[5, 4, 3, 2, 1]
+            .map(
+              (s) =>
+                `<button type="button" class="review-star-btn js-star-choice${s === 5 ? " is-active" : ""}" data-star="${s}">${s} ★</button>`
+            )
+            .join("")}
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="visually-hidden" for="review-comment-input">Nội dung đánh giá</label>
+          <textarea id="review-comment-input" class="form-textarea" rows="3" placeholder="Chia sẻ cảm nhận về chất lượng, độ tươi hoặc mùi vị khi làm bánh..." required></textarea>
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+          <label class="form-label" for="review-photo-input" style="font-size:13px;font-weight:700;color:#5c402d;display:block;margin-bottom:6px;">Ảnh đính kèm (tùy chọn)</label>
+          <input type="file" id="review-photo-input" accept="image/*" class="form-input" style="padding:8px;">
+          <div id="review-photo-preview-wrap" class="review-photo-preview-wrap" hidden>
+            <img id="review-photo-preview-img" class="review-photo-preview-img" alt="Xem trước ảnh đánh giá">
+            <button type="button" id="btn-clear-review-photo" class="btn btn--outline-dark" style="padding:5px 10px;font-size:12px;">Xóa ảnh</button>
+          </div>
+        </div>
+        <button type="submit" class="btn btn--primary">Gửi đánh giá</button>
+      </form>
+      ${
+        list.length > 0
+          ? reviewsHtml
+          : `<p style="font-size: 14px; color: var(--accent-sub);">Chưa có đánh giá nào được gửi từ cộng đồng. Hãy trở thành người đầu tiên!</p>`
+      }
+    `;
+
+    let uploadedPhotoDataUrl = "";
+    const photoInput = document.getElementById("review-photo-input");
+    const previewWrap = document.getElementById("review-photo-preview-wrap");
+    const previewImg = document.getElementById("review-photo-preview-img");
+    const btnClearPhoto = document.getElementById("btn-clear-review-photo");
+
+    if (photoInput) {
+      photoInput.addEventListener("change", function () {
+        const file = photoInput.files && photoInput.files[0];
+        if (!file || !file.type || !file.type.startsWith("image/")) {
+          uploadedPhotoDataUrl = "";
+          if (previewWrap) previewWrap.hidden = true;
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          const resUrl = String(ev.target && ev.target.result ? ev.target.result : "");
+          if (resUrl.length > 440000) {
+            if (typeof window.showCartToast === "function") {
+              window.showCartToast("Ảnh quá lớn (vui lòng chọn ảnh dưới 300KB).", { type: "warning" });
+            }
+            photoInput.value = "";
+            uploadedPhotoDataUrl = "";
+            if (previewWrap) previewWrap.hidden = true;
+            return;
+          }
+          uploadedPhotoDataUrl = resUrl;
+          if (previewImg) previewImg.src = resUrl;
+          if (previewWrap) previewWrap.hidden = false;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    if (btnClearPhoto) {
+      btnClearPhoto.addEventListener("click", function () {
+        uploadedPhotoDataUrl = "";
+        if (photoInput) photoInput.value = "";
+        if (previewWrap) previewWrap.hidden = true;
+      });
+    }
+
+    const starBtns = reviewsContainer.querySelectorAll(".js-star-choice");
+    starBtns.forEach((btn) => {
+      btn.addEventListener("click", function () {
+        selectedRating = Number(btn.dataset.star) || 5;
+        starBtns.forEach((b) => b.classList.toggle("is-active", Number(b.dataset.star) === selectedRating));
+      });
+    });
+
+    const reviewForm = document.getElementById("product-review-form");
+    if (reviewForm) {
+      reviewForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const commentEl = document.getElementById("review-comment-input");
+        const commentText = commentEl ? commentEl.value.trim() : "";
+        if (commentText.length < 4) {
+          if (typeof window.showCartToast === "function") {
+            window.showCartToast("Vui lòng nhập nhận xét tối thiểu 4 ký tự.", { type: "warning" });
+          }
+          if (commentEl) commentEl.focus();
+          return;
+        }
+        if (typeof window.addReview === "function") {
+          window.addReview({
+            targetType: "product",
+            targetId: product.id,
+            userId: currentUser.userId,
+            userName: currentUser.fullName,
+            rating: selectedRating,
+            comment: commentText,
+            imageDataUrl: uploadedPhotoDataUrl
+          });
+        }
+        updateRatingSummaryDisplay();
+        renderProductReviews();
+        if (typeof window.showCartToast === "function") {
+          window.showCartToast("Cảm ơn bạn đã gửi đánh giá sản phẩm!", { type: "success" });
+        }
+      });
+    }
+  }
+
+  renderProductReviews();
+  window.addEventListener("bakemate:authChanged", renderProductReviews);
+
   // Khối "Thường được mua cùng"
   if (relatedTitle) {
     relatedTitle.textContent = `Thường được mua cùng ${meta.shortName.toLowerCase()}`;
@@ -1088,5 +1404,50 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
     }
+  }
+
+  function renderPdRecentViewed() {
+    if (!recentSection || !recentGrid || typeof window.getRecentProducts !== "function") {
+      return;
+    }
+    const ids = window.getRecentProducts().filter((id) => Number(id) !== Number(product.id));
+    const recentItems = ids
+      .map((id) => productList.find((p) => Number(p.id) === Number(id)))
+      .filter(Boolean)
+      .slice(0, 4);
+
+    if (recentItems.length === 0) {
+      recentSection.hidden = true;
+      recentGrid.innerHTML = "";
+      return;
+    }
+
+    recentSection.hidden = false;
+    recentGrid.innerHTML = recentItems
+      .map(
+        (item) => `
+          <a href="product-detail.html?id=${item.id}" class="recent-viewed-card">
+            <div class="recent-viewed-card__img-wrap">
+              <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}" class="recent-viewed-card__img" onerror="this.onerror=null;this.src='${escapeHtml(FALLBACK_IMG)}';">
+            </div>
+            <div class="recent-viewed-card__body">
+              <div class="recent-viewed-card__title">${escapeHtml(item.name)}</div>
+              <div class="recent-viewed-card__meta">${escapeHtml(item.brand || "BakeMate")} · ${escapeHtml(item.packagingLabel || item.category)}</div>
+              <div class="recent-viewed-card__price">${escapeHtml(formatPrice(item.price))}</div>
+            </div>
+          </a>
+        `
+      )
+      .join("");
+  }
+
+  renderPdRecentViewed();
+  if (btnClearRecent) {
+    btnClearRecent.addEventListener("click", function () {
+      if (typeof window.clearRecentProducts === "function") {
+        window.clearRecentProducts();
+        renderPdRecentViewed();
+      }
+    });
   }
 });

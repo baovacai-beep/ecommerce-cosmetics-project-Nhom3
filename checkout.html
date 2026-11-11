@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Thanh toán đơn hàng BakeMate: chọn địa chỉ nhận hàng, phương thức vận chuyển theo khu vực và áp dụng mã ưu đãi.">
+  <title>Thanh toán | BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="cart-page-body">
+
+  <!-- ================= THANH MÃ GIẢM GIÁ TOÀN HỆ THỐNG ================= -->
+  <div class="promo-topbar" role="region" aria-label="Ưu đãi thành viên BakeMate">
+    <div class="promo-topbar__inner">
+      <span class="promo-topbar__left">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+        </svg>
+        <span>Ưu đãi thành viên BakeMate</span>
+      </span>
+      <div class="promo-topbar__codes">
+        <div class="promo-topbar__item">
+          <span>Giảm 10% đơn đầu:</span>
+          <span class="promo-topbar__code-badge">CHAOBANMOI</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+        <div class="promo-topbar__item">
+          <span>Freeship 20K (đơn từ 200K):</span>
+          <span class="promo-topbar__code-badge">FREESHIP20</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link" aria-label="Trang chủ BakeMate">
+        <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item has-megamenu">
+            <a href="products.html" class="site-header__menu-link js-megamenu-trigger" aria-expanded="false">
+              Sản phẩm
+              <svg class="megamenu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="mega-menu" role="region" aria-label="Danh mục sản phẩm BakeMate">
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=B%E1%BB%99t%20v%C3%A0%20nguy%C3%AAn%20li%E1%BB%87u%20kh%C3%B4" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
+                  <li><a href="products.html?sub=Chocolate%20v%C3%A0%20t%E1%BA%A1o%20v%E1%BB%8B" class="mega-menu__link">Chocolate và tạo vị</a></li>
+                  <li><a href="products.html?sub=B%C6%A1%2C%20s%E1%BB%AFa%20v%C3%A0%20kem" class="mega-menu__link">Bơ, sữa và kem</a></li>
+                  <li><a href="products.html?sub=Nguy%C3%AAn%20li%E1%BB%87u%20t%E1%BA%A1o%20c%E1%BA%A5u%20tr%C3%BAc" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=D%E1%BB%A5ng%20c%E1%BB%A5" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=Khu%C3%B4n%20b%C3%A1nh" class="mega-menu__link">Khuôn bánh</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20c%C3%A2n%2C%20%C4%91ong" class="mega-menu__link">Dụng cụ cân, đong</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20tr%E1%BB%99n" class="mega-menu__link">Dụng cụ trộn</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20trang%20tr%C3%AD" class="mega-menu__link">Dụng cụ trang trí</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Ph%E1%BB%A5%20ki%E1%BB%87n%20%26%20%C4%90%C3%B3ng%20g%C3%B3i" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=H%E1%BB%99p%20v%C3%A0%20t%C3%BAi%20%C4%91%E1%BB%B1ng%20b%C3%A1nh" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
+                  <li><a href="products.html?sub=%C4%90%E1%BA%BF%20v%C3%A0%20khay%20b%C3%A1nh" class="mega-menu__link">Đế và khay bánh</a></li>
+                  <li><a href="products.html?sub=Trang%20tr%C3%AD%20b%C3%A1nh" class="mega-menu__link">Trang trí bánh</a></li>
+                  <li><a href="products.html?sub=B%E1%BA%A3o%20qu%E1%BA%A3n%20nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="site-header__menu-item"><a href="recipes.html" class="site-header__menu-link">Công thức</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Về chúng tôi</a></li>
+          <li class="site-header__menu-item"><a href="contact.html" class="site-header__menu-link">Liên hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" action="products.html" method="get" role="search">
+          <label class="visually-hidden" for="checkout-header-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
+          <input id="checkout-header-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input" autocomplete="off">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
+        </form>
+
+        <a href="wishlist.html" class="site-header__icon-btn site-header__wishlist" aria-label="Danh sách yêu thích">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+          <span class="site-header__cart-badge js-wishlist-badge is-empty" id="wishlist-badge">0</span>
+        </a>
+
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
+        </a>
+
+        <div class="account-wrap js-account-wrap">
+          <button type="button" class="site-header__icon-btn account-trigger js-account-trigger" aria-expanded="false" aria-label="Tài khoản">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="account-trigger__name js-account-name" hidden></span>
+          </button>
+          <div class="account-dropdown js-account-menu" role="menu"></div>
+        </div>
+
+        <button type="button" class="mobile-menu-toggle js-mobile-menu-toggle" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NỘI DUNG TRANG THANH TOÁN ================= -->
+  <main class="page-container">
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item"><a href="cart.html">Giỏ hàng</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active">Thanh toán</li>
+      </ul>
+    </nav>
+
+    <div class="cart-page__header">
+      <div>
+        <h1 class="cart-page__title">Xác nhận &amp; Thanh toán đơn hàng</h1>
+        <p class="cart-page__subtitle">Kiểm tra địa chỉ nhận hàng, gói vận chuyển phù hợp khu vực và hoàn tất đặt hàng.</p>
+      </div>
+      <a href="cart.html" class="btn btn--outline-dark">&larr; Sửa giỏ hàng</a>
+    </div>
+
+    <!-- Thanh tiến trình 3 bước -->
+    <nav class="checkout-progress" aria-label="Tiến trình thanh toán">
+      <a href="cart.html" class="checkout-progress__step is-done">
+        <span class="checkout-progress__num">1</span>
+        <span>Giỏ hàng</span>
+      </a>
+      <div class="checkout-progress__step is-active" aria-current="step">
+        <span class="checkout-progress__num">2</span>
+        <span>Thông tin &amp; Thanh toán</span>
+      </div>
+      <div class="checkout-progress__step">
+        <span class="checkout-progress__num">3</span>
+        <span>Hoàn tất đơn hàng</span>
+      </div>
+    </nav>
+
+    <!-- Thông báo đặt hàng thành công (fallback) -->
+    <section id="checkout-success-box" class="order-confirmation" hidden aria-live="polite"></section>
+
+    <!-- Trạng thái giỏ hàng trống khi vào thẳng checkout.html -->
+    <section id="checkout-empty-box" class="cart-empty" hidden>
+      <h2 class="cart-empty__title" id="checkout-empty-title">Bạn chưa có sản phẩm nào cần thanh toán</h2>
+      <p class="cart-empty__desc" id="checkout-empty-desc">Hãy chọn nguyên liệu hoặc combo công thức trước khi tiến hành thanh toán nhé.</p>
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;">
+        <a href="cart.html" class="btn btn--primary" id="checkout-back-cart-btn">Quay lại giỏ hàng</a>
+        <a href="products.html" class="btn btn--outline-dark">Khám phá sản phẩm</a>
+        <a href="orders.html" class="btn btn--outline-dark">Xem đơn hàng đã đặt</a>
+      </div>
+    </section>
+
+    <!-- Banner Địa chỉ nhận hàng kiểu Shopee -->
+    <section id="checkout-address-banner" class="checkout-address-banner" style="flex-wrap:wrap;" hidden aria-label="Địa chỉ nhận hàng">
+      <div style="flex:1;min-width:250px;">
+        <div class="checkout-address-banner__title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+          <span>Địa Chỉ Nhận Hàng</span>
+        </div>
+        <div id="active-address-display" class="checkout-address-banner__meta">
+          <!-- Render từ js/checkout.js -->
+        </div>
+      </div>
+      <button type="button" id="btn-change-address" class="btn btn--outline-dark" style="white-space:nowrap;">
+        Thay đổi
+      </button>
+    </section>
+
+    <!-- Lưới 2 cột Checkout -->
+    <section id="checkout-main-grid" class="cart-layout" hidden>
+      <!-- Cột trái: Danh sách món hàng + Phương thức vận chuyển động + Lời nhắn + Thanh toán -->
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div class="cart-items-panel">
+          <div class="cart-panel__head">
+            <h2 class="cart-panel__title">Sản phẩm trong đơn (<span id="checkout-item-count">0</span>)</h2>
+            <a href="cart.html" style="font-size:13.5px;font-weight:700;color:var(--accent-cta);">Chỉnh sửa giỏ &rarr;</a>
+          </div>
+          <div id="checkout-items-list" style="display:flex;flex-direction:column;gap:12px;"></div>
+        </div>
+
+        <div class="cart-items-panel">
+          <div class="cart-panel__head" style="margin-bottom:12px;">
+            <h2 class="cart-panel__title">Phương thức vận chuyển</h2>
+            <span id="checkout-zone-badge" class="cart-page__count-pill">Nội thành TP.HCM</span>
+          </div>
+          <p style="font-size:13px;color:var(--accent-sub);margin-bottom:12px;">
+            Tùy chọn vận chuyển được cập nhật tự động theo khu vực địa chỉ nhận hàng bạn đang chọn.
+          </p>
+          <div id="checkout-perishable-alert" class="checkout-perishable-alert" hidden></div>
+          <div id="shipping-methods-list" style="display:flex;flex-direction:column;gap:10px;">
+            <!-- Render động theo SHIPPING_ZONES[zone] -->
+          </div>
+        </div>
+
+        <div class="cart-items-panel">
+          <h2 class="cart-panel__title" style="margin-bottom:12px;">Lời nhắn &amp; Phương thức thanh toán</h2>
+          <div class="form-group">
+            <label for="checkout-shop-note" class="form-label">Lời nhắn cho Shop</label>
+            <input type="text" id="checkout-shop-note" class="form-input" placeholder="Ví dụ: Giao giờ hành chính, đóng gói riêng kem lạnh...">
+          </div>
+
+          <div class="payment-method-box" style="margin-top:8px;">
+            <span class="form-label">Phương thức thanh toán</span>
+            <label class="payment-option" style="margin-bottom:8px;">
+              <input type="radio" name="checkoutPayment" value="COD" checked>
+              <span>
+                <strong>Thanh toán khi nhận hàng (COD)</strong>
+                <small>Kiểm tra đủ quy cách sản phẩm trước khi thanh toán tiền mặt.</small>
+              </span>
+            </label>
+            <label class="payment-option" style="margin-bottom:8px;">
+              <input type="radio" name="checkoutPayment" value="Chuyển khoản VietQR">
+              <span>
+                <strong>Chuyển khoản ngân hàng (VietQR)</strong>
+                <small>Hiển thị mã QR quét nhanh với đúng số tiền &amp; nội dung đơn hàng.</small>
+              </span>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="checkoutPayment" value="Ví điện tử">
+              <span>
+                <strong>Ví điện tử (MoMo / VNPAY / ZaloPay)</strong>
+                <small>Mô phỏng liên kết ví điện tử thanh toán nhanh không cần tiền mặt.</small>
+              </span>
+            </label>
+          </div>
+          <div id="checkout-payment-extra" class="payment-extra-box" hidden></div>
+        </div>
+      </div>
+
+      <!-- Cột phải: Mã giảm giá & Bảng tính tiền + Đặt hàng -->
+      <aside class="cart-summary-panel" aria-label="Chi tiết thanh toán">
+        <div class="cart-summary-card">
+          <h2 class="cart-summary-card__title">BakeMate Voucher &amp; Thanh toán</h2>
+
+          <form id="checkout-coupon-form" class="cart-coupon" novalidate>
+            <label for="checkout-coupon-input" class="cart-coupon__label">Chọn hoặc nhập mã ưu đãi (Cộng dồn 1 giảm đơn + 1 Freeship)</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+              <button type="button" class="price-preset-btn js-quick-voucher" data-code="CHAOBANMOI">+ CHAOBANMOI (-10%)</button>
+              <button type="button" class="price-preset-btn js-quick-voucher" data-code="FREESHIP20">+ FREESHIP20 (-20K ship)</button>
+            </div>
+            <div class="cart-coupon__row">
+              <input type="text" id="checkout-coupon-input" class="form-input cart-coupon__input" placeholder="Nhập mã giảm giá..." autocomplete="off">
+              <button type="submit" class="btn btn--primary cart-coupon__btn">Áp dụng</button>
+              <button type="button" id="checkout-remove-coupon" class="btn-remove-coupon" hidden>Xóa mã</button>
+            </div>
+            <div id="checkout-coupon-chips" class="coupon-applied-list" aria-live="polite"></div>
+            <p id="checkout-coupon-feedback" class="coupon-feedback" aria-live="polite"></p>
+          </form>
+
+          <div class="cart-summary-row">
+            <span>Tạm tính tiền hàng</span>
+            <strong id="checkout-subtotal">0 ₫</strong>
+          </div>
+          <div class="cart-summary-row">
+            <span id="checkout-ship-label">Phí vận chuyển</span>
+            <strong id="checkout-shipping">0 ₫</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-row--discount" id="checkout-ship-discount-row" hidden>
+            <span id="checkout-ship-discount-label">Ưu đãi vận chuyển</span>
+            <strong id="checkout-ship-discount">-0 ₫</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-row--discount" id="checkout-discount-row" hidden>
+            <span id="checkout-discount-label">Ưu đãi Voucher</span>
+            <strong id="checkout-discount">-0 ₫</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-row--total">
+            <span>Tổng cộng</span>
+            <strong id="checkout-total">0 ₫</strong>
+          </div>
+          <div class="cart-summary-row" id="checkout-savings-row" style="border-bottom:none;padding-top:4px;font-size:13px;color:#15803d;" hidden>
+            <span>Bạn tiết kiệm được</span>
+            <strong id="checkout-savings">0 ₫</strong>
+          </div>
+
+          <button type="button" id="btn-place-order" class="btn btn--primary checkout-submit-btn" style="width:100%;margin-top:16px;">
+            Đặt hàng ngay
+          </button>
+          <p style="font-size:12px;color:#8c6a52;text-align:center;margin-top:10px;">
+            Nhấn "Đặt hàng ngay" đồng nghĩa bạn đồng ý với điều khoản giao nhận của BakeMate.
+          </p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <!-- ================= MODAL CHỌN ĐỊA CHỈ GIAO HÀNG ================= -->
+  <div id="address-picker-modal" class="bake-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="addr-picker-title" hidden>
+    <div class="bake-confirm-card bake-policy-card">
+      <div class="bake-policy-card__head">
+        <h3 id="addr-picker-title">Địa chỉ của tôi</h3>
+        <button type="button" class="bake-modal-close js-close-addr-picker" aria-label="Đóng hộp thoại">&times;</button>
+      </div>
+      <div id="address-list-container" style="display:flex;flex-direction:column;gap:10px;max-height:55vh;overflow-y:auto;"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;flex-wrap:wrap;">
+        <button type="button" id="btn-open-add-address" class="btn btn--outline-dark">+ Thêm địa chỉ mới</button>
+        <button type="button" class="btn btn--primary js-close-addr-picker">Xong</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL THÊM ĐỊA CHỈ MỚI (CHUẨN SHOPEE UI) ================= -->
+  <div id="address-add-modal" class="bake-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="addr-add-title" hidden>
+    <div class="bake-confirm-card bake-policy-card" style="max-height:90vh;overflow-y:auto;">
+      <div class="bake-policy-card__head">
+        <h3 id="addr-add-title">&larr; Thêm địa chỉ mới</h3>
+        <button type="button" class="bake-modal-close js-close-addr-add" aria-label="Đóng hộp thoại">&times;</button>
+      </div>
+
+      <form id="new-address-form" class="checkout-form" novalidate>
+        <div class="contact-form-row-2" style="margin-bottom:10px;">
+          <div class="form-group">
+            <label for="addr-city" class="form-label">Tỉnh / Thành phố <span class="required-mark">*</span></label>
+            <select id="addr-city" class="form-input"></select>
+          </div>
+          <div class="form-group">
+            <label for="addr-district" class="form-label">Quận / Huyện <span class="required-mark">*</span></label>
+            <select id="addr-district" class="form-input"></select>
+          </div>
+        </div>
+
+        <div class="contact-form-row-2" style="margin-bottom:10px;">
+          <div class="form-group">
+            <label for="addr-ward" class="form-label">Phường / Xã <span class="required-mark">*</span></label>
+            <select id="addr-ward" class="form-input"></select>
+          </div>
+          <div class="form-group">
+            <label for="addr-location-suggest" class="form-label">Hoặc tìm nhanh khu vực</label>
+            <input type="text" id="addr-location-suggest" list="addr-location-presets" class="form-input" placeholder="Gõ Quận 3, Thủ Đức, Hà Nội...">
+            <datalist id="addr-location-presets">
+              <option value="Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh"></option>
+              <option value="Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh"></option>
+              <option value="Phường Thảo Điền, TP. Thủ Đức (Ngoại thành TP.HCM)"></option>
+              <option value="Phường Láng Thượng, Quận Đống Đa, TP. Hà Nội"></option>
+              <option value="Phường Hải Châu 1, Quận Hải Châu, TP. Đà Nẵng"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="addr-zone" class="form-label">Khu vực tính phí giao hàng <span class="required-mark">*</span></label>
+          <select id="addr-zone" class="form-input">
+            <option value="hcm">Nội thành TP.HCM (Lấy tại shop 0đ / Nhanh 20k / Hỏa tốc 40k)</option>
+            <option value="province">Ngoại thành / Tỉnh khác (GHN 30k / GHTK 20k)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="addr-area" class="form-label">Tỉnh/Thành phố, Quận/Huyện, Phường/Xã <span class="required-mark">*</span></label>
+          <input type="text" id="addr-area" class="form-input" placeholder="Ví dụ: Phường 6, Quận 3, TP. Hồ Chí Minh" required>
+        </div>
+
+        <div class="form-group">
+          <label for="addr-street" class="form-label">Tên đường, Tòa nhà, Số nhà <span class="required-mark">*</span></label>
+          <input type="text" id="addr-street" class="form-input" placeholder="Ví dụ: 59C Nguyễn Đình Chiểu" required>
+        </div>
+
+        <div class="contact-form-row-2">
+          <div class="form-group">
+            <label for="addr-fullname" class="form-label">Họ và tên người nhận <span class="required-mark">*</span></label>
+            <input type="text" id="addr-fullname" class="form-input" placeholder="Nguyễn Bảo Ngọc" required>
+          </div>
+          <div class="form-group">
+            <label for="addr-phone" class="form-label">Số điện thoại <span class="required-mark">*</span></label>
+            <input type="tel" id="addr-phone" class="form-input" placeholder="0912345678" required>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid #f0e3d0;border-bottom:1px solid #f0e3d0;margin-bottom:14px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:#4a2e19;cursor:pointer;">
+            <input type="checkbox" id="addr-is-default" checked style="width:17px;height:17px;accent-color:#f39c12;">
+            Đặt làm địa chỉ mặc định
+          </label>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span style="font-size:13px;color:var(--accent-sub);">Loại địa chỉ:</span>
+            <button type="button" class="blog-filter-btn active js-addr-type-btn" data-type="Nhà Riêng" style="padding:5px 12px;font-size:12.5px;">Nhà Riêng</button>
+            <button type="button" class="blog-filter-btn js-addr-type-btn" data-type="Văn Phòng" style="padding:5px 12px;font-size:12.5px;">Văn Phòng</button>
+          </div>
+        </div>
+
+        <p id="addr-form-error" class="form-error" aria-live="polite" style="margin-bottom:10px;"></p>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <button type="button" class="btn btn--outline-dark js-close-addr-add">Hủy bỏ</button>
+          <button type="submit" id="btn-save-address" class="btn btn--primary">Hoàn thành</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER DÙNG CHUNG ================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Làm bánh chuẩn vị</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh theo công thức hàng đầu.</p>
+        <p class="footer-col__contact">Slogan: Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Khám phá</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="recipes.html">Công thức</a></li>
+          <li><a href="blog.html">Blog làm bánh</a></li>
+          <li><a href="about.html">Về chúng tôi</a></li>
+          <li><a href="orders.html">Theo dõi đơn hàng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <ul class="footer-policy-list">
+          <li><a href="#" class="js-policy-trigger" data-policy="guide">Hướng dẫn mua hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả</a></li>
+          <li><a href="contact.html#faq-section">Câu hỏi thường gặp (FAQ)</a></li>
+          <li><a href="wishlist.html">Danh sách yêu thích</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Liên hệ</h3>
+        <p class="footer-col__contact">59C Nguyễn Đình Chiểu, Quận 3, TP.HCM</p>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+        <p class="footer-col__contact">Giờ phục vụ: 08:30 – 21:00 (Hằng ngày)</p>
+        <p class="footer-col__contact"><a href="contact.html">Gửi tin nhắn hỗ trợ &rarr;</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/recipes-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>
