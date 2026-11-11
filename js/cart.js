@@ -1,7 +1,7 @@
 /*
  * =====================================================
  * BAKEMATE - GIAO DIỆN & XỬ LÝ GIỎ HÀNG + ĐẶT HÀNG COD
- * Tệp: js/cart.js (Bước 5 & F12, F13)
+ * Tệp: js/cart.js (Bước 5 + recipeGroupId + CHAOBANMOI + F12, F13)
  * =====================================================
  */
 
@@ -9,9 +9,6 @@
   const MAX_QTY = 99;
   const FALLBACK_IMG = window.FALLBACK_PRODUCT_IMAGE || "images/logo.jpg";
 
-  /**
-   * Escape HTML để tránh XSS khi hiển thị nội dung người dùng nhập.
-   */
   function escapeHtml(value) {
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;")
@@ -21,9 +18,6 @@
       .replace(/'/g, "&#39;");
   }
 
-  /**
-   * Định dạng thời gian hiển thị tiếng Việt.
-   */
   function formatOrderDate(isoString) {
     try {
       const date = new Date(isoString);
@@ -39,34 +33,182 @@
     }
   }
 
+  function getGroupAttr(recipeGroupId) {
+    return recipeGroupId ? String(recipeGroupId) : "";
+  }
+
+  function parseGroupAttr(value) {
+    if (!value || typeof value !== "string" || value.trim() === "") {
+      return null;
+    }
+    return value.trim();
+  }
+
   /**
-   * Render danh sách sản phẩm trong giỏ hàng và bảng tóm tắt.
+   * Tạo HTML cho 1 dòng sản phẩm trong giỏ (hỗ trợ cả mua lẻ và combo công thức).
+   */
+  function renderCartItemRow({ item, product }) {
+    const optionIndex = Number(item.optionIndex) || 0;
+    const recipeGroupId = getGroupAttr(item.recipeGroupId);
+    const option =
+      typeof window.getProductOption === "function"
+        ? window.getProductOption(product.id, optionIndex)
+        : { optionIndex: 0, shortLabel: "Tiêu chuẩn", price: Number(product.price) };
+    const unitPrice = option ? Number(option.price) : Number(product.price);
+    const lineTotal = unitPrice * Number(item.quantity);
+    const safeName = escapeHtml(product.name);
+    const safeCategory = escapeHtml(product.category);
+    const safeOption = escapeHtml(option ? option.shortLabel : "");
+    const safeImage = escapeHtml(product.image || FALLBACK_IMG);
+    const safeGroupAttr = escapeHtml(recipeGroupId);
+    const labelWithOption = safeOption ? `${safeName} (${safeOption})` : safeName;
+
+    return `
+      <div
+        class="cart-item"
+        data-product-id="${product.id}"
+        data-option-index="${optionIndex}"
+        data-recipe-group-id="${safeGroupAttr}"
+      >
+        <div class="cart-item__cell cart-item__product-cell" data-label="Sản phẩm">
+          <div class="cart-item__product">
+            <a href="product-detail.html?id=${product.id}" class="cart-item__thumb-link">
+              <img
+                src="${safeImage}"
+                alt="${safeName}"
+                class="cart-item__img"
+                onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+              >
+            </a>
+            <div class="cart-item__meta">
+              <a href="product-detail.html?id=${product.id}" class="cart-item__name">${safeName}</a>
+              <span class="cart-item__category">${safeCategory}${safeOption ? ` · Quy cách: <strong>${safeOption}</strong>` : ""}</span>
+            </div>
+          </div>
+        </div>
+        <div class="cart-item__cell cart-item__price" data-label="Đơn giá">
+          ${window.formatCurrency(unitPrice)}
+        </div>
+        <div class="cart-item__cell cart-item__qty-cell" data-label="Số lượng">
+          <div class="cart-qty-control">
+            <button
+              type="button"
+              class="qty-btn js-qty-minus"
+              data-product-id="${product.id}"
+              data-option-index="${optionIndex}"
+              data-recipe-group-id="${safeGroupAttr}"
+              aria-label="Giảm số lượng ${labelWithOption}"
+            >-</button>
+            <input
+              type="number"
+              class="qty-input js-qty-input"
+              data-product-id="${product.id}"
+              data-option-index="${optionIndex}"
+              data-recipe-group-id="${safeGroupAttr}"
+              value="${item.quantity}"
+              min="1"
+              max="${MAX_QTY}"
+              aria-label="Số lượng ${labelWithOption}"
+            >
+            <button
+              type="button"
+              class="qty-btn js-qty-plus"
+              data-product-id="${product.id}"
+              data-option-index="${optionIndex}"
+              data-recipe-group-id="${safeGroupAttr}"
+              aria-label="Tăng số lượng ${labelWithOption}"
+              ${item.quantity >= MAX_QTY ? "disabled" : ""}
+            >+</button>
+          </div>
+        </div>
+        <div class="cart-item__cell cart-item__subtotal" data-label="Thành tiền">
+          <strong>${window.formatCurrency(lineTotal)}</strong>
+        </div>
+        <div class="cart-item__cell cart-item__action" data-label="Thao tác">
+          <button
+            type="button"
+            class="btn-remove-item js-remove-item"
+            data-product-id="${product.id}"
+            data-option-index="${optionIndex}"
+            data-recipe-group-id="${safeGroupAttr}"
+            aria-label="Xóa ${labelWithOption} khỏi giỏ hàng"
+          >
+            Xóa
+          </button>
+        </div>
+      </div>
+    `;
+  }
+
+  /**
+   * Cập nhật khối Tóm tắt giỏ hàng (bao gồm Tạm tính, Giảm giá CHAOBANMOI, Tổng thanh toán).
+   */
+  function updateCartSummaryDisplay(totalCount, subtotal) {
+    const pageCountEl = document.getElementById("cart-page-count");
+    const summaryCountEl = document.getElementById("cart-summary-count");
+    const summarySubtotalEl = document.getElementById("cart-summary-subtotal");
+    const discountRowEl = document.getElementById("cart-summary-discount-row");
+    const discountLabelEl = document.getElementById("cart-summary-discount-label");
+    const discountValueEl = document.getElementById("cart-summary-discount");
+    const summaryShippingEl = document.getElementById("cart-summary-shipping");
+    const summaryTotalEl = document.getElementById("cart-summary-total");
+    const couponInput = document.getElementById("coupon-code-input");
+    const removeCouponBtn = document.getElementById("btn-remove-coupon");
+
+    const activeCoupon = typeof window.getSavedCoupon === "function" ? window.getSavedCoupon() : null;
+    const discountInfo =
+      typeof window.calculateDiscount === "function"
+        ? window.calculateDiscount(subtotal, activeCoupon)
+        : { couponCode: null, discountAmount: 0, finalTotal: subtotal };
+
+    const shippingFee = 0;
+    const grandTotal = discountInfo.finalTotal + shippingFee;
+
+    if (pageCountEl) {
+      pageCountEl.textContent = `${totalCount} sản phẩm`;
+    }
+    if (summaryCountEl) summaryCountEl.textContent = `${totalCount} sản phẩm`;
+    if (summarySubtotalEl) summarySubtotalEl.textContent = window.formatCurrency(subtotal);
+    if (summaryShippingEl) summaryShippingEl.textContent = "Miễn phí (0 ₫)";
+    if (summaryTotalEl) summaryTotalEl.textContent = window.formatCurrency(grandTotal);
+
+    if (discountRowEl && discountValueEl) {
+      if (discountInfo.couponCode && discountInfo.discountAmount > 0) {
+        discountRowEl.hidden = false;
+        if (discountLabelEl) {
+          discountLabelEl.textContent = `Giảm giá (${discountInfo.couponCode} -10%)`;
+        }
+        discountValueEl.textContent = `-${window.formatCurrency(discountInfo.discountAmount)}`;
+      } else {
+        discountRowEl.hidden = true;
+      }
+    }
+
+    if (couponInput && activeCoupon && document.activeElement !== couponInput) {
+      couponInput.value = activeCoupon;
+    }
+    if (removeCouponBtn) {
+      removeCouponBtn.hidden = !activeCoupon;
+    }
+  }
+
+  /**
+   * Render danh sách sản phẩm trong giỏ (phân tách hàng mua lẻ và từng combo recipeGroupId)
+   * cùng bảng tóm tắt.
    */
   function renderCart() {
     const cart = typeof window.getCart === "function" ? window.getCart() : [];
     const emptyState = document.getElementById("cart-empty-state");
     const layoutEl = document.getElementById("cart-content-layout");
-    const tbody = document.getElementById("cart-items-body");
-    const pageCountEl = document.getElementById("cart-page-count");
-    const summaryCountEl = document.getElementById("cart-summary-count");
-    const summarySubtotalEl = document.getElementById("cart-summary-subtotal");
-    const summaryShippingEl = document.getElementById("cart-summary-shipping");
-    const summaryTotalEl = document.getElementById("cart-summary-total");
+    const groupsContainer = document.getElementById("cart-items-body");
 
-    if (!tbody || !emptyState || !layoutEl) {
+    if (!groupsContainer || !emptyState || !layoutEl) {
       return;
     }
 
     const totalCount = typeof window.getCartCount === "function" ? window.getCartCount(cart) : 0;
     const subtotal = typeof window.getCartTotal === "function" ? window.getCartTotal(cart) : 0;
-    const shippingFee = 0;
-    const grandTotal = subtotal + shippingFee;
 
-    if (pageCountEl) {
-      pageCountEl.textContent = `${totalCount} sản phẩm`;
-    }
-
-    // Lọc các dòng có sản phẩm hợp lệ trong products.js
     const validEntries = cart
       .map((item) => {
         const product = typeof window.getProduct === "function" ? window.getProduct(item.productId) : null;
@@ -75,107 +217,90 @@
       .filter(Boolean);
 
     if (validEntries.length === 0) {
-      tbody.innerHTML = "";
+      groupsContainer.innerHTML = "";
       emptyState.hidden = false;
       layoutEl.hidden = true;
-      if (summaryCountEl) summaryCountEl.textContent = "0 sản phẩm";
-      if (summarySubtotalEl) summarySubtotalEl.textContent = window.formatCurrency(0);
-      if (summaryTotalEl) summaryTotalEl.textContent = window.formatCurrency(0);
+      updateCartSummaryDisplay(0, 0);
       return;
     }
 
     emptyState.hidden = true;
     layoutEl.hidden = false;
 
-    tbody.innerHTML = validEntries
-      .map(({ item, product }) => {
-        const optionIndex = Number(item.optionIndex) || 0;
+    const standaloneEntries = [];
+    const recipeGroupsMap = new Map();
+
+    validEntries.forEach((entry) => {
+      const groupId = parseGroupAttr(entry.item.recipeGroupId);
+      if (!groupId) {
+        standaloneEntries.push(entry);
+      } else {
+        if (!recipeGroupsMap.has(groupId)) {
+          recipeGroupsMap.set(groupId, []);
+        }
+        recipeGroupsMap.get(groupId).push(entry);
+      }
+    });
+
+    const htmlParts = [];
+
+    if (standaloneEntries.length > 0) {
+      htmlParts.push(`
+        <section class="cart-group cart-group--standalone" aria-label="Sản phẩm mua lẻ">
+          ${standaloneEntries.map(renderCartItemRow).join("")}
+        </section>
+      `);
+    }
+
+    recipeGroupsMap.forEach((groupEntries, groupId) => {
+      const comboInfo =
+        typeof window.getRecipeComboInfo === "function"
+          ? window.getRecipeComboInfo(groupId)
+          : { title: `Combo công thức (${groupId})` };
+
+      const groupTotal = groupEntries.reduce((sum, { item, product }) => {
         const option =
           typeof window.getProductOption === "function"
-            ? window.getProductOption(product.id, optionIndex)
-            : { optionIndex: 0, shortLabel: "Tiêu chuẩn", price: Number(product.price) };
+            ? window.getProductOption(product.id, item.optionIndex)
+            : null;
         const unitPrice = option ? Number(option.price) : Number(product.price);
-        const lineTotal = unitPrice * Number(item.quantity);
-        const safeName = escapeHtml(product.name);
-        const safeCategory = escapeHtml(product.category);
-        const safeOption = escapeHtml(option ? option.shortLabel : "");
-        const safeImage = escapeHtml(product.image || FALLBACK_IMG);
-        const labelWithOption = safeOption ? `${safeName} (${safeOption})` : safeName;
+        return sum + unitPrice * Number(item.quantity);
+      }, 0);
 
-        return `
-          <tr class="cart-item" data-product-id="${product.id}" data-option-index="${optionIndex}">
-            <td class="cart-item__product-cell" data-label="Sản phẩm">
-              <div class="cart-item__product">
-                <a href="product-detail.html?id=${product.id}" class="cart-item__thumb-link">
-                  <img
-                    src="${safeImage}"
-                    alt="${safeName}"
-                    class="cart-item__img"
-                    onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
-                  >
-                </a>
-                <div class="cart-item__meta">
-                  <a href="product-detail.html?id=${product.id}" class="cart-item__name">${safeName}</a>
-                  <span class="cart-item__category">${safeCategory}${safeOption ? ` · Quy cách: <strong>${safeOption}</strong>` : ""}</span>
-                </div>
-              </div>
-            </td>
-            <td class="cart-item__price" data-label="Đơn giá">
-              ${window.formatCurrency(unitPrice)}
-            </td>
-            <td class="cart-item__qty-cell" data-label="Số lượng">
-              <div class="cart-qty-control">
-                <button
-                  type="button"
-                  class="qty-btn js-qty-minus"
-                  data-product-id="${product.id}"
-                  data-option-index="${optionIndex}"
-                  aria-label="Giảm số lượng ${labelWithOption}"
-                  ${item.quantity <= 1 ? "disabled" : ""}
-                >-</button>
-                <input
-                  type="number"
-                  class="qty-input js-qty-input"
-                  data-product-id="${product.id}"
-                  data-option-index="${optionIndex}"
-                  value="${item.quantity}"
-                  min="1"
-                  max="${MAX_QTY}"
-                  aria-label="Số lượng ${labelWithOption}"
-                >
-                <button
-                  type="button"
-                  class="qty-btn js-qty-plus"
-                  data-product-id="${product.id}"
-                  data-option-index="${optionIndex}"
-                  aria-label="Tăng số lượng ${labelWithOption}"
-                  ${item.quantity >= MAX_QTY ? "disabled" : ""}
-                >+</button>
-              </div>
-            </td>
-            <td class="cart-item__subtotal" data-label="Thành tiền">
-              <strong>${window.formatCurrency(lineTotal)}</strong>
-            </td>
-            <td class="cart-item__action" data-label="Thao tác">
+      htmlParts.push(`
+        <section
+          class="cart-group cart-group--recipe"
+          data-recipe-group-id="${escapeHtml(groupId)}"
+          aria-label="${escapeHtml(comboInfo.title)}"
+        >
+          <div class="cart-group__header">
+            <div class="cart-group__title-wrap">
+              <span class="cart-group__badge">Combo công thức</span>
+              <h3 class="cart-group__title">${escapeHtml(comboInfo.title)}</h3>
+            </div>
+            <div class="cart-group__meta">
+              <span class="cart-group__subtotal">
+                Tạm tính combo: <strong>${window.formatCurrency(groupTotal)}</strong>
+              </span>
               <button
                 type="button"
-                class="btn-remove-item js-remove-item"
-                data-product-id="${product.id}"
-                data-option-index="${optionIndex}"
-                aria-label="Xóa ${labelWithOption} khỏi giỏ hàng"
+                class="btn-remove-combo js-remove-recipe-combo"
+                data-recipe-group-id="${escapeHtml(groupId)}"
+                aria-label="Xóa cả combo ${escapeHtml(comboInfo.title)}"
               >
-                Xóa
+                Xóa cả combo
               </button>
-            </td>
-          </tr>
-        `;
-      })
-      .join("");
+            </div>
+          </div>
+          <div class="cart-group__items">
+            ${groupEntries.map(renderCartItemRow).join("")}
+          </div>
+        </section>
+      `);
+    });
 
-    if (summaryCountEl) summaryCountEl.textContent = `${totalCount} sản phẩm`;
-    if (summarySubtotalEl) summarySubtotalEl.textContent = window.formatCurrency(subtotal);
-    if (summaryShippingEl) summaryShippingEl.textContent = "Miễn phí (0 ₫)";
-    if (summaryTotalEl) summaryTotalEl.textContent = window.formatCurrency(grandTotal);
+    groupsContainer.innerHTML = htmlParts.join("");
+    updateCartSummaryDisplay(totalCount, subtotal);
   }
 
   /**
@@ -190,14 +315,25 @@
     const itemsHtml = order.items
       .map((item) => {
         const optionSuffix = item.optionLabel ? ` (${escapeHtml(item.optionLabel)})` : "";
+        const comboTag = item.recipeGroupId ? ` <small class="order-item-combo-tag">[Combo]</small>` : "";
         return `
           <li>
-            <span>${escapeHtml(item.name)}${optionSuffix} × ${item.quantity}</span>
+            <span>${escapeHtml(item.name)}${optionSuffix}${comboTag} × ${item.quantity}</span>
             <strong>${window.formatCurrency(item.lineTotal)}</strong>
           </li>
         `;
       })
       .join("");
+
+    const discountLineHtml =
+      order.discountAmount > 0 && order.couponCode
+        ? `
+          <div class="order-confirmation__discount">
+            <span>Giảm giá (${escapeHtml(order.couponCode)} -10%):</span>
+            <strong>-${window.formatCurrency(order.discountAmount)}</strong>
+          </div>
+        `
+        : "";
 
     box.innerHTML = `
       <div class="order-confirmation__badge">Đặt hàng thành công</div>
@@ -222,6 +358,7 @@
         <div class="order-confirmation__items">
           <h3>Chi tiết đơn hàng (${order.totalQuantity} sản phẩm)</h3>
           <ul class="order-confirmation__list">${itemsHtml}</ul>
+          ${discountLineHtml}
           <div class="order-confirmation__total">
             <span>Tổng thanh toán (COD):</span>
             <strong>${window.formatCurrency(order.total)}</strong>
@@ -274,6 +411,11 @@
           })
           .join(", ");
 
+        const couponBadge =
+          order.couponCode && order.discountAmount > 0
+            ? `<span class="order-history-card__coupon">Mã ${escapeHtml(order.couponCode)} (-${window.formatCurrency(order.discountAmount)})</span>`
+            : "";
+
         return `
           <article class="order-history-card">
             <div class="order-history-card__top">
@@ -290,7 +432,7 @@
               <strong>Sản phẩm:</strong> ${itemsSummary}
             </p>
             <div class="order-history-card__bottom">
-              <span>Tổng số lượng: ${Number(order.totalQuantity) || 0}</span>
+              <span>Tổng số lượng: ${Number(order.totalQuantity) || 0} ${couponBadge}</span>
               <strong>Tổng tiền: ${window.formatCurrency(order.total)}</strong>
             </div>
           </article>
@@ -299,9 +441,6 @@
       .join("");
   }
 
-  /**
-   * Hiển thị hoặc xóa thông báo lỗi trên từng ô form đặt hàng COD.
-   */
   function setFieldError(inputId, errorId, message) {
     const input = document.getElementById(inputId);
     const errorEl = document.getElementById(errorId);
@@ -314,9 +453,6 @@
     }
   }
 
-  /**
-   * Kiểm tra dữ liệu biểu mẫu đặt hàng COD theo F13 & NFR02.
-   */
   function validateCheckoutForm() {
     const nameInput = document.getElementById("customer-name");
     const phoneInput = document.getElementById("customer-phone");
@@ -399,34 +535,80 @@
     };
   }
 
+  function findCartItem(productId, optionIndex, recipeGroupId) {
+    const cart = window.getCart();
+    return cart.find(
+      (item) =>
+        item.productId === productId &&
+        Number(item.optionIndex || 0) === optionIndex &&
+        parseGroupAttr(item.recipeGroupId) === recipeGroupId
+    );
+  }
+
+  function promptRemoveOnZero(productId, optionIndex, recipeGroupId) {
+    const product = window.getProduct(productId);
+    const productName = product ? product.name : "sản phẩm này";
+    const confirmed = window.confirm(
+      `Số lượng sản phẩm đang là 1. Bạn có chắc muốn xóa "${productName}" khỏi giỏ hàng?`
+    );
+    if (!confirmed) {
+      return false;
+    }
+    window.removeFromCart(productId, optionIndex, recipeGroupId);
+    window.showCartToast(`Đã xóa "${productName}" khỏi giỏ hàng.`, { showCartLink: false });
+    return true;
+  }
+
+  function showCouponFeedback(message, isError) {
+    const feedback = document.getElementById("coupon-feedback");
+    if (!feedback) return;
+    feedback.textContent = message || "";
+    feedback.classList.toggle("is-error", Boolean(isError && message));
+    feedback.classList.toggle("is-success", Boolean(!isError && message));
+  }
+
   /**
-   * Xử lý các tương tác tăng/giảm/sửa số lượng, xóa sản phẩm và đặt hàng COD.
+   * Khởi tạo toàn bộ sự kiện tăng/giảm/xóa sản phẩm, xóa cả combo, mã giảm giá và đặt hàng COD.
    */
   function initCartEvents() {
-    const tbody = document.getElementById("cart-items-body");
+    const groupsContainer = document.getElementById("cart-items-body");
     const clearBtn = document.getElementById("btn-clear-cart");
+    const couponForm = document.getElementById("cart-coupon-form");
+    const couponInput = document.getElementById("coupon-code-input");
+    const removeCouponBtn = document.getElementById("btn-remove-coupon");
     const checkoutForm = document.getElementById("cod-checkout-form");
     const clearOrdersBtn = document.getElementById("btn-clear-orders");
 
-    if (tbody) {
-      tbody.addEventListener("click", function (event) {
+    if (groupsContainer) {
+      groupsContainer.addEventListener("click", function (event) {
+        const removeComboBtn = event.target.closest(".js-remove-recipe-combo");
+        if (removeComboBtn) {
+          const groupId = parseGroupAttr(removeComboBtn.dataset.recipeGroupId);
+          if (groupId && typeof window.removeRecipeGroup === "function") {
+            const comboInfo =
+              typeof window.getRecipeComboInfo === "function"
+                ? window.getRecipeComboInfo(groupId)
+                : { title: groupId };
+            window.removeRecipeGroup(groupId);
+            window.showCartToast(`Đã xóa trọn bộ "${comboInfo.title}" khỏi giỏ hàng.`, {
+              showCartLink: false
+            });
+          }
+          return;
+        }
+
         const minusBtn = event.target.closest(".js-qty-minus");
         if (minusBtn) {
           const productId = Number(minusBtn.dataset.productId);
           const optionIndex = Number(minusBtn.dataset.optionIndex) || 0;
-          const cart = window.getCart();
-          const current = cart.find(
-            (item) => item.productId === productId && Number(item.optionIndex || 0) === optionIndex
-          );
+          const recipeGroupId = parseGroupAttr(minusBtn.dataset.recipeGroupId);
+          const current = findCartItem(productId, optionIndex, recipeGroupId);
           if (current) {
             if (current.quantity <= 1) {
-              window.showCartToast("Số lượng tối thiểu là 1. Nhấn nút Xóa nếu muốn bỏ sản phẩm.", {
-                type: "warning",
-                showCartLink: false
-              });
+              promptRemoveOnZero(productId, optionIndex, recipeGroupId);
               return;
             }
-            window.updateQuantity(productId, current.quantity - 1, optionIndex);
+            window.updateQuantity(productId, current.quantity - 1, optionIndex, recipeGroupId);
           }
           return;
         }
@@ -435,10 +617,8 @@
         if (plusBtn) {
           const productId = Number(plusBtn.dataset.productId);
           const optionIndex = Number(plusBtn.dataset.optionIndex) || 0;
-          const cart = window.getCart();
-          const current = cart.find(
-            (item) => item.productId === productId && Number(item.optionIndex || 0) === optionIndex
-          );
+          const recipeGroupId = parseGroupAttr(plusBtn.dataset.recipeGroupId);
+          const current = findCartItem(productId, optionIndex, recipeGroupId);
           if (current) {
             if (current.quantity >= MAX_QTY) {
               window.showCartToast(`Số lượng tối đa cho mỗi sản phẩm là ${MAX_QTY}.`, {
@@ -447,7 +627,7 @@
               });
               return;
             }
-            window.updateQuantity(productId, current.quantity + 1, optionIndex);
+            window.updateQuantity(productId, current.quantity + 1, optionIndex, recipeGroupId);
           }
           return;
         }
@@ -456,12 +636,13 @@
         if (removeBtn) {
           const productId = Number(removeBtn.dataset.productId);
           const optionIndex = Number(removeBtn.dataset.optionIndex) || 0;
+          const recipeGroupId = parseGroupAttr(removeBtn.dataset.recipeGroupId);
           const product = window.getProduct(productId);
           const option =
             typeof window.getProductOption === "function"
               ? window.getProductOption(productId, optionIndex)
               : null;
-          window.removeFromCart(productId, optionIndex);
+          window.removeFromCart(productId, optionIndex, recipeGroupId);
           const optText = option && option.shortLabel ? ` (${option.shortLabel})` : "";
           window.showCartToast(
             product ? `Đã xóa "${product.name}"${optText} khỏi giỏ hàng.` : "Đã xóa sản phẩm khỏi giỏ hàng.",
@@ -470,7 +651,7 @@
         }
       });
 
-      tbody.addEventListener("change", function (event) {
+      groupsContainer.addEventListener("change", function (event) {
         const qtyInput = event.target.closest(".js-qty-input");
         if (!qtyInput) {
           return;
@@ -478,10 +659,20 @@
 
         const productId = Number(qtyInput.dataset.productId);
         const optionIndex = Number(qtyInput.dataset.optionIndex) || 0;
+        const recipeGroupId = parseGroupAttr(qtyInput.dataset.recipeGroupId);
+        const current = findCartItem(productId, optionIndex, recipeGroupId);
         const rawValue = Number(qtyInput.value);
 
+        if (Number.isFinite(rawValue) && Math.floor(rawValue) === 0) {
+          const removed = promptRemoveOnZero(productId, optionIndex, recipeGroupId);
+          if (!removed && current) {
+            qtyInput.value = current.quantity;
+          }
+          return;
+        }
+
         if (!Number.isFinite(rawValue) || Math.floor(rawValue) < 1) {
-          window.updateQuantity(productId, 1, optionIndex);
+          window.updateQuantity(productId, 1, optionIndex, recipeGroupId);
           window.showCartToast("Số lượng không hợp lệ (tối thiểu là 1). Đã đặt lại về 1.", {
             type: "warning",
             showCartLink: false
@@ -489,7 +680,7 @@
           return;
         }
 
-        const result = window.updateQuantity(productId, rawValue, optionIndex);
+        const result = window.updateQuantity(productId, rawValue, optionIndex, recipeGroupId);
         if (result.capped) {
           window.showCartToast(`Số lượng tối đa cho mỗi sản phẩm là ${MAX_QTY}.`, {
             type: "warning",
@@ -511,8 +702,58 @@
       });
     }
 
+    // Xử lý áp dụng & hủy mã giảm giá CHAOBANMOI
+    if (couponForm && couponInput) {
+      const initialCoupon = typeof window.getSavedCoupon === "function" ? window.getSavedCoupon() : null;
+      if (initialCoupon) {
+        showCouponFeedback(`Đang áp dụng mã ${initialCoupon}: Giảm 10% cho đơn hàng đầu tiên.`, false);
+      }
+
+      couponForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        const code = couponInput.value.trim();
+        const result =
+          typeof window.setSavedCoupon === "function"
+            ? window.setSavedCoupon(code)
+            : { valid: false, message: "Chức năng mã giảm giá chưa sẵn sàng." };
+
+        if (!result.valid) {
+          showCouponFeedback(result.message, true);
+          if (couponInput) {
+            couponInput.classList.add("is-invalid");
+            couponInput.focus();
+          }
+          return;
+        }
+
+        if (couponInput) {
+          couponInput.classList.remove("is-invalid");
+          couponInput.value = result.code;
+        }
+        showCouponFeedback(result.message, false);
+        renderCart();
+      });
+
+      couponInput.addEventListener("input", function () {
+        couponInput.classList.remove("is-invalid");
+      });
+    }
+
+    if (removeCouponBtn) {
+      removeCouponBtn.addEventListener("click", function () {
+        if (typeof window.clearSavedCoupon === "function") {
+          window.clearSavedCoupon();
+        }
+        if (couponInput) {
+          couponInput.value = "";
+          couponInput.classList.remove("is-invalid");
+        }
+        showCouponFeedback("Đã bỏ mã giảm giá.", false);
+        renderCart();
+      });
+    }
+
     if (checkoutForm) {
-      // Xóa lỗi ngay khi người dùng chỉnh sửa trường đang lỗi
       const fieldPairs = [
         ["customer-name", "error-name"],
         ["customer-phone", "error-phone"],
@@ -548,7 +789,6 @@
           return;
         }
 
-        // Tính lại toàn bộ giá và số lượng từ nguồn products.js & quy cách hợp lệ (NFR03)
         const orderItems = [];
         let totalQuantity = 0;
         let subtotal = 0;
@@ -576,6 +816,7 @@
             name: product.name,
             optionIndex,
             optionLabel: option ? option.shortLabel : "",
+            recipeGroupId: parseGroupAttr(entry.recipeGroupId),
             price: unitPrice,
             image: product.image,
             quantity: Number(entry.quantity),
@@ -583,7 +824,13 @@
           });
         }
 
+        const activeCoupon = typeof window.getSavedCoupon === "function" ? window.getSavedCoupon() : null;
+        const discountInfo =
+          typeof window.calculateDiscount === "function"
+            ? window.calculateDiscount(subtotal, activeCoupon)
+            : { couponCode: null, discountAmount: 0, finalTotal: subtotal };
         const shippingFee = 0;
+
         const order = {
           orderCode: window.createOrderCode(),
           createdAt: new Date().toISOString(),
@@ -593,13 +840,22 @@
           items: orderItems,
           totalQuantity,
           subtotal,
+          couponCode: discountInfo.couponCode,
+          discountAmount: discountInfo.discountAmount,
           shippingFee,
-          total: subtotal + shippingFee
+          total: discountInfo.finalTotal + shippingFee
         };
 
         window.saveOrder(order);
         window.clearCart();
+        if (typeof window.clearSavedCoupon === "function") {
+          window.clearSavedCoupon();
+        }
         checkoutForm.reset();
+        if (couponInput) {
+          couponInput.value = "";
+        }
+        showCouponFeedback("", false);
 
         renderOrderConfirmation(order);
         renderOrderHistory();

@@ -387,3 +387,22 @@ Hover/Focus	Hiệu ứng có thể gây xô lệch bố cục	Ưu tiên màu, b�
 Rà soát mã nguồn	Liên kết fragment không có ID đích tương ứng	Ghi nhận để chỉnh khi hoàn thiện; vẫn giữ một trang chi tiết mẫu
 Rà soát ảnh	Hai phần báo cáo có nhận xét khác nhau	Kiểm tra lại cùng phiên bản trang và ảnh trước khi kết luận
 README	Prompt nêu việc đã dọn CSS trùng nhưng phần khác ghi chưa làm	Chỉ ghi thay đổi đã hoàn tất và có thể đối chiếu
+
+---
+
+## 4. Nhật ký sử dụng AI – Buổi 3 (Hoàn thiện JavaScript, Giỏ hàng & 21 Sản phẩm)
+
+### Lần sử dụng 13: Mở rộng 21 sản phẩm, chuẩn hóa giỏ hàng `bakemate_cart` & `blog.html`
+- **Công cụ AI:** Antigravity Agent (Gemini)
+- **Mục đích:** Rà soát lỗi tồn đọng sau Buổi 2 (trạng thái `.active` trên Header `cart.html`, chuẩn 3 danh mục, chuẩn hóa khóa `bakemate_cart` với `recipeGroupId`), mở rộng thêm 10 sản phẩm kèm bộ 3 ảnh chi tiết, bổ sung trang `blog.html` và mã giảm giá `CHAOBANMOI` (-10%).
+- **Prompt chính (tóm tắt):** Thực hiện theo Phương án A (giữ nguyên kiến trúc Vanilla JS `js/` + Pure CSS `css/style.css`, không viết lại sang Bootstrap 5), bổ sung 10 sản phẩm đa dạng nguyên liệu/dụng cụ/phụ kiện cùng hình ảnh tương ứng vào `images/products/`, đặt banner ưu đãi `CHAOBANMOI` trong Footer, xây dựng hoàn chỉnh `blog.html`, phân tách nhóm combo `recipeGroupId` viền nét đứt caramel trên `cart.html` và cập nhật tài liệu nghiệm thu Buổi 3.
+- **Kết quả đề xuất & Thực thi:**
+  - Chuẩn hóa `js/products.js` lên 21 sản phẩm thuộc đúng 3 danh mục (`Nguyên liệu`, `Dụng cụ`, `Phụ kiện & Đóng gói`) với đường dẫn ảnh `images/products/<slug>-1.jpg`.
+  - Tạo bộ 63 ảnh vuông `800×800px` trong `images/products/` (gồm ảnh chụp thực tế của shop + 6 ảnh AI cho `#1`, `#12` + ảnh studio vector render bằng `.NET System.Drawing` cho các góc sản phẩm còn lại khi hạn mức API tạo ảnh chạm ngưỡng).
+  - Nâng cấp `js/storage.js`, `js/search-filter.js`, `js/product-detail.js`, `js/cart.js` với IIFE an toàn, đầy đủ quy cách đóng gói `100g/300g/500g/1kg` cho bột mì, thuộc tính `recipeGroupId`, hộp thoại xác nhận khi giảm số lượng `1 -> 0`, áp dụng/hủy mã `CHAOBANMOI` và luồng đặt hàng COD F13.
+  - Xây dựng mới `blog.html` + `js/blog.js` với bộ lọc chủ đề, tìm kiếm bài viết, modal công thức từng bước và nút gom combo trực tiếp vào giỏ hàng.
+- **Phản biện / Kiểm chứng của nhóm:**
+  - Không tự ý chuyển sang Bootstrap 5 để tránh xung đột CSS với `css/style.css` nhóm đã xây ở Buổi 2 (chốt giữ Phương án A).
+  - Bắt buộc ghi nhận minh bạch các ảnh studio vector tự động vẽ bằng script đồ họa cục bộ nhằm thay thế tạm khi API tạo ảnh AI chạm giới hạn quota, cho phép thay thế dần bằng ảnh chụp sản phẩm thực tế mà không cần đổi tên tệp.
+  - Kiểm tra thực tế toàn bộ liên kết HTML, ảnh `images/products/*`, logic JavaScript và hiển thị đa màn hình trước khi cập nhật `docs/test-report.md`.
+- **Người kiểm tra:** Gia Bảo, Bảo Ngọc, Phạm Thương

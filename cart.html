@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Giỏ hàng và đặt hàng thanh toán khi nhận hàng (COD) tại BakeMate.">
+  <meta name="description" content="Giỏ hàng, áp dụng mã CHAOBANMOI và đặt hàng thanh toán khi nhận hàng (COD) tại BakeMate.">
   <title>Giỏ hàng | BakeMate</title>
 
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
@@ -14,7 +14,7 @@
 </head>
 <body class="cart-page-body">
 
-  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <!-- ================= HEADER DÙNG CHUNG (KHÔNG GÁN .active CHO SẢN PHẨM) ================= -->
   <header class="site-header">
     <div class="header-container">
       <a href="index.html" class="site-header__logo-link">
@@ -26,6 +26,7 @@
         <ul class="site-header__menu">
           <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
           <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
           <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
         </ul>
       </nav>
@@ -37,7 +38,12 @@
           <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
         <a href="cart.html" class="site-header__cart active" aria-label="Giỏ hàng" aria-current="page">
-          <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
           <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
         </a>
       </div>
@@ -57,7 +63,7 @@
     <div class="cart-page__header">
       <div>
         <h1 class="cart-page__title">Giỏ hàng của bạn</h1>
-        <p class="cart-page__subtitle" id="cart-page-subtitle">Kiểm tra nguyên liệu, điều chỉnh số lượng và đặt hàng nhanh với hình thức COD.</p>
+        <p class="cart-page__subtitle" id="cart-page-subtitle">Kiểm tra nguyên liệu mua lẻ, combo công thức và đặt hàng nhanh với hình thức COD.</p>
       </div>
       <span class="cart-page__count-pill" id="cart-page-count">0 sản phẩm</span>
     </div>
@@ -69,49 +75,66 @@
 
     <!-- Trạng thái giỏ hàng trống -->
     <section id="cart-empty-state" class="cart-empty" hidden>
-      <div class="cart-empty__icon" aria-hidden="true">🧁</div>
+      <div class="cart-empty__icon" aria-hidden="true">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>
+        </svg>
+      </div>
       <h2 class="cart-empty__title">Giỏ hàng của bạn đang trống</h2>
       <p class="cart-empty__desc">
-        Hãy khám phá các nguyên liệu và dụng cụ làm bánh chất lượng của BakeMate để bắt đầu công thức yêu thích của bạn.
+        Hãy khám phá các nguyên liệu, dụng cụ hoặc combo công thức chuẩn vị của BakeMate để bắt đầu mẻ bánh mới của bạn.
       </p>
       <a href="products.html" class="btn btn--primary">Khám phá sản phẩm ngay</a>
     </section>
 
     <!-- Bố cục 2 cột: Danh sách sản phẩm + Tóm tắt & Đặt hàng COD -->
     <section id="cart-content-layout" class="cart-layout" hidden>
-      <!-- Cột trái: Bảng sản phẩm trong giỏ -->
+      <!-- Cột trái: Danh sách hàng mua lẻ & Combo Recipe-to-Cart -->
       <div class="cart-items-panel">
         <div class="cart-panel__head">
           <h2 class="cart-panel__title">Danh sách sản phẩm</h2>
           <button type="button" id="btn-clear-cart" class="btn-clear-cart">Xóa toàn bộ giỏ hàng</button>
         </div>
 
-        <div class="cart-table-wrap">
-          <table class="cart-table">
-            <thead>
-              <tr>
-                <th scope="col">Sản phẩm</th>
-                <th scope="col">Đơn giá</th>
-                <th scope="col">Số lượng</th>
-                <th scope="col">Thành tiền</th>
-                <th scope="col">Thao tác</th>
-              </tr>
-            </thead>
-            <tbody id="cart-items-body">
-              <!-- Render động bằng js/cart.js -->
-            </tbody>
-          </table>
+        <div class="cart-grid-head" aria-hidden="true">
+          <span>Sản phẩm</span>
+          <span>Đơn giá</span>
+          <span>Số lượng</span>
+          <span>Thành tiền</span>
+          <span>Thao tác</span>
+        </div>
+
+        <div id="cart-items-body" class="cart-groups-list">
+          <!-- Render động phân nhóm mua lẻ & combo công thức bằng js/cart.js -->
         </div>
 
         <div class="cart-panel__footer">
           <a href="products.html" class="btn btn--outline-dark">&larr; Tiếp tục mua sắm</a>
+          <a href="blog.html" class="btn btn--outline-dark">+ Chọn thêm combo công thức</a>
         </div>
       </div>
 
-      <!-- Cột phải: Tóm tắt đơn hàng & Form đặt hàng COD (F13) -->
+      <!-- Cột phải: Mã giảm giá CHAOBANMOI, Tóm tắt đơn hàng & Form COD -->
       <aside class="cart-summary-panel" aria-label="Tóm tắt giỏ hàng và đặt hàng">
         <div class="cart-summary-card">
           <h2 class="cart-summary-card__title">Tóm tắt giỏ hàng</h2>
+
+          <form id="cart-coupon-form" class="cart-coupon" novalidate>
+            <label for="coupon-code-input" class="cart-coupon__label">Mã ưu đãi thành viên</label>
+            <div class="cart-coupon__row">
+              <input
+                type="text"
+                id="coupon-code-input"
+                class="form-input cart-coupon__input"
+                placeholder="Nhập mã CHAOBANMOI (-10%)"
+                autocomplete="off"
+              >
+              <button type="submit" id="btn-apply-coupon" class="btn btn--primary cart-coupon__btn">Áp dụng</button>
+              <button type="button" id="btn-remove-coupon" class="btn-remove-coupon" hidden aria-label="Hủy mã giảm giá">Hủy</button>
+            </div>
+            <p id="coupon-feedback" class="coupon-feedback" aria-live="polite"></p>
+          </form>
+
           <div class="cart-summary-row">
             <span>Tổng số lượng</span>
             <strong id="cart-summary-count">0 sản phẩm</strong>
@@ -119,6 +142,10 @@
           <div class="cart-summary-row">
             <span>Tạm tính</span>
             <strong id="cart-summary-subtotal">0 ₫</strong>
+          </div>
+          <div class="cart-summary-row cart-summary-row--discount" id="cart-summary-discount-row" hidden>
+            <span id="cart-summary-discount-label">Giảm giá (CHAOBANMOI -10%)</span>
+            <strong id="cart-summary-discount">-0 ₫</strong>
           </div>
           <div class="cart-summary-row">
             <span>Phí vận chuyển</span>
@@ -200,6 +227,32 @@
     </section>
   </main>
 
+  <!-- ================= BANNER VOUCHER KHUYẾN MÃI ================= -->
+  <section class="promo-ticket-band" aria-label="Ưu đãi thành viên mới">
+    <div class="promo-ticket-band__inner">
+      <div class="footer-promo promo-ticket-bar" role="region" aria-label="Mã giảm giá thành viên mới">
+        <div class="promo-ticket-bar__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+            <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+          </svg>
+        </div>
+        <div class="promo-ticket-bar__content">
+          <span>Ưu đãi khách hàng mới: Nhập mã</span>
+          <span class="promo-badge">CHAOBANMOI</span>
+          <span>để được giảm <strong>10%</strong> cho đơn hàng đầu tiên!</span>
+        </div>
+        <button type="button" class="promo-ticket-bar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã giảm giá CHAOBANMOI">
+          <svg class="promo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span class="js-copy-promo-label">Sao chép mã</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= FOOTER DÙNG CHUNG ================= -->
   <footer class="site-footer">
     <div class="footer-container">
@@ -212,6 +265,7 @@
         <ul class="footer-col__list">
           <li><a href="index.html">Trang chủ</a></li>
           <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="blog.html">Blog</a></li>
           <li><a href="cart.html">Giỏ hàng</a></li>
           <li><a href="about.html">Giới thiệu</a></li>
         </ul>
