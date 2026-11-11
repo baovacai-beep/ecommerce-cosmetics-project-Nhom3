@@ -549,7 +549,7 @@
     const product = window.getProduct(productId);
     const productName = product ? product.name : "sản phẩm này";
     const confirmed = window.confirm(
-      `Số lượng sản phẩm đang là 1. Bạn có chắc muốn xóa "${productName}" khỏi giỏ hàng?`
+      `Bạn có chắc muốn xóa "${productName}" khỏi giỏ hàng?`
     );
     if (!confirmed) {
       return false;
@@ -661,9 +661,16 @@
         const optionIndex = Number(qtyInput.dataset.optionIndex) || 0;
         const recipeGroupId = parseGroupAttr(qtyInput.dataset.recipeGroupId);
         const current = findCartItem(productId, optionIndex, recipeGroupId);
-        const rawValue = Number(qtyInput.value);
+        const rawStr = String(qtyInput.value == null ? "" : qtyInput.value).trim();
 
-        if (Number.isFinite(rawValue) && Math.floor(rawValue) === 0) {
+        if (rawStr === "") {
+          qtyInput.value = current ? current.quantity : 1;
+          return;
+        }
+
+        const rawValue = Number(rawStr);
+
+        if (rawValue === 0) {
           const removed = promptRemoveOnZero(productId, optionIndex, recipeGroupId);
           if (!removed && current) {
             qtyInput.value = current.quantity;
