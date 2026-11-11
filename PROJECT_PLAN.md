@@ -1,66 +1,40 @@
-
-# PROJECT PLAN – BakeMate
+# PROJECT PLAN – BakeMate (`bakemate-ecommerce-project`)
 
 ## 1. Thành viên và vai trò
 
-| Thành viên | Vai trò | Trách nhiệm chính |
+| Thành viên | Vai trò chính | Trách nhiệm tổng quát & Module Buổi 3 |
 |---|---|---|
-| Trần Thị Bảo Ngọc | Project Manager | Điều phối nhóm, phân công công việc và theo dõi tiến độ dự án. |
-| Trần Thị Bảo Ngọc, Trần Lê Như Hậu | Business Analyst (BA) | Thu thập thông tin, phân tích nhu cầu khách hàng và xác định yêu cầu chức năng. |
-| Phạm Hoài Thương | Tester | Kiểm thử chức năng, phát hiện lỗi và kiểm tra kết quả sau khi sửa lỗi. |
-| Hồ Gia Bảo | QA & Documentation | Theo dõi chất lượng phần mềm và tổng hợp, hoàn thiện tài liệu dự án. |
-| Vũ Ngọc Minh Thư, Siu Đen Ny | UI/UX Designer | Thiết kế trải nghiệm người dùng, giao diện và triển khai frontend. |
-| Hồ Gia Bảo, Dương Thúy Hiền, Nguyễn Hoài Thương | Developer | Phát  triển chức năng, Thiết kế cơ sở dữ liệu, xử lý nghiệp vụ và kết nối dữ liệu với frontend. |
+| Hồ Gia Bảo | Tech Lead / Core Architecture / QA Docs | Thiết kế kiến trúc JS mô-đun hóa (`js/storage.js`), chuẩn hóa `bakemate_cart` (`recipeGroupId`), mã giảm giá `CHAOBANMOI`, điều phối Git/PR & tài liệu tổng hợp. |
+| Trần Thị Bảo Ngọc | Project Manager / BA / Data Lead | Điều phối tiến độ nhóm, chuẩn hóa dữ liệu 21 sản phẩm & 3 danh mục (`js/products.js`), kiểm soát phạm vi `REQUIREMENTS.md`. |
+| Vũ Ngọc Minh Thư | UI/UX Designer / Frontend Filter | Thiết kế hệ thống Design Tokens (`css/style.css`), triển khai `js/search-filter.js` (`renderProducts`, `applyFiltersAndSort`) và giao diện `products.html`. |
+| Nguyễn Hoài Thương | Frontend Developer | Triển khai `js/product-detail.js`, gallery đa ảnh cho 21 mặt hàng, quy cách đóng gói `100g–1kg`, khối Recipe Cross-link và kiểm tra ID URL. |
+| Siu Đen Ny | UI/UX & Cart Developer | Thiết kế và lập trình `cart.html`, `js/cart.js` (bảng giỏ hàng, nhóm viền nét đứt `recipeGroupId`, đồng bộ `bakemate_cart`). |
+| Dương Thúy Hiền | Cart & Checkout Developer (F12, F13) | Hoàn thiện tương tác giỏ hàng F12, luồng kiểm tra form đặt hàng COD (F13), lịch sử đơn hàng và tích hợp `CHAOBANMOI`. |
+| Trần Lê Như Hậu | BA / Blog Content & Recipe Integration | Soạn nội dung công thức, kết nối giải pháp Recipe-to-Cart trên `blog.html` & `js/blog.js`, hỗ trợ tài liệu nghiệp vụ. |
+| Phạm Hoài Thương | QA Tester & Bug Verification | Lập bảng nghiệm thu 14 Test Cases (`docs/test-report.md`), kiểm thử hồi quy, đối chiếu Responsive (`1366/768/390px`) và báo cáo lỗi đã fix. |
 
-## 2. Các giai đoạn thực hiện
+---
 
-### Giai đoạn 1: Khảo sát và phân tích yêu cầu
-- Khảo sát nhu cầu của người dùng.
-- Xác định đối tượng khách hàng và mục tiêu dự án.
-- Xác định phạm vi và chức năng của website.
+## 2. Bảng phân công chi tiết Buổi 3 (Theo tiến độ chuẩn 8 bước)
 
-### Giai đoạn 2: Phân tích nghiệp vụ và thiết kế giao diện
-- Phân tích quy trình hoạt động của website.
-- Xây dựng luồng người dùng và cấu trúc các trang.
-- Thiết kế giao diện UI/UX.
-### Giai đoạn 3: Phát triển hệ thống
-- Xây dựng giao diện frontend.
-- Thiết kế cơ sở dữ liệu.
-- Phát triển backend và xử lý nghiệp vụ.
+| Bước công việc | Nhiệm vụ chính | Tệp mã nguồn / Đầu ra | Thành viên phụ trách | Điều kiện phụ thuộc | Tiêu chí nghiệm thu (Acceptance Criteria) | Trạng thái |
+|---|---|---|---|---|---|---|
+| Bước 1. Kiến trúc & Phân công module | Thiết lập quy ước đặt tên (`camelCase`, `UPPER_SNAKE_CASE`, `kebab-case`), khóa `bakemate_cart`, cấu trúc thư mục `js/` và thứ tự nạp script. | `docs/ui-design.md`, `PROJECT_PLAN.md` | Gia Bảo, Bảo Ngọc | Thống nhất Design System Buổi 2 | Mọi script tách IIFE không xung đột biến toàn cục; khóa `bakemate_cart` dùng chung mọi trang. | Hoàn tất |
+| Bước 2. Chuẩn hóa dữ liệu & Render danh sách | Chuẩn hóa 21 sản phẩm (6 trường, 3 danh mục), bổ sung 63 ảnh trong `images/products/`, viết `renderProducts()`. | `js/products.js`, `images/products/*`, `products.html` | Bảo Ngọc | Cấu trúc thẻ `.product-card` đạt chuẩn | 21 sản phẩm hiển thị đúng ảnh/giá/danh mục, không lỗi 404 ảnh, định dạng tiền tệ VND. | Hoàn tất |
+| Bước 3. Tìm kiếm, Lọc & Sắp xếp động | Lập trình tìm kiếm không dấu, lọc 3 danh mục, sắp xếp giá tăng/giảm bất biến `[...products]`, đọc `?q=` & `?category=`. | `js/search-filter.js` (`applyFiltersAndSort()`) | Minh Thư, Nguyễn Thương | `js/products.js` sẵn sàng | Kết hợp đồng thời từ khóa + danh mục + sắp xếp; không sửa mảng gốc; hiện Empty State khi 0 kết quả. | Hoàn tất |
+| Bước 4. Trang chi tiết sản phẩm động | Đọc `URLSearchParams`, gallery 3 ảnh, chọn quy cách (`100g/300g/500g/1kg`), Recipe Cross-link & fallback khi ID sai. | `product-detail.html`, `js/product-detail.js` | Nguyễn Thương | `products.js` & `storage.js` | Đủ thông tin cho ID `1..21`, đổi giá tức thì theo pill quy cách, ID sai báo lỗi thân thiện. | Hoàn tất |
+| Bước 5. Giao diện & Chức năng giỏ hàng + F13 | Bảng giỏ hàng nhóm `recipeGroupId` viền nét đứt caramel, xác nhận `1->0`, mã `CHAOBANMOI` (-10%), form COD F13. | `cart.html`, `js/cart.js`, `css/style.css` | Đen Ny, Hiền | `js/storage.js` | Hàng lẻ tách khỏi combo công thức; giảm `1->0` hỏi xác nhận; F13 tạo mã đơn `#BM-XXXXXX`. | Hoàn tất |
+| Bước 6. Tích hợp `localStorage` & Blog | Hàm `addToCart`, `addRecipeComboToCart`, `removeRecipeGroup`, đồng bộ Header badge mọi trang & hoàn thiện `blog.html`. | `js/storage.js`, `blog.html`, `js/blog.js`, 6 file HTML | Gia Bảo, Đen Ny, Như Hậu | Đồng bộ cấu trúc Header/Footer | F5 giữ nguyên giỏ hàng; Header trang Giỏ hàng không tô active `Sản phẩm`; `blog.html` thêm được combo. | Hoàn tất |
+| Bước 7. Tích hợp, Kiểm thử & Tối ưu UI | Chạy kiểm thử toàn trình 14 Test Cases, kiểm tra 404 ảnh/liên kết, Responsive `1366/768/390px` và ghi nhật ký fix lỗi. | `docs/test-report.md` | Phạm Thương | Hoàn thành Bước 2–6 | 100% ảnh & link hợp lệ, không vỡ bố cục 3 màn hình, 14 Test Cases đạt chuẩn. | Đang hoàn tất |
+| Bước 8. Quản lý GitHub & Hồ sơ bàn giao | Rà soát `README.md`, `ui-design.md`, `AI_USAGE_LOG.md`, kiểm tra sạch sẽ repository `bakemate-ecommerce-project`. | `README.md`, `AI_USAGE_LOG.md`, nhánh tích hợp | Gia Bảo | Nghiệm thu Bước 7 | Tài liệu đồng bộ với mã nguồn thực tế, sẵn sàng trình bày và nộp bài. | Đang hoàn tất |
 
-### Giai đoạn 4: Tích hợp và kiểm thử
-- Tích hợp frontend với backend và cơ sở dữ liệu.
-- Kiểm thử các chức năng của website.
-- Ghi nhận và sửa lỗi.
+---
 
-### Giai đoạn 5: Hoàn thiện và bàn giao
-- Rà soát chức năng và giao diện.
-- Hoàn thiện mã nguồn và tài liệu dự án.
-- Chuẩn bị sản phẩm để báo cáo.
-
-## 3. Danh sách công việc
-
-| Mã công việc | Công việc | Người phụ trách | Kết quả cần đạt | Thời hạn | Trạng thái |
-|---|---|---|---|---|---|
-| T01 | Khảo sát và xác định yêu cầu | Trần Thị Bảo Ngọc, Trần Lê Như Hậu | Tài liệu yêu cầu và danh sách chức năng | Chưa thống nhất | Chưa bắt đầu |
-| T02 | Lập kế hoạch dự án | Trần Thị Bảo Ngọc | File PROJECT_PLAN.md và kế hoạch công việc | Chưa thống nhất | Chưa bắt đầu |
-| T03 | Phân tích nghiệp vụ | Trần Thị Bảo Ngọc, Trần Lê Như Hậu | Tài liệu nghiệp vụ và luồng người dùng | Chưa thống nhất | Chưa bắt đầu |
-| T04 | Thiết kế UI/UX | Vũ Ngọc Minh Thư, Siu Đen Ny | Bản thiết kế giao diện website | Chưa thống nhất | Chưa bắt đầu |
-| T05 | Phát triển frontend | Vũ Ngọc Minh Thư, Siu Đen Ny | Các trang giao diện website | Chưa thống nhất | Chưa bắt đầu |
-| T06 | Phát triển backend và cơ sở dữ liệu | Hồ Gia Bảo, Dương Thúy Hiền, Nguyễn Hoài Thương | Cơ sở dữ liệu và chức năng xử lý nghiệp vụ | Chưa thống nhất | Chưa bắt đầu |
-| T07 | Kiểm thử chức năng | Phạm Hoài Thương | Test case và báo cáo lỗi | Chưa thống nhất | Chưa bắt đầu |
-| T08 | Đảm bảo chất lượng và hoàn thiện tài liệu | Hồ Gia Bảo | Tài liệu dự án và báo cáo chất lượng | Chưa thống nhất | Chưa bắt đầu |
-| T09 | Tích hợp hệ thống và sửa lỗi | Các thành viên theo phần việc được giao | Các chức năng được tích hợp và lỗi được xử lý | Chưa thống nhất | Chưa bắt đầu |
-| T10 | Hoàn thiện sản phẩm và chuẩn bị báo cáo | Toàn bộ thành viên | Website hoàn chỉnh và tài liệu báo cáo | Chưa thống nhất | Chưa bắt đầu |
-
-## 4. Rủi ro và phương án xử lý
+## 3. Rủi ro và phương án xử lý
 
 | Rủi ro | Ảnh hưởng | Phương án xử lý |
 |---|---|---|
-| Chậm tiến độ | Không hoàn thành dự án đúng hạn | Theo dõi tiến độ định kỳ và ưu tiên các công việc quan trọng. |
-| Yêu cầu chưa rõ ràng hoặc thay đổi | Phải sửa thiết kế và mã nguồn | Thống nhất yêu cầu trước khi phát triển và cập nhật tài liệu khi có thay đổi. |
-| Giao diện không đồng nhất | Ảnh hưởng trải nghiệm người dùng | Thống nhất quy chuẩn giao diện giữa các thành viên frontend. |
-| Lỗi tích hợp hệ thống | Chức năng không hoạt động đúng | Kiểm thử từng thành phần trước khi tích hợp toàn bộ hệ thống. |
-| Phân công chồng chéo | Khó xác định trách nhiệm | Xác định người phụ trách chính cho từng công việc. |
-| Phát hiện lỗi muộn | Tốn thời gian sửa lỗi | Thực hiện kiểm thử xuyên suốt quá trình phát triển. |
-| Xung đột mã nguồn | Khó tích hợp thay đổi của các thành viên | Sử dụng Git và GitHub, kiểm tra thay đổi trước khi hợp nhất mã nguồn. |
+| Trùng tên biến toàn cục khi gộp nhiều tệp JS | Lỗi `Identifier already been declared` làm sập script | Bọc toàn bộ controller trong IIFE `(function () { ... })()` và chỉ gắn API cần thiết lên `window`. |
+| Mất đồng bộ giá khi có nhiều quy cách đóng gói | Sai tổng tiền giỏ hàng / đơn hàng F13 | Quy định index `0` của `PRODUCT_PACKAGING_OPTIONS` luôn khớp `product.price` và tính lại giá ở phía `cart.js` trước khi lưu đơn. |
+| Người dùng nhập URL sản phẩm sai hoặc trống | Trang chi tiết bị trống hoặc lỗi JS `Cannot read property` | Kiểm tra `if (!product)` đầu luồng, ẩn các khối phụ và hiển thị thông báo kèm nút quay về `products.html`. |
+| Xung đột CSS khi hiển thị nhóm Combo trên Mobile | Tràn ngang (`overflow-x`) ở màn hình `390px` | Sử dụng CSS Grid chuyển đổi về bố cục thẻ dọc `@media (max-width: 768px)` cho từng `.cart-item`. |

@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Blog BakeMate: Công thức làm bánh chuẩn vị, mẹo chọn bột mì và tự động gom combo nguyên liệu vào giỏ hàng.">
+  <title>Blog công thức &amp; Kiến thức làm bánh | BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="blog-page-body">
+
+  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link">
+        <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
+        <span class="site-header__logo-text">Bake<span>Mate</span></span>
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link active" aria-current="page">Blog</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" action="products.html" method="get" role="search">
+          <label class="visually-hidden" for="blog-header-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
+          <input id="blog-header-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
+        </form>
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NỘI DUNG CHÍNH TRANG BLOG ================= -->
+  <main class="page-container blog-page">
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active">Blog làm bánh</li>
+      </ul>
+    </nav>
+
+    <section class="blog-hero">
+      <div class="blog-hero__content">
+        <span class="about-eyebrow">Góc Bếp BakeMate</span>
+        <h1 class="blog-hero__title">Blog Công Thức &amp; Mẹo Chọn Nguyên Liệu</h1>
+        <p class="blog-hero__desc">
+          Khám phá hướng dẫn làm bánh chi tiết từng bước và thêm trọn bộ nguyên liệu đúng quy cách đóng gói vào giỏ hàng chỉ bằng 1 lần chạm.
+        </p>
+      </div>
+      <div class="blog-hero__voucher">
+        <span class="blog-hero__voucher-badge">Ưu đãi thành viên mới</span>
+        <p>Nhập mã <strong>CHAOBANMOI</strong> tại giỏ hàng để được giảm ngay <strong>10%</strong> cho đơn hàng đầu tiên!</p>
+      </div>
+    </section>
+
+    <!-- Bộ lọc chủ đề & Tìm kiếm bài viết -->
+    <section class="blog-toolbar" aria-label="Lọc bài viết Blog">
+      <div class="blog-filters" role="group" aria-label="Lọc theo chủ đề">
+        <button type="button" class="blog-filter-btn js-blog-filter active" data-category="all">Tất cả</button>
+        <button type="button" class="blog-filter-btn js-blog-filter" data-category="Công thức chuẩn vị">Công thức chuẩn vị</button>
+        <button type="button" class="blog-filter-btn js-blog-filter" data-category="Kỹ thuật làm bánh">Kỹ thuật làm bánh</button>
+        <button type="button" class="blog-filter-btn js-blog-filter" data-category="Mẹo chọn nguyên liệu">Mẹo chọn nguyên liệu</button>
+      </div>
+
+      <div class="blog-search-wrap">
+        <label class="visually-hidden" for="blog-search">Tìm bài viết, công thức</label>
+        <input type="search" id="blog-search" class="form-input blog-search-input" placeholder="Tìm tên bánh hoặc mẹo làm bánh...">
+        <span class="blog-count-pill" id="blog-count" aria-live="polite">6 bài viết</span>
+      </div>
+    </section>
+
+    <!-- Lưới bài viết Blog -->
+    <section aria-label="Danh sách bài viết Blog">
+      <div class="blog-grid" id="blog-grid">
+        <!-- Render động bằng js/blog.js -->
+      </div>
+
+      <div id="blog-empty" class="no-products-message" hidden>
+        <span class="no-products-message__icon" aria-hidden="true">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+          </svg>
+        </span>
+        <strong>Không tìm thấy bài viết nào phù hợp</strong>
+        <p>Hãy thử tìm với từ khóa khác hoặc nhấn đặt lại bộ lọc chủ đề.</p>
+        <button type="button" id="blog-reset-btn" class="btn btn--primary" style="margin-top: 14px;">Xem tất cả bài viết</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal đọc chi tiết bài viết & Recipe-to-Cart -->
+  <div id="blog-modal" class="blog-modal" role="dialog" aria-modal="true" aria-labelledby="blog-modal-title" hidden>
+    <div class="blog-modal__dialog">
+      <button type="button" id="blog-modal-close" class="blog-modal__close" aria-label="Đóng bài viết">&times;</button>
+      <div id="blog-modal-body" class="blog-modal__body">
+        <!-- Render động khi bấm Đọc hướng dẫn -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= BANNER VOUCHER KHUYẾN MÃI ================= -->
+  <section class="promo-ticket-band" aria-label="Ưu đãi thành viên mới">
+    <div class="promo-ticket-band__inner">
+      <div class="footer-promo promo-ticket-bar" role="region" aria-label="Mã giảm giá thành viên mới">
+        <div class="promo-ticket-bar__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+            <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+          </svg>
+        </div>
+        <div class="promo-ticket-bar__content">
+          <span>Ưu đãi khách hàng mới: Nhập mã</span>
+          <span class="promo-badge">CHAOBANMOI</span>
+          <span>để được giảm <strong>10%</strong> cho đơn hàng đầu tiên!</span>
+        </div>
+        <button type="button" class="promo-ticket-bar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã giảm giá CHAOBANMOI">
+          <svg class="promo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span class="js-copy-promo-label">Sao chép mã</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FOOTER DÙNG CHUNG ================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Lối tắt</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="cart.html">Giỏ hàng</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/blog.js"></script>
+</body>
+</html>

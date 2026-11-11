@@ -6,7 +6,9 @@
   <meta name="description" content="Tìm hiểu BakeMate - website kết nối công thức làm bánh với nguyên liệu, dụng cụ và giỏ hàng tiện lợi.">
   <title>Giới thiệu | BakeMate</title>
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-  <!-- Điều chỉnh đường dẫn CSS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -21,15 +23,10 @@
 
       <nav class="site-header__nav" aria-label="Điều hướng chính">
         <ul class="site-header__menu">
-          <li class="site-header__menu-item">
-            <a href="index.html" class="site-header__menu-link">Trang chủ</a>
-          </li>
-          <li class="site-header__menu-item">
-            <a href="products.html" class="site-header__menu-link">Sản phẩm</a>
-          </li>
-          <li class="site-header__menu-item">
-            <a href="about.html" class="site-header__menu-link active" aria-current="page">Giới thiệu</a>
-          </li>
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link">Sản phẩm</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link active" aria-current="page">Giới thiệu</a></li>
         </ul>
       </nav>
 
@@ -39,8 +36,14 @@
           <input id="site-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input">
           <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
-        <a href="products.html" class="site-header__cart" aria-label="Xem sản phẩm và giỏ hàng">
-          <span class="site-header__cart-icon" aria-hidden="true">🛒</span>
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
         </a>
       </div>
     </div>
@@ -61,7 +64,7 @@
         </p>
         <div class="about-hero__actions">
           <a href="products.html" class="btn btn--primary">Khám phá sản phẩm</a>
-          <a href="#about-difference" class="btn btn--outline about-hero__secondary">Tìm hiểu BakeMate</a>
+          <a href="blog.html" class="btn btn--outline about-hero__secondary">Xem Blog công thức</a>
         </div>
       </div>
       <figure class="about-hero__visual">
@@ -134,7 +137,6 @@
     </section>
 
     <!-- 4. KHÁCH HÀNG MỤC TIÊU -->
-    <!-- KHÁCH HÀNG MỤC TIÊU -->
     <section class="about-section about-audience" aria-labelledby="about-audience-title">
       <div class="about-section__heading">
         <span class="about-eyebrow">Dành cho người yêu làm bánh</span>
@@ -149,11 +151,8 @@
       </div>
 
       <div class="about-audience__grid">
-        <!-- Khối 1: Người mới học làm bánh -->
         <article class="about-audience-card">
-          <img src="images/about-beginner.jpg"
-               alt="Chuẩn bị nguyên liệu cho người mới học làm bánh"
-               loading="lazy">
+          <img src="images/about-beginner.jpg" alt="Chuẩn bị nguyên liệu cho người mới học làm bánh" loading="lazy">
           <div class="about-audience-card__body">
             <span class="about-audience-card__label">Bắt đầu</span>
             <h3>Người mới học làm bánh</h3>
@@ -164,11 +163,8 @@
           </div>
         </article>
 
-        <!-- Khối 2: Người thường xuyên làm bánh tại nhà -->
         <article class="about-audience-card">
-          <img src="images/about-sharing-cakes.jpg"
-               alt="Những chiếc bánh tự làm dành cho người thân và bạn bè"
-               loading="lazy">
+          <img src="images/about-sharing-cakes.jpg" alt="Những chiếc bánh tự làm dành cho người thân và bạn bè" loading="lazy">
           <div class="about-audience-card__body">
             <span class="about-audience-card__label">Chia sẻ</span>
             <h3>Người thường xuyên làm bánh tại nhà</h3>
@@ -257,12 +253,61 @@
 
   </main>
 
+  <!-- ================= BANNER VOUCHER KHUYẾN MÃI ================= -->
+  <section class="promo-ticket-band" aria-label="Ưu đãi thành viên mới">
+    <div class="promo-ticket-band__inner">
+      <div class="footer-promo promo-ticket-bar" role="region" aria-label="Mã giảm giá thành viên mới">
+        <div class="promo-ticket-bar__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+            <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+          </svg>
+        </div>
+        <div class="promo-ticket-bar__content">
+          <span>Ưu đãi khách hàng mới: Nhập mã</span>
+          <span class="promo-badge">CHAOBANMOI</span>
+          <span>để được giảm <strong>10%</strong> cho đơn hàng đầu tiên!</span>
+        </div>
+        <button type="button" class="promo-ticket-bar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã giảm giá CHAOBANMOI">
+          <svg class="promo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
+          <span class="js-copy-promo-label">Sao chép mã</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= FOOTER DÙNG CHUNG ================= -->
   <footer class="site-footer">
     <div class="footer-container">
-      <p>&copy; 2026 BakeMate - Cửa hàng nguyên liệu & dụng cụ làm bánh theo công thức.</p>
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Lối tắt</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="cart.html">Giỏ hàng</a></li>
+          <li><a href="about.html">Giới thiệu</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
     </div>
   </footer>
 
+  <script src="js/products.js"></script>
+  <script src="js/storage.js"></script>
 </body>
 </html>
