@@ -123,6 +123,44 @@
         "Lắp đui sao mở trong bộ 12 đui Inox vào túi bắt kem vân nhám chống trượt, cho bột vào nửa túi và bắt thành từng bông hoa lên khay lót giấy nến.",
         "Làm lạnh khay bánh 15 phút trước khi cho vào lò ở 170°C trong 15–18 phút giúp giữ vân bánh sắc nét không bị chảy dẹt."
       ]
+    },
+    {
+      id: "post-mousse-socola",
+      recipeGroupId: "recipe-mousse-socola",
+      title: "Bánh Mousse Socola Lạnh mịn mượt không cần lò nướng, tách khuôn sắc nét",
+      category: "Kỹ thuật làm bánh",
+      readTime: "75 phút thực hiện",
+      diff: "Vừa",
+      author: "Minh Thư · BakeMate Studio",
+      publishedAt: "27/10/2026",
+      image: "images/about-ingredients.jpg",
+      excerpt:
+        "Chỉ cần Whipping Cream Anchor làm lạnh đúng 2–4°C, bột cacao Hershey's đậm vị, phới lồng Inox và khuôn đế rời 20cm để tạo nên chiếc mousse tan chảy mát lạnh.",
+      steps: [
+        "Hòa tan 35g bột cacao Hershey's với 60ml nước ấm hoặc sữa ấm bằng phới lồng Inox sao cho hỗn hợp bóng mượt không vón cục, để nguội về khoảng 35°C.",
+        "Làm lạnh âu trộn và đánh 250ml Whipping Cream Anchor lạnh với phới lồng đến khi kem sánh đặc, tạo vân mềm nhưng vẫn chảy nhẹ.",
+        "Trộn nhẹ (fold) hỗn hợp cacao vào kem tươi đã đánh theo một chiều cho hòa quyện đều, đổ vào khuôn tròn đế rời 20cm đã lót sẵn đế bánh.",
+        "Giữ lạnh trong ngăn mát ít nhất 4 giờ cho bánh định hình hoàn toàn, dùng khăn ấm lau quanh thành khuôn rồi đẩy nhẹ phần đế rời để tách bánh nguyên vẹn."
+      ]
+    },
+    {
+      id: "post-pancake-mat-ong",
+      recipeGroupId: "recipe-pancake",
+      title: "Bánh Pancake Mật Ong bữa sáng mềm xốp chỉ 25 phút với bột mì đa dụng",
+      category: "Công thức chuẩn vị",
+      readTime: "25 phút thực hiện",
+      diff: "Dễ",
+      author: "Bảo Ngọc · BakeMate Kitchen",
+      publishedAt: "25/10/2026",
+      image: "images/about-beginner.jpg",
+      excerpt:
+        "Công thức bữa sáng nhanh gọn tại nhà: định lượng sữa tươi bằng ca đong chia ml rõ nét, đánh tan trứng gà tươi cùng 150g bột mì đa dụng Meizan cho mẻ pancake vàng ươm.",
+      steps: [
+        "Rây 150g bột mì đa dụng Meizan (chọn túi 300g tiết kiệm) cùng 40g đường tinh luyện và một chút muối vào âu trộn.",
+        "Dùng ca đong đo chuẩn 180ml sữa tươi, đập 2 quả trứng gà tươi vào khuấy nhẹ rồi rót từ từ vào âu bột khô.",
+        "Khuấy đều vừa quyện đến khi hỗn hợp hơi sánh mịn (không cần đánh quá kỹ để bánh giữ độ xốp), để bột nghỉ 10 phút.",
+        "Làm nóng chảo chống dính ở lửa vừa nhỏ, dùng ca đong rót từng muôi bột tròn đều; lật mặt khi bề mặt nổi bọt khí và nướng thêm 1 phút đến khi vàng đều hai mặt."
+      ]
     }
   ];
 
@@ -437,12 +475,18 @@
     renderBlogList();
 
     // Nếu điều hướng từ product-detail.html#recipe-... thì mở sẵn bài viết tương ứng
-    const hash = window.location.hash.replace(/^#/, "").trim();
-    if (hash) {
+    function openModalFromHash() {
+      const hash = window.location.hash.replace(/^#/, "").trim();
+      if (!hash) {
+        return;
+      }
       const matched = BLOG_POSTS.find((p) => p.recipeGroupId === hash || p.id === hash);
       if (matched) {
         openPostModal(matched);
       }
     }
+
+    openModalFromHash();
+    window.addEventListener("hashchange", openModalFromHash);
   });
 })();

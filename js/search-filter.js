@@ -193,6 +193,13 @@
       if (searchInput) searchInput.value = "";
       if (categoryFilter) categoryFilter.value = "all";
       if (priceSort) priceSort.value = "default";
+      if (window.location.search && window.history && typeof window.history.replaceState === "function") {
+        try {
+          window.history.replaceState({}, "", window.location.pathname + window.location.hash);
+        } catch (error) {
+          // Bỏ qua nếu môi trường trình duyệt hạn chế replaceState
+        }
+      }
       updateProducts();
     });
   }
@@ -207,11 +214,16 @@
   }
   if (categoryFilter) {
     const urlCat = (urlParams.get("category") || "").trim();
-    const hasMatchingOption = Array.from(categoryFilter.options).some(
-      (opt) => opt.value === urlCat
-    );
-    if (urlCat && hasMatchingOption) {
-      categoryFilter.value = urlCat;
+    if (urlCat) {
+      const normalizedUrlCat = normalizeText(urlCat);
+      const matchedOption =
+        Array.from(categoryFilter.options).find((opt) => opt.value === urlCat) ||
+        Array.from(categoryFilter.options).find(
+          (opt) => opt.value !== "all" && normalizeText(opt.value) === normalizedUrlCat
+        );
+      if (matchedOption) {
+        categoryFilter.value = matchedOption.value;
+      }
     }
   }
 

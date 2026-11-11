@@ -1080,7 +1080,18 @@ img {
   border: 1px dashed var(--accent-sub);
   padding: 16px 20px;
   border-radius: 8px;
-  margin-bottom: 24px;
+  margin-bottom: 18px;
+}
+
+.product-detail__desc {
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--primary-color);
+  background-color: rgba(255, 248, 237, 0.55);
+  border-left: 3px solid var(--accent-cta);
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
 }
 
 .price-box__row {

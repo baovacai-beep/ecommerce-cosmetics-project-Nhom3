@@ -658,6 +658,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const thumbsContainer = document.getElementById("gallery-thumbs-container");
   const productBrand = document.getElementById("product-brand");
   const productTitle = document.getElementById("product-title");
+  const productDescription = document.getElementById("product-description");
   const productRating = document.getElementById("product-rating");
   const productSold = document.getElementById("product-sold");
   const productCodeMeta = document.getElementById("product-code-meta");
@@ -719,6 +720,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.title = `${product.name} | BakeMate`;
   if (breadcrumbCurrent) breadcrumbCurrent.textContent = product.name;
   if (productTitle) productTitle.textContent = product.name;
+  if (productDescription) productDescription.textContent = product.description || "";
 
   if (productBrand) {
     productBrand.innerHTML = `Thương hiệu: <strong>${escapeHtml(meta.brand)}</strong> | Xuất xứ: ${escapeHtml(meta.origin)}`;
@@ -949,16 +951,12 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnMinus && btnPlus && qtyInput) {
     btnMinus.addEventListener("click", function () {
       const currentQty = getSelectedQuantity();
-      if (currentQty > 1) {
-        qtyInput.value = currentQty - 1;
-      }
+      qtyInput.value = currentQty > 1 ? currentQty - 1 : 1;
     });
 
     btnPlus.addEventListener("click", function () {
       const currentQty = getSelectedQuantity();
-      if (currentQty < MAX_QTY) {
-        qtyInput.value = currentQty + 1;
-      }
+      qtyInput.value = currentQty < MAX_QTY ? currentQty + 1 : MAX_QTY;
     });
 
     qtyInput.addEventListener("change", function () {
@@ -972,8 +970,13 @@ document.addEventListener("DOMContentLoaded", function () {
       if (typeof window.addToCart !== "function") {
         return;
       }
+      const rawParsed = qtyInput ? Math.floor(Number(qtyInput.value)) : 1;
       const qty = getSelectedQuantity();
-      const result = window.addToCart(product.id, qty, selectedOptionIndex, null);
+      if (qtyInput) {
+        qtyInput.value = qty;
+      }
+      const addQty = Number.isFinite(rawParsed) && rawParsed > MAX_QTY ? rawParsed : qty;
+      const result = window.addToCart(product.id, addQty, selectedOptionIndex, null);
       if (typeof window.showCartToast === "function") {
         window.showCartToast(result.message, {
           type: result.success ? (result.capped ? "warning" : "success") : "warning"
@@ -989,6 +992,9 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       const qty = getSelectedQuantity();
+      if (qtyInput) {
+        qtyInput.value = qty;
+      }
       const result = window.addToCart(product.id, qty, selectedOptionIndex, null);
       if (result.success) {
         window.location.href = "cart.html";
