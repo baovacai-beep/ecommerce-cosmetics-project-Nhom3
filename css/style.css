@@ -41,6 +41,10 @@ img {
   height: auto;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* Ẩn tiêu đề ngữ nghĩa dành cho Screen Reader */
 .visually-hidden {
   position: absolute;
@@ -1260,7 +1264,9 @@ img {
 /* Cụm nút CTA */
 .product-detail__actions {
   display: flex;
-  gap: 14px;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
@@ -1873,7 +1879,7 @@ img {
 
 /* 2. CÂU CHUYỆN (STORY) */
 .about-section {
-  padding: 76px 24px;
+  padding: 56px 24px;
 }
 
 .about-story {
@@ -1882,8 +1888,16 @@ img {
 
 .about-story__heading {
   max-width: 720px;
-  margin: 0 auto 26px;
+  margin: 0 auto 22px;
   text-align: center;
+}
+
+.about-story__title {
+  margin-bottom: 14px;
+  color: var(--about-primary);
+  font-size: clamp(28px, 3.6vw, 40px);
+  font-weight: 800;
+  line-height: 1.25;
 }
 
 .about-story__body {
@@ -2188,10 +2202,11 @@ a.contact-value:hover {
 
 /* 7. KÊU GỌI HÀNH ĐỘNG (CTA CUỐI TRANG) */
 .about-cta {
-  padding: 68px 24px;
+  padding: 52px 24px;
   background: var(--about-primary);
   color: #fff;
   text-align: center;
+  border-bottom: 1px solid rgba(255, 248, 237, 0.22);
 }
 
 .about-cta__inner {
@@ -2337,8 +2352,8 @@ a.contact-value:hover {
   max-width: var(--max-width);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
-  gap: 32px;
+  grid-template-columns: 1.35fr 1fr 1fr 1.15fr;
+  gap: 28px;
   text-align: left;
 }
 
@@ -2443,11 +2458,6 @@ textarea:focus-visible,
     order: 2;
   }
 
-  .site-header__search-input {
-    width: 140px;
-    font-size: 13px;
-  }
-
   .hero-slide {
     min-height: 410px;
     padding: 46px 18px 72px;
@@ -2538,7 +2548,9 @@ textarea:focus-visible,
     gap: 10px;
   }
 
-  .btn--cart, .btn--buy {
+  .btn--cart,
+  .btn--buy,
+  .btn--wishlist-detail {
     width: 100%;
   }
 
@@ -2555,9 +2567,13 @@ textarea:focus-visible,
   /* Responsive Trang Chủ, Giới thiệu & Footer (768px) */
   .about-hero,
   .about-difference,
-  .contact-container,
-  .footer-container {
+  .contact-container {
     grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footer-container {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 24px;
   }
 
@@ -2586,30 +2602,30 @@ textarea:focus-visible,
     padding: 18px 16px;
   }
 
-  .site-header__actions {
-    width: 100%;
-    gap: 8px;
-  }
-
-  .site-header__search {
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .site-header__search-input {
-    width: 100%;
-    flex: 1 1 0;
-    min-width: 0;
-  }
-
-  .site-header__search-btn,
-  .site-header__cart {
-    flex-shrink: 0;
-  }
-
   .product-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    gap: 10px;
+  }
+
+  .product-card {
+    padding: 12px;
+  }
+
+  .product-card__title {
+    font-size: 14px;
+    height: 39px;
+  }
+
+  .product-card__price-row .product-card__price,
+  .product-card__price {
+    font-size: 15px;
+  }
+
+  .product-card__status-tag {
+    top: 18px;
+    left: 18px;
+    font-size: 10px;
+    padding: 2px 7px;
   }
 
   .about-process__grid {
@@ -4139,3 +4155,3349 @@ textarea:focus-visible,
     width: 100%;
   }
 }
+
+/* ==========================================================================
+   9. NÂNG CẤP GIAO DIỆN TOÀN HỆ THỐNG (HEADER, MEGA MENU, RECIPES, AUTH, CHECKOUT, ADMIN)
+   ========================================================================== */
+
+/* ----------------- 9.1 Admin Presence Topbar & Promo Topbar ----------------- */
+.admin-presence-bar {
+  background-color: #4a2e19;
+  color: #fff8ed;
+  border-bottom: 1.5px solid #f39c12;
+  font-size: 13px;
+  position: relative;
+  z-index: 1200;
+}
+
+.admin-presence-bar__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 7px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.admin-presence-bar__text {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.admin-presence-bar__btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #f39c12;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12px;
+  transition: filter 0.2s ease;
+}
+
+.admin-presence-bar__btn:hover {
+  filter: brightness(0.92);
+}
+
+.promo-topbar {
+  background-color: var(--primary-color);
+  color: #fff8ed;
+  font-size: 12.5px;
+  border-bottom: 1px solid rgba(242, 217, 166, 0.22);
+}
+
+.promo-topbar__inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 7px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+
+.promo-topbar__left {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--secondary-color);
+  font-weight: 500;
+}
+
+.promo-topbar__codes {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.promo-topbar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.promo-topbar__code-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background-color: #f59e0b;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 11.5px;
+  letter-spacing: 0.4px;
+}
+
+.promo-topbar__copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(255, 248, 237, 0.14);
+  color: #fff8ed;
+  border: 1px solid rgba(242, 217, 166, 0.45);
+  border-radius: 5px;
+  padding: 2px 8px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.promo-topbar__copy:hover,
+.promo-topbar__copy.is-copied {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+}
+
+/* ----------------- 9.2 Header Nền Kem Sáng + Mega Menu 3 Cột ----------------- */
+.site-header {
+  background-color: var(--bg-color);
+  border-bottom: 1px solid #eadbc6;
+  box-shadow: 0 2px 12px rgba(74, 46, 25, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.header-container {
+  position: relative;
+  gap: 16px;
+  padding: 10px 20px;
+}
+
+.site-header__logo-img {
+  height: 44px;
+  width: auto;
+  border-radius: 6px;
+}
+
+.site-header__nav {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.site-header__menu {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.site-header__menu-item {
+  position: static;
+}
+
+.site-header__menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #4a2e19;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border-bottom: 2.5px solid transparent;
+  background-color: transparent;
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.site-header__menu-link:hover {
+  color: var(--accent-cta);
+  background-color: rgba(245, 158, 11, 0.08);
+}
+
+.site-header__menu-link.active {
+  color: #4a2e19;
+  background-color: transparent;
+  border-bottom-color: var(--accent-cta);
+  border-radius: 8px 8px 0 0;
+}
+
+.megamenu-chevron {
+  transition: transform 0.25s ease;
+}
+
+.has-megamenu.is-open .megamenu-chevron {
+  transform: rotate(180deg);
+}
+
+/* Mega Menu Panel */
+.mega-menu {
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 100%;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 22px 48px rgba(74, 46, 25, 0.14);
+  padding: 24px 32px 28px;
+  display: none;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  z-index: 1050;
+}
+
+.mega-menu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -22px;
+  height: 24px;
+  background: transparent;
+}
+
+.has-megamenu.is-open > .mega-menu {
+  display: grid;
+  animation: fadeSlideDown 0.18s ease-out;
+}
+
+@keyframes fadeSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mega-menu__col-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #4a2e19;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1.5px solid #eadbc6;
+}
+
+.mega-menu__col-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  transition: color 0.18s ease;
+}
+
+.mega-menu__col-link:hover {
+  color: var(--accent-cta);
+  text-decoration: underline;
+}
+
+.mega-menu__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mega-menu__link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b4e3b;
+  transition: background-color 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+
+.mega-menu__link::after {
+  content: "→";
+  font-size: 13px;
+  opacity: 0.65;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.mega-menu__link:hover {
+  background-color: #fff8ed;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.mega-menu__link:hover::after {
+  transform: translateX(3px);
+  opacity: 1;
+  color: var(--accent-cta);
+}
+
+/* Search Header + Live Suggest */
+.site-header__actions {
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.site-header__search {
+  position: relative;
+  height: 38px;
+}
+
+.site-header__search-input {
+  width: 195px;
+  background-color: #ffffff;
+  border: 1.5px solid #dfd0bc;
+  color: #4a2e19;
+  border-radius: 999px 0 0 999px;
+  padding: 0 14px;
+}
+
+.site-header__search-btn {
+  border-radius: 0 999px 999px 0;
+  padding: 0 14px;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.site-header__search-btn:hover {
+  background-color: var(--accent-cta);
+  border-color: var(--accent-cta);
+}
+
+.header-search-suggest {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: min(360px, 88vw);
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  box-shadow: 0 16px 36px rgba(74, 46, 25, 0.16);
+  padding: 6px;
+  z-index: 1200;
+}
+
+.header-search-suggest[hidden] {
+  display: none;
+}
+
+.header-search-suggest__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.header-search-suggest__item:hover {
+  background-color: #fff8ed;
+}
+
+.header-search-suggest__img {
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.header-search-suggest__meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.header-search-suggest__meta strong {
+  font-size: 13px;
+  color: #4a2e19;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-search-suggest__meta span {
+  font-size: 11.5px;
+  color: var(--accent-sub);
+}
+
+.header-search-suggest__empty {
+  padding: 12px;
+  font-size: 13px;
+  color: var(--accent-sub);
+  text-align: center;
+}
+
+/* Header Action Icon Buttons (Heart, Cart, Account) */
+.site-header__icon-btn,
+.site-header__cart,
+.site-header__wishlist {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background-color: rgba(112, 69, 43, 0.08);
+  color: #4a2e19;
+  border: 1px solid rgba(200, 139, 82, 0.25);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.site-header__icon-btn:hover,
+.site-header__cart:hover,
+.site-header__wishlist:hover,
+.site-header__cart.active,
+.site-header__wishlist.active {
+  background-color: var(--accent-cta);
+  border-color: var(--accent-cta);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.site-header__cart-badge {
+  border: 2px solid var(--bg-color);
+  top: -5px;
+  right: -6px;
+}
+
+/* Account Dropdown */
+.account-wrap {
+  position: relative;
+}
+
+.account-trigger {
+  width: auto;
+  min-width: 38px;
+  padding: 0 9px;
+  border-radius: 999px;
+  gap: 6px;
+}
+
+.account-trigger.is-logged-in {
+  background-color: rgba(243, 156, 18, 0.14);
+  border-color: rgba(243, 156, 18, 0.45);
+  color: #4a2e19;
+}
+
+.account-trigger__name {
+  font-size: 12.5px;
+  font-weight: 700;
+  max-width: 78px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.account-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 245px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  box-shadow: 0 18px 40px rgba(74, 46, 25, 0.16);
+  padding: 8px;
+  display: none;
+  z-index: 1250;
+}
+
+.account-wrap.is-open .account-dropdown {
+  display: block;
+}
+
+.account-dropdown__head {
+  padding: 10px 10px 8px;
+  border-bottom: 1px solid #f1e5d6;
+  margin-bottom: 6px;
+}
+
+.account-dropdown__head strong {
+  display: block;
+  font-size: 14px;
+  color: #4a2e19;
+}
+
+.account-dropdown__head span {
+  display: inline-block;
+  font-size: 11.5px;
+  color: var(--accent-sub);
+  margin-top: 2px;
+}
+
+.account-role-pill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #fef3c7;
+  color: #92400e !important;
+  font-weight: 700;
+}
+
+.account-role-pill.is-admin {
+  background-color: #4a2e19;
+  color: #fff8ed !important;
+}
+
+.account-dropdown__item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #4a2e19;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.account-dropdown__item:hover {
+  background-color: #fff8ed;
+  color: var(--accent-cta);
+}
+
+.account-dropdown__item--highlight {
+  font-weight: 700;
+  color: #b45309;
+  background-color: rgba(243, 156, 18, 0.12);
+}
+
+.account-dropdown__item--danger {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.account-dropdown__item--danger:hover {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.account-dropdown__divider {
+  height: 1px;
+  background-color: #f1e5d6;
+  margin: 6px 0;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #dfd0bc;
+  background-color: #ffffff;
+  color: #4a2e19;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Toast Top-Right (Bo góc 10px, viền cam mờ, nằm góc trên bên phải) */
+.bakemate-toast-container {
+  top: 76px;
+  bottom: auto;
+  right: 20px;
+}
+
+.bakemate-toast {
+  border-radius: 10px;
+  border: 1.5px solid rgba(243, 156, 18, 0.55);
+  border-left: 4px solid #f39c12;
+  background-color: #4a2e19;
+  color: #fff8ed;
+}
+
+/* ----------------- 9.3 Nút Yêu thích trên Card Sản phẩm + Layout Home ----------------- */
+.product-card__meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.product-card__meta-row .product-card__category {
+  margin-bottom: 0;
+}
+
+.product-card__wish {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid #eadbc6;
+  background-color: #ffffff;
+  color: #8c6a52;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.product-card__wish:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.product-card__wish.is-active {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.product-card__wish.is-active svg {
+  fill: #dc2626;
+}
+
+.product-card__packaging {
+  font-size: 12.5px;
+  color: var(--accent-sub);
+  margin-bottom: 6px;
+}
+
+.product-card__price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 8px;
+  margin-bottom: 12px;
+}
+
+.product-card__price-row .product-card__price {
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.product-card__old-price {
+  font-size: 12.5px;
+  color: #a38974;
+  text-decoration: line-through;
+  white-space: nowrap;
+}
+
+.product-card__status-tag {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 3;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background-color: #f39c12;
+  color: #ffffff;
+}
+
+.product-card__status-tag--soon {
+  background-color: #4a2e19;
+  color: #f2d9a6;
+}
+
+.product-card__status-tag--sale {
+  background-color: #dc2626;
+  color: #ffffff;
+}
+
+/* Home Favorites Section */
+.home-favorites-section,
+.recipe-flipbook-section {
+  max-width: var(--max-width);
+  margin: 48px auto;
+  padding: 0 20px;
+}
+
+.home-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.home-section-head__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 4px;
+}
+
+.home-section-head__sub {
+  font-size: 14.5px;
+  color: var(--accent-sub);
+}
+
+.home-section-head__link {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--primary-color);
+  white-space: nowrap;
+  transition: color 0.2s ease;
+}
+
+.home-section-head__link:hover {
+  color: var(--accent-cta);
+}
+
+/* ----------------- 9.4 Sách Lật 3D Công Thức Gợi Ý (Trang chủ) ----------------- */
+.recipe-flipbook-wrap {
+  background: linear-gradient(135deg, #fffdf9 0%, #fbf1df 100%);
+  border: 1.5px solid #eadbc6;
+  border-radius: 22px;
+  padding: 28px;
+  box-shadow: 0 18px 42px rgba(74, 46, 25, 0.08);
+}
+
+.recipe-flipbook-stage {
+  perspective: 1600px;
+}
+
+.recipe-flipbook-book {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e4d1ba;
+  box-shadow: 0 20px 44px rgba(74, 46, 25, 0.14);
+  overflow: hidden;
+  min-height: 410px;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.28s ease;
+}
+
+.recipe-flipbook-book::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 22px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, rgba(74, 46, 25, 0) 0%, rgba(74, 46, 25, 0.12) 50%, rgba(74, 46, 25, 0) 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+.recipe-flipbook-book.is-turning-next {
+  animation: bookTurnNext 0.5s ease;
+}
+
+.recipe-flipbook-book.is-turning-prev {
+  animation: bookTurnPrev 0.5s ease;
+}
+
+@keyframes bookTurnNext {
+  0% { transform: rotateY(0deg); opacity: 1; }
+  45% { transform: rotateY(-12deg) scale(0.985); opacity: 0.72; }
+  100% { transform: rotateY(0deg); opacity: 1; }
+}
+
+@keyframes bookTurnPrev {
+  0% { transform: rotateY(0deg); opacity: 1; }
+  45% { transform: rotateY(12deg) scale(0.985); opacity: 0.72; }
+  100% { transform: rotateY(0deg); opacity: 1; }
+}
+
+.flipbook-page {
+  padding: 28px 30px;
+  position: relative;
+}
+
+.flipbook-page--left {
+  background-color: #fdf6ea;
+  border-right: 1px solid #eadbc6;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.flipbook-photo-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 240px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e4d1ba;
+}
+
+.flipbook-photo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flipbook-bookmark {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background-color: rgba(74, 46, 25, 0.88);
+  color: #fff8ed;
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.flipbook-wish-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #70452b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.flipbook-wish-btn.is-active {
+  color: #dc2626;
+}
+
+.flipbook-wish-btn.is-active svg {
+  fill: #dc2626;
+}
+
+.flipbook-left-caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #6b4e3b;
+  font-weight: 600;
+}
+
+.flipbook-page--right {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(180deg, #ffffff 0%, #fffdf8 100%);
+}
+
+.flipbook-right__eyebrow {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-cta);
+  margin-bottom: 6px;
+}
+
+.flipbook-right__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #4a2e19;
+  line-height: 1.3;
+  margin-bottom: 10px;
+}
+
+.flipbook-right__desc {
+  font-size: 14px;
+  color: #6b4e3b;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.flipbook-ingredients-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.flipbook-chip {
+  padding: 5px 11px;
+  border-radius: 999px;
+  background-color: #fff8ed;
+  border: 1px solid #eadbc6;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4a2e19;
+}
+
+.flipbook-steps-preview {
+  padding-left: 18px;
+  font-size: 13px;
+  color: #5c402d;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+
+.flipbook-right__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px dashed #e2d1ba;
+}
+
+.flipbook-controls {
+  margin-top: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flipbook-page-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+}
+
+.flipbook-page-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid #dfcbb3;
+  background-color: #ffffff;
+  color: #4a2e19;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.flipbook-page-pill.is-active,
+.flipbook-page-pill:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff8ed;
+}
+
+/* ----------------- 9.5 Trang Sản phẩm Bố Cục 2 Cột (Sidebar + Grid) ----------------- */
+.products-layout {
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.products-sidebar {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(74, 46, 25, 0.05);
+}
+
+.products-sidebar__title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1.5px solid #eadbc6;
+}
+
+.filter-group {
+  padding: 12px 0;
+  border-bottom: 1px solid #f1e5d6;
+}
+
+.filter-group:last-of-type {
+  border-bottom: none;
+}
+
+.filter-group__head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: transparent;
+  border: none;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a2e19;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+}
+
+.filter-group__body {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group.is-collapsed .filter-group__body {
+  display: none;
+}
+
+.filter-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: #5c402d;
+  cursor: pointer;
+}
+
+.filter-check input[type="checkbox"] {
+  accent-color: var(--primary-color);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.filter-price-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.filter-price-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  color: #4a2e19;
+}
+
+.filter-price-input:focus {
+  outline: none;
+  border-color: #f39c12;
+}
+
+.products-sidebar__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.products-sidebar__apply {
+  width: 100%;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.products-sidebar__reset-link {
+  background: transparent;
+  border: none;
+  color: var(--accent-sub);
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px;
+  text-align: center;
+}
+
+.products-sidebar__reset-link:hover {
+  color: var(--primary-color);
+  text-decoration: underline;
+}
+
+.products-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.products-main-header__title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 4px;
+}
+
+.products-main-header__sub {
+  font-size: 13.5px;
+  color: var(--accent-sub);
+}
+
+.products-sort-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.products-sort-select {
+  padding: 9px 14px;
+  border: 1px solid #dfd0bc;
+  border-radius: 999px;
+  background-color: #ffffff;
+  color: #4a2e19;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mobile-filter-toggle {
+  display: none;
+}
+
+/* ----------------- 9.6 Đánh giá Sản phẩm & Công thức ----------------- */
+.reviews-section {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  padding: 28px;
+  margin-top: 32px;
+  margin-bottom: 32px;
+}
+
+.reviews-empty-card {
+  background-color: #fdf8ef;
+  border: 1px dashed #e2cfb6;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.reviews-empty-card strong {
+  display: block;
+  font-size: 16px;
+  color: #4a2e19;
+  margin-bottom: 4px;
+}
+
+.reviews-empty-card p {
+  font-size: 14px;
+  color: var(--accent-sub);
+  margin-bottom: 14px;
+}
+
+.review-form-box {
+  background-color: #fdf8ef;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+}
+
+.review-stars-input {
+  display: inline-flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.review-star-btn {
+  background: #ffffff;
+  border: 1px solid #dfd0bc;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-family: inherit;
+  font-size: 13.5px;
+  cursor: pointer;
+  color: #7c5c46;
+}
+
+.review-star-btn.is-active {
+  background-color: #f59e0b;
+  border-color: #f59e0b;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.review-item {
+  padding: 14px 16px;
+  border: 1px solid #f0e3d0;
+  border-radius: 10px;
+  background-color: #fffdf9;
+}
+
+.review-item__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  font-size: 13.5px;
+}
+
+.review-item__stars {
+  color: #f59e0b;
+  font-weight: 700;
+}
+
+.btn--wishlist-detail {
+  background-color: #ffffff;
+  color: #4a2e19;
+  border: 1.5px solid #dfd0bc;
+  border-radius: 8px;
+  padding: 12px 16px;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn--wishlist-detail:hover,
+.btn--wishlist-detail.is-active {
+  border-color: #dc2626;
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.btn--wishlist-detail.is-active svg {
+  fill: #dc2626;
+}
+
+/* ----------------- 9.7 Trang Công thức & Chi tiết Công thức ----------------- */
+.recipes-hero {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 30px;
+}
+
+.recipes-hero__title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #4a2e19;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+
+.recipes-hero__desc {
+  font-size: 15.5px;
+  color: var(--accent-sub);
+}
+
+.recipes-filter-bar {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.recipes-editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.recipe-poster-card {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  background-color: #4a2e19;
+  box-shadow: 0 14px 30px rgba(74, 46, 25, 0.14);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.recipe-poster-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 38px rgba(74, 46, 25, 0.22);
+}
+
+.recipe-poster-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.45s ease;
+}
+
+.recipe-poster-card:hover .recipe-poster-card__img {
+  transform: scale(1.05);
+}
+
+.recipe-poster-card__scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(44, 24, 12, 0.12) 0%, rgba(44, 24, 12, 0.45) 50%, rgba(44, 24, 12, 0.92) 100%);
+}
+
+.recipe-poster-card__wish {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 3;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.92);
+  color: #4a2e19;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.recipe-poster-card__wish.is-active {
+  color: #dc2626;
+}
+
+.recipe-poster-card__wish.is-active svg {
+  fill: #dc2626;
+}
+
+.recipe-poster-card__body {
+  position: relative;
+  z-index: 2;
+  padding: 22px;
+  color: #fff8ed;
+}
+
+.recipe-poster-card__code {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  color: var(--secondary-color);
+  margin-bottom: 6px;
+}
+
+.recipe-poster-card__title {
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1.3;
+  margin-bottom: 8px;
+}
+
+.recipe-poster-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #f2d9a6;
+  margin-bottom: 14px;
+}
+
+.recipe-poster-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.recipe-poster-card__cta:hover {
+  color: var(--accent-cta);
+}
+
+/* Recipe Detail (Bản 2) */
+.recipe-detail-hero {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 36px;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.recipe-detail-hero__eyebrow {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--accent-sub);
+  margin-bottom: 8px;
+}
+
+.recipe-detail-hero__title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #4a2e19;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.recipe-detail-hero__desc {
+  font-size: 15px;
+  color: #6b4e3b;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.recipe-detail-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recipe-detail-hero__media {
+  border-radius: 18px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 14px 32px rgba(74, 46, 25, 0.12);
+}
+
+.recipe-detail-hero__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-calc-section {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 30px;
+}
+
+.recipe-calc-layout {
+  display: grid;
+  grid-template-columns: 1.35fr 0.9fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 18px;
+}
+
+.recipe-ingredients-card {
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  padding: 20px;
+  background-color: #fffdfa;
+}
+
+.recipe-servings-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eadbc6;
+}
+
+.recipe-servings-stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #dfd0bc;
+  border-radius: 999px;
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.recipe-servings-stepper button {
+  width: 34px;
+  height: 34px;
+  border: none;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 700;
+  color: #4a2e19;
+  cursor: pointer;
+}
+
+.recipe-servings-stepper span {
+  min-width: 36px;
+  text-align: center;
+  font-weight: 700;
+  color: #4a2e19;
+}
+
+.recipe-ingredient-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px dashed #eedfc9;
+}
+
+.recipe-ingredient-row:last-child {
+  border-bottom: none;
+}
+
+.recipe-ingredient-row__left {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.recipe-ingredient-row__left input[type="checkbox"] {
+  margin-top: 4px;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+}
+
+.recipe-ingredient-row__left strong {
+  display: block;
+  font-size: 14.5px;
+  color: #4a2e19;
+}
+
+.recipe-ingredient-row__qty {
+  font-size: 13px;
+  color: var(--accent-sub);
+  font-weight: 600;
+}
+
+.recipe-ingredient-row__right {
+  text-align: right;
+  font-size: 13px;
+}
+
+.recipe-ingredient-row__match {
+  color: #4a2e19;
+  font-weight: 600;
+}
+
+.recipe-ingredient-row__unmatched {
+  color: #9a7b64;
+  font-style: italic;
+}
+
+.recipe-cart-summary-card {
+  background-color: #fbf1dc;
+  border: 1px solid #e6d1ac;
+  border-radius: 14px;
+  padding: 22px;
+}
+
+.recipe-cart-summary-card h3 {
+  font-size: 18px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 6px;
+}
+
+.recipe-cart-summary-card__sub {
+  font-size: 13px;
+  color: #7c5c46;
+  margin-bottom: 14px;
+}
+
+.recipe-cart-summary-card__stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #4a2e19;
+}
+
+.recipe-cart-summary-card__total {
+  font-size: 22px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 16px;
+}
+
+.recipe-cart-summary-card__btns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.recipe-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.recipe-tool-card {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.recipe-steps-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.recipe-step-card {
+  display: flex;
+  gap: 14px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.recipe-step-card__num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent-cta);
+  flex-shrink: 0;
+}
+
+.recipe-tips-box {
+  background-color: #fbf1dc;
+  border-radius: 14px;
+  padding: 24px 28px;
+  margin: 28px 0;
+  border: 1px solid #e6d1ac;
+}
+
+.recipe-tips-box h2 {
+  font-size: 20px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 10px;
+}
+
+.recipe-tips-box ul {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14.5px;
+  color: #5c402d;
+}
+
+/* ----------------- 9.8 Trang Blog Search Autocomplete & Blog Detail ----------------- */
+.blog-search-form {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  width: 100%;
+  max-width: 420px;
+}
+
+.blog-search-form .blog-search-input {
+  flex: 1;
+  border-radius: 999px 0 0 999px;
+  border-right: none;
+}
+
+.blog-search-form__btn {
+  border-radius: 0 999px 999px 0;
+  padding: 0 18px;
+}
+
+.blog-search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  box-shadow: 0 18px 36px rgba(74, 46, 25, 0.16);
+  padding: 6px;
+  z-index: 400;
+}
+
+.blog-search-dropdown[hidden] {
+  display: none;
+}
+
+.blog-search-suggest-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: #4a2e19;
+  text-align: left;
+  cursor: pointer;
+}
+
+.blog-search-suggest-item:hover {
+  background-color: #fff8ed;
+}
+
+.blog-search-suggest-empty {
+  padding: 12px;
+  text-align: center;
+  font-size: 13.5px;
+  color: #dc2626;
+}
+
+.blog-article-container {
+  max-width: 880px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 8px 28px rgba(74, 46, 25, 0.06);
+}
+
+/* ----------------- 9.9 Trang Liên hệ (contact.html) ----------------- */
+.contact-hero-split {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 32px;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.contact-hero-split__media {
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  border: 1px solid #eadbc6;
+}
+
+.contact-hero-split__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.contact-page-grid {
+  display: grid;
+  grid-template-columns: 0.95fr 1.35fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.contact-info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.contact-info-item strong {
+  display: block;
+  font-size: 14px;
+  color: #4a2e19;
+  margin-bottom: 2px;
+}
+
+.contact-info-item span,
+.contact-info-item a {
+  font-size: 14px;
+  color: #7c5c46;
+}
+
+.contact-form-card {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 8px 24px rgba(74, 46, 25, 0.06);
+}
+
+.contact-form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ----------------- 9.10 Checkout Shopee-style, Orders Timeline & Wishlist ----------------- */
+.checkout-address-banner {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-top: 3px solid #f39c12;
+  border-radius: 12px;
+  padding: 18px 22px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 20px;
+}
+
+.checkout-address-banner > div {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.checkout-address-banner__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f39c12;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.checkout-address-banner__meta {
+  font-size: 14.5px;
+  color: #4a2e19;
+  overflow-wrap: anywhere;
+}
+
+.shipping-method-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1.5px solid #eadbc6;
+  border-radius: 10px;
+  background-color: #fffdfa;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.shipping-method-card.is-selected {
+  border-color: #f39c12;
+  background-color: #fff7e6;
+}
+
+/* Modal Confirm & Address Picker */
+.bake-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(45, 27, 15, 0.55);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 3000;
+}
+
+.bake-modal-backdrop[hidden] {
+  display: none;
+}
+
+.bake-confirm-card {
+  width: min(460px, 100%);
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 26px;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 24px 48px rgba(45, 27, 15, 0.25);
+  text-align: center;
+}
+
+.bake-policy-card {
+  width: min(560px, 100%);
+  text-align: left;
+}
+
+.bake-policy-card__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eadbc6;
+  margin-bottom: 14px;
+}
+
+.bake-modal-close {
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: #4a2e19;
+  line-height: 1;
+}
+
+.policy-modal-list {
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: #4a2e19;
+  line-height: 1.6;
+}
+
+.bake-confirm-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #fef3c7;
+  color: #d97706;
+  margin-bottom: 12px;
+}
+
+.bake-confirm-card__title {
+  font-size: 19px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 8px;
+}
+
+.bake-confirm-card__message {
+  font-size: 14.5px;
+  color: #6b4e3b;
+  margin-bottom: 20px;
+}
+
+.bake-confirm-card__actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+/* Order Timeline Stepper */
+.order-timeline {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 14px 0;
+  padding: 12px;
+  background-color: #fff8ed;
+  border-radius: 10px;
+}
+
+.order-step {
+  text-align: center;
+  font-size: 12px;
+  color: #9c826b;
+  position: relative;
+}
+
+.order-step__dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #eadbc6;
+  color: #70452b;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.order-step.is-done .order-step__dot {
+  background-color: #f39c12;
+  color: #ffffff;
+}
+
+.order-step.is-done {
+  color: #4a2e19;
+  font-weight: 700;
+}
+
+/* ----------------- 9.11 Auth Pages (Design Tokens PDF) & Admin Dashboard ----------------- */
+.auth-page-body {
+  background-color: #faf6f0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 20px;
+}
+
+.auth-card {
+  width: min(460px, 100%);
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 12px 36px rgba(74, 46, 25, 0.08);
+  padding: 32px;
+}
+
+.auth-card__head {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.auth-promo-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background-color: #f39c12;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+
+.auth-logo-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 10px;
+  background-color: #4a2e19;
+  color: #fff8ed;
+  font-weight: 800;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.auth-card__title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 4px;
+}
+
+.auth-card__subtitle {
+  font-size: 14px;
+  color: var(--accent-sub);
+}
+
+.auth-input {
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4a2e19;
+  font-family: inherit;
+  font-size: 14px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: #f39c12;
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.16);
+}
+
+.auth-password-wrap {
+  position: relative;
+}
+
+.auth-password-wrap .auth-input {
+  padding-right: 44px;
+}
+
+.auth-eye-btn {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #7c5c46;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.password-strength-bar {
+  height: 5px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.password-strength-bar__fill {
+  height: 100%;
+  width: 0%;
+  transition: width 0.25s ease, background-color 0.25s ease;
+}
+
+.password-strength-text {
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.auth-btn-primary {
+  width: 100%;
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f39c12;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: filter 0.2s ease;
+}
+
+.auth-btn-primary:hover {
+  filter: brightness(0.95);
+}
+
+.auth-social-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.auth-social-btn {
+  height: 40px;
+  border-radius: 8px;
+  border: 1.5px solid #e2d1ba;
+  background-color: #ffffff;
+  color: #4a2e19;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-social-btn:hover {
+  background-color: #fff8ed;
+}
+
+.auth-demo-box {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background-color: #fff8ed;
+  border: 1px dashed #e2cfb6;
+}
+
+.auth-demo-box p {
+  font-size: 12px;
+  color: #6b4e3b;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.auth-demo-btns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.wizard-progress {
+  height: 5px;
+  border-radius: 999px;
+  background-color: #f1e5d6;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.wizard-progress__fill {
+  height: 100%;
+  background-color: #f39c12;
+  transition: width 0.3s ease;
+}
+
+.otp-inputs-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  margin: 16px 0;
+}
+
+.otp-box {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  height: 48px;
+  text-align: center;
+  font-size: 20px;
+  font-weight: 800;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #4a2e19;
+}
+
+.otp-box:focus {
+  outline: none;
+  border-color: #f39c12;
+  box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.16);
+}
+
+/* Admin Dashboard */
+.admin-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-stat-card {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.admin-stat-card span {
+  display: block;
+  font-size: 12.5px;
+  color: var(--accent-sub);
+  margin-bottom: 4px;
+}
+
+.admin-stat-card strong {
+  font-size: 24px;
+  font-weight: 800;
+  color: #4a2e19;
+}
+
+.admin-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.admin-table-wrap {
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 12px 14px;
+  text-align: left;
+  border-bottom: 1px solid #f0e3d0;
+}
+
+.admin-table th {
+  background-color: #fdf6ea;
+  color: #4a2e19;
+  font-weight: 700;
+}
+
+/* ----------------- 9.12 Responsive Extensions ----------------- */
+@media (max-width: 1024px) {
+  .mobile-menu-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .account-wrap {
+    flex-shrink: 0;
+  }
+
+  .site-header__nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid #eadbc6;
+    box-shadow: 0 14px 28px rgba(74, 46, 25, 0.14);
+    padding: 14px 20px;
+    display: none;
+    z-index: 990;
+  }
+
+  .site-header__nav.is-mobile-open {
+    display: block;
+    max-height: calc(100vh - 96px);
+    overflow-y: auto;
+  }
+
+  .mega-menu::before {
+    display: none;
+  }
+
+  .site-header__menu {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mega-menu {
+    position: static;
+    grid-template-columns: 1fr;
+    box-shadow: none;
+    padding: 12px;
+    margin-top: 6px;
+  }
+
+  .recipe-flipbook-book {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-flipbook-book::after {
+    display: none;
+  }
+
+  .recipes-editorial-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1240px) {
+  .site-header__search-input {
+    width: 155px;
+  }
+
+  .site-header__menu-link {
+    padding: 9px 9px;
+    font-size: 13.5px;
+  }
+}
+
+@media (max-width: 900px) {
+  .products-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .mobile-filter-toggle {
+    display: inline-flex;
+  }
+
+  .products-sidebar.is-mobile-hidden {
+    display: none;
+  }
+
+  .recipe-detail-hero,
+  .recipe-calc-layout,
+  .contact-hero-split,
+  .contact-page-grid,
+  .recipe-tools-grid,
+  .recipe-steps-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header__nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    order: initial;
+    padding: 14px 20px;
+    border-top: 1px solid #eadbc6;
+  }
+
+  .site-header__menu {
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .site-header__menu-link {
+    font-size: 14.5px;
+    padding: 10px 12px;
+  }
+
+  .site-header__search-input {
+    width: 145px;
+  }
+
+  .home-section-head,
+  .recipe-servings-bar {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 640px) {
+  .promo-topbar__inner {
+    justify-content: center;
+    text-align: center;
+    padding: 6px 12px;
+  }
+
+  .promo-topbar__codes {
+    justify-content: center;
+  }
+
+  .admin-presence-bar__inner {
+    padding: 8px 14px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .header-container {
+    flex-wrap: wrap;
+    gap: 8px 10px;
+    padding: 10px 14px;
+  }
+
+  .site-header__logo-link {
+    order: 1;
+    margin-right: auto;
+  }
+
+  .site-header__actions {
+    display: contents;
+  }
+
+  .site-header__wishlist {
+    order: 2;
+  }
+
+  .site-header__cart {
+    order: 3;
+  }
+
+  .account-wrap {
+    order: 4;
+    flex-shrink: 0;
+  }
+
+  .account-trigger__name {
+    max-width: 64px;
+  }
+
+  .account-dropdown {
+    width: min(245px, calc(100vw - 24px));
+  }
+
+  .mobile-menu-toggle {
+    order: 5;
+    flex-shrink: 0;
+  }
+
+  .site-header__search {
+    order: 6;
+    flex: 1 0 100%;
+    width: 100%;
+    max-width: 100%;
+    margin-top: 2px;
+  }
+
+  .site-header__search-input {
+    width: 100%;
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  .site-header__search-btn {
+    flex-shrink: 0;
+  }
+
+  .header-search-suggest {
+    width: 100%;
+  }
+
+  .bakemate-toast-container {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    bottom: auto;
+    max-width: none;
+  }
+
+  .cart-page__subtitle,
+  .admin-stat-card strong {
+    overflow-wrap: anywhere;
+  }
+
+  .recipes-editorial-grid,
+  .admin-stats-grid,
+  .contact-form-row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .recipe-calc-section,
+  .reviews-section,
+  .blog-article-container,
+  .contact-form-card {
+    padding: 18px 14px;
+  }
+
+  .mini-card {
+    flex-wrap: wrap;
+  }
+
+  .order-timeline {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .auth-card {
+    padding: 24px 18px;
+  }
+
+  .otp-inputs-row {
+    gap: 6px;
+  }
+
+  .otp-box {
+    height: 44px;
+    font-size: 18px;
+  }
+}
+
+.product-card__add-btn--brown {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.product-card__add-btn--brown:hover {
+  background-color: #5b361f;
+  border-color: #5b361f;
+}
+
+.footer-policy-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.footer-policy-list a {
+  color: var(--secondary-color);
+  font-size: 14px;
+  transition: color 0.2s ease, padding-left 0.2s ease;
+}
+
+.footer-policy-list a:hover {
+  color: var(--accent-cta);
+  padding-left: 4px;
+}
+
+/* ==========================================================================
+   9.13 NÂNG CẤP TỔNG THỂ: SLIDER GIÁ, RECENTLY VIEWED, CART, CHECKOUT, RECIPE, BLOG, FAQ
+   ========================================================================== */
+
+/* Dual-Handle Price Range Slider (products.html) */
+.price-slider-readout {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #4a2e19;
+  margin-bottom: 10px;
+}
+
+.price-slider-track-wrap {
+  position: relative;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  user-select: none;
+}
+
+.price-slider-rail {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background-color: #eadbc6;
+}
+
+.price-slider-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0%;
+  right: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #d97706 0%, #f59e0b 100%);
+}
+
+.price-slider-input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  background: transparent;
+  pointer-events: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.price-slider-input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.price-slider-input::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+}
+
+.price-slider-input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 2px 6px rgba(74, 46, 25, 0.25);
+  cursor: grab;
+  margin-top: -6px;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.price-slider-input::-webkit-slider-thumb:hover,
+.price-slider-input::-webkit-slider-thumb:active {
+  transform: scale(1.14);
+  border-color: #70452b;
+  cursor: grabbing;
+}
+
+.price-slider-input::-moz-range-thumb {
+  pointer-events: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  border: 3px solid #f59e0b;
+  box-shadow: 0 2px 6px rgba(74, 46, 25, 0.25);
+  cursor: grab;
+}
+
+.filter-price-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.filter-price-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.filter-price-field__label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #7c5c46;
+}
+
+.price-quick-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.price-preset-btn {
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid #dfd0bc;
+  background-color: #fffdf9;
+  color: #5c402d;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.price-preset-btn:hover,
+.price-preset-btn.is-active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #fff8ed;
+}
+
+/* Recently Viewed Section (Ghi nhớ sản phẩm đã xem) */
+.recent-viewed-section {
+  margin-top: 40px;
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 16px;
+}
+
+.recent-viewed-section[hidden] {
+  display: none;
+}
+
+.recent-viewed__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.recent-viewed__title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #4a2e19;
+}
+
+.recent-viewed__clear-btn {
+  background: transparent;
+  border: 1px solid #dfd0bc;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #7c5c46;
+  cursor: pointer;
+}
+
+.recent-viewed__clear-btn:hover {
+  border-color: #dc2626;
+  color: #dc2626;
+  background-color: #fef2f2;
+}
+
+.recent-viewed-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.recent-viewed-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: #fffdfa;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recent-viewed-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(74, 46, 25, 0.1);
+}
+
+.recent-viewed-card__img-wrap {
+  aspect-ratio: 4 / 3;
+  background-color: #fff8ed;
+  overflow: hidden;
+}
+
+.recent-viewed-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recent-viewed-card__body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.recent-viewed-card__title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #4a2e19;
+  line-height: 1.35;
+}
+
+.recent-viewed-card__meta {
+  font-size: 12px;
+  color: #7c5c46;
+}
+
+.recent-viewed-card__price {
+  margin-top: auto;
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--accent-cta);
+}
+
+/* Home Quick Bake Section ("Bạn muốn làm bánh gì hôm nay?") */
+.home-quick-bake {
+  max-width: var(--max-width);
+  margin: 44px auto 20px;
+  padding: 0 20px;
+}
+
+.quick-bake-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.quick-bake-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  border-radius: 16px;
+  background: linear-gradient(155deg, #ffffff 0%, #fff8ed 100%);
+  border: 1px solid #eadbc6;
+  box-shadow: 0 6px 18px rgba(112, 69, 43, 0.06);
+  transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.quick-bake-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-cta);
+  box-shadow: 0 12px 26px rgba(112, 69, 43, 0.12);
+}
+
+.quick-bake-card__tag {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.quick-bake-card__title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #4a2e19;
+  margin-bottom: 6px;
+}
+
+.quick-bake-card__desc {
+  font-size: 13.5px;
+  color: #6b4e3b;
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.quick-bake-card__cta {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Cart Selection & Stacked Vouchers */
+.cart-select-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: #fffdfa;
+  border: 1px solid #eadbc6;
+  border-radius: 10px;
+  margin-bottom: 14px;
+}
+
+.cart-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a2e19;
+  cursor: pointer;
+}
+
+.cart-item-checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary-color);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cart-item--unchecked {
+  opacity: 0.65;
+  background-color: #faf6f0;
+}
+
+.coupon-applied-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.coupon-applied-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #70452b;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.coupon-applied-chip__remove {
+  border: none;
+  background: transparent;
+  color: #b45309;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.btn--disabled,
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Checkout Progress Bar, Perishable Alert, VietQR & Order Success */
+.checkout-progress {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+}
+
+.checkout-progress__step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #8c6a52;
+}
+
+.checkout-progress__num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #f1e5d6;
+  color: #70452b;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.checkout-progress__step.is-active,
+.checkout-progress__step.is-done {
+  color: #4a2e19;
+  font-weight: 700;
+}
+
+.checkout-progress__step.is-active .checkout-progress__num {
+  background-color: var(--accent-cta);
+  color: #ffffff;
+}
+
+.checkout-progress__step.is-done .checkout-progress__num {
+  background-color: #16a34a;
+  color: #ffffff;
+}
+
+.checkout-perishable-alert {
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  border: 1px solid #f59e0b;
+  background-color: #fffbeb;
+  color: #92400e;
+}
+
+.checkout-perishable-alert.is-blocked {
+  border-color: #fca5a5;
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.shipping-method-card.is-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f5efe6;
+}
+
+.payment-extra-box {
+  margin-top: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #fffdfa;
+  border: 1.5px dashed #d97706;
+}
+
+.vietqr-box {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.vietqr-box__svg {
+  width: 136px;
+  height: 136px;
+  padding: 8px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.ewallet-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ewallet-pill {
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1.5px solid #dfd0bc;
+  background-color: #ffffff;
+  color: #4a2e19;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ewallet-pill.is-active {
+  border-color: #f59e0b;
+  background-color: #fff7e6;
+  color: #b45309;
+}
+
+.order-success-card {
+  max-width: 780px;
+  margin: 12px auto 36px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-top: 4px solid #16a34a;
+  border-radius: 18px;
+  padding: 32px;
+  box-shadow: 0 14px 36px rgba(74, 46, 25, 0.08);
+}
+
+.order-success-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background-color: #dcfce7;
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.order-success-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 18px 0;
+}
+
+.order-success-panel {
+  padding: 16px;
+  border-radius: 12px;
+  background-color: #fffdfa;
+  border: 1px solid #eadbc6;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+/* Recipes Filters + Detail Progress + Baking Timer + Photo Preview */
+.recipes-controls-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  margin-bottom: 18px;
+}
+
+.recipes-controls-panel__left {
+  display: flex;
+  flex: 1 1 260px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.recipes-controls-panel__right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.recipe-progress-card {
+  background-color: #fffdfa;
+  border: 1px solid #eadbc6;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 18px;
+}
+
+.recipe-progress-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a2e19;
+}
+
+.recipe-progress-bar {
+  height: 10px;
+  border-radius: 999px;
+  background-color: #f1e5d6;
+  overflow: hidden;
+}
+
+.recipe-progress-bar__fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #d97706 0%, #16a34a 100%);
+  transition: width 0.25s ease;
+}
+
+.recipe-step-card {
+  flex-direction: column;
+}
+
+.recipe-step-card.is-completed {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+}
+
+.recipe-step-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.recipe-step-card__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #5c402d;
+  cursor: pointer;
+}
+
+.recipe-step-card__check input {
+  width: 17px;
+  height: 17px;
+  accent-color: #16a34a;
+  cursor: pointer;
+}
+
+.baking-timer-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding: 18px 22px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fff8ed 0%, #fbf1dc 100%);
+  border: 1.5px solid #e6d1ac;
+  margin-bottom: 24px;
+}
+
+.baking-timer__clock {
+  font-size: 30px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: #4a2e19;
+}
+
+.baking-timer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.review-photo-preview-wrap {
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.review-photo-preview-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #eadbc6;
+}
+
+/* Contact FAQ Accordion */
+.faq-section {
+  margin-top: 40px;
+  background-color: #ffffff;
+  border: 1px solid #eadbc6;
+  border-radius: 16px;
+  padding: 28px;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.faq-item {
+  border: 1px solid #eadbc6;
+  border-radius: 12px;
+  background-color: #fffdfa;
+  overflow: hidden;
+}
+
+.faq-item__trigger {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 18px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: #4a2e19;
+  cursor: pointer;
+}
+
+.faq-item__icon {
+  flex-shrink: 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--accent-cta);
+  transition: transform 0.2s ease;
+}
+
+.faq-item.is-open .faq-item__icon {
+  transform: rotate(45deg);
+}
+
+.faq-item__panel {
+  padding: 0 18px 16px;
+  font-size: 14px;
+  color: #5c402d;
+  line-height: 1.65;
+}
+
+.faq-item__panel[hidden] {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .recent-viewed-grid,
+  .quick-bake-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .checkout-progress {
+    grid-template-columns: 1fr;
+  }
+
+  .order-success-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-success-card {
+    padding: 20px 16px;
+  }
+
+  .recent-viewed-grid,
+  .quick-bake-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+}
+

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Đăng nhập tài khoản BakeMate để quản lý đơn hàng, lưu công thức và nhận ưu đãi thành viên.">
+  <title>Đăng nhập | BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-page-body">
+
+  <!-- ================= THANH MÃ GIẢM GIÁ TOÀN HỆ THỐNG ================= -->
+  <div class="promo-topbar" role="region" aria-label="Ưu đãi thành viên BakeMate">
+    <div class="promo-topbar__inner">
+      <span class="promo-topbar__left">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+        </svg>
+        <span>Ưu đãi thành viên BakeMate</span>
+      </span>
+      <div class="promo-topbar__codes">
+        <div class="promo-topbar__item">
+          <span>Giảm 10% đơn đầu:</span>
+          <span class="promo-topbar__code-badge">CHAOBANMOI</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+        <div class="promo-topbar__item">
+          <span>Freeship 20K (đơn từ 200K):</span>
+          <span class="promo-topbar__code-badge">FREESHIP20</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link" aria-label="Trang chủ BakeMate">
+        <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item has-megamenu">
+            <a href="products.html" class="site-header__menu-link js-megamenu-trigger" aria-expanded="false">
+              Sản phẩm
+              <svg class="megamenu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="mega-menu" role="region" aria-label="Danh mục sản phẩm BakeMate">
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=B%E1%BB%99t%20v%C3%A0%20nguy%C3%AAn%20li%E1%BB%87u%20kh%C3%B4" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
+                  <li><a href="products.html?sub=Chocolate%20v%C3%A0%20t%E1%BA%A1o%20v%E1%BB%8B" class="mega-menu__link">Chocolate và tạo vị</a></li>
+                  <li><a href="products.html?sub=B%C6%A1%2C%20s%E1%BB%AFa%20v%C3%A0%20kem" class="mega-menu__link">Bơ, sữa và kem</a></li>
+                  <li><a href="products.html?sub=Nguy%C3%AAn%20li%E1%BB%87u%20t%E1%BA%A1o%20c%E1%BA%A5u%20tr%C3%BAc" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=D%E1%BB%A5ng%20c%E1%BB%A5" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=Khu%C3%B4n%20b%C3%A1nh" class="mega-menu__link">Khuôn bánh</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20c%C3%A2n%2C%20%C4%91ong" class="mega-menu__link">Dụng cụ cân, đong</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20tr%E1%BB%99n" class="mega-menu__link">Dụng cụ trộn</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20trang%20tr%C3%AD" class="mega-menu__link">Dụng cụ trang trí</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Ph%E1%BB%A5%20ki%E1%BB%87n%20%26%20%C4%90%C3%B3ng%20g%C3%B3i" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=H%E1%BB%99p%20v%C3%A0%20t%C3%BAi%20%C4%91%E1%BB%B1ng%20b%C3%A1nh" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
+                  <li><a href="products.html?sub=%C4%90%E1%BA%BF%20v%C3%A0%20khay%20b%C3%A1nh" class="mega-menu__link">Đế và khay bánh</a></li>
+                  <li><a href="products.html?sub=Trang%20tr%C3%AD%20b%C3%A1nh" class="mega-menu__link">Trang trí bánh</a></li>
+                  <li><a href="products.html?sub=B%E1%BA%A3o%20qu%E1%BA%A3n%20nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="site-header__menu-item"><a href="recipes.html" class="site-header__menu-link">Công thức</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Về chúng tôi</a></li>
+          <li class="site-header__menu-item"><a href="contact.html" class="site-header__menu-link">Liên hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" action="products.html" method="get" role="search">
+          <label class="visually-hidden" for="login-header-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
+          <input id="login-header-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input" autocomplete="off">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
+        </form>
+
+        <a href="wishlist.html" class="site-header__icon-btn site-header__wishlist" aria-label="Danh sách yêu thích">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+          <span class="site-header__cart-badge js-wishlist-badge is-empty" id="wishlist-badge">0</span>
+        </a>
+
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
+        </a>
+
+        <div class="account-wrap js-account-wrap">
+          <button type="button" class="site-header__icon-btn account-trigger js-account-trigger" aria-expanded="false" aria-label="Tài khoản">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="account-trigger__name js-account-name" hidden></span>
+          </button>
+          <div class="account-dropdown js-account-menu" role="menu"></div>
+        </div>
+
+        <button type="button" class="mobile-menu-toggle js-mobile-menu-toggle" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NỘI DUNG ĐĂNG NHẬP ================= -->
+  <main class="auth-main">
+    <section class="auth-card" aria-labelledby="login-heading">
+      <div class="auth-card__head">
+        <div class="auth-logo-badge">BakeMate</div>
+        <h1 class="auth-card__title" id="login-heading">Đăng nhập tài khoản</h1>
+        <p class="auth-card__subtitle">Chào mừng quay lại với căn bếp nhỏ</p>
+      </div>
+
+      <!-- Thông báo trạng thái đã đăng nhập (nếu có session sẵn) -->
+      <div id="auth-active-session-box" hidden style="margin-bottom:16px;padding:12px 14px;border-radius:10px;background:#fff8ed;border:1px solid #eadbc6;font-size:13px;color:#4a2e19;"></div>
+
+      <!-- Thông báo lỗi / cảnh báo khóa / đăng ký thành công -->
+      <div id="auth-feedback" role="alert" aria-live="polite" hidden style="margin-bottom:16px;padding:12px 14px;border-radius:10px;font-size:13.5px;font-weight:500;"></div>
+
+      <form id="login-form" class="checkout-form" novalidate>
+        <div class="form-group">
+          <label for="login-identifier" class="form-label">Email hoặc Số điện thoại <span class="required-mark">*</span></label>
+          <input type="text" id="login-identifier" name="identifier" class="auth-input" placeholder="VD: khachhang@gmail.com hoặc 0912345678" autocomplete="username" required>
+          <span class="form-error" id="err-login-identifier"></span>
+        </div>
+
+        <div class="form-group">
+          <label for="login-password" class="form-label">Mật khẩu <span class="required-mark">*</span></label>
+          <div class="auth-password-wrap">
+            <input type="password" id="login-password" name="password" class="auth-input" placeholder="Nhập mật khẩu của bạn" autocomplete="current-password" required>
+            <button type="button" class="auth-eye-btn js-toggle-pass" data-target="login-password" aria-label="Hiện hoặc ẩn mật khẩu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>
+              </svg>
+            </button>
+          </div>
+          <span class="form-error" id="err-login-password"></span>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0 4px;">
+          <label style="display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#4a2e19;cursor:pointer;font-weight:500;">
+            <input type="checkbox" id="login-remember" checked style="width:16px;height:16px;accent-color:#f39c12;">
+            Ghi nhớ đăng nhập
+          </label>
+          <a href="forgot-password.html" style="font-size:13px;font-weight:600;color:#b45309;">Quên mật khẩu?</a>
+        </div>
+
+        <button type="submit" class="auth-btn-primary">Đăng nhập</button>
+      </form>
+
+      <div style="display:flex;align-items:center;gap:10px;margin:18px 0 6px;color:#9c826b;font-size:12px;">
+        <span style="flex:1;height:1px;background:#eadbc6;"></span>
+        <span>Hoặc đăng nhập nhanh với</span>
+        <span style="flex:1;height:1px;background:#eadbc6;"></span>
+      </div>
+
+      <div class="auth-social-row">
+        <button type="button" class="auth-social-btn js-social-login" data-provider="Google">
+          Google (Khách hàng)
+        </button>
+        <button type="button" class="auth-social-btn js-social-login" data-provider="Facebook">
+          Facebook (Khách hàng)
+        </button>
+      </div>
+
+      <div class="auth-demo-box">
+        <p><strong>Dùng thử nhanh (Demo Learning):</strong> Trải nghiệm ngay phân quyền Khách hàng &amp; Quản trị viên</p>
+        <div class="auth-demo-btns">
+          <button type="button" class="btn btn--outline-dark js-demo-login" data-demo-role="customer" style="padding:8px 10px;font-size:12.5px;">
+            Vào vai Khách hàng
+          </button>
+          <button type="button" class="btn btn--primary js-demo-login" data-demo-role="admin" style="padding:8px 10px;font-size:12.5px;">
+            Vào vai Admin Dashboard
+          </button>
+        </div>
+      </div>
+
+      <p style="text-align:center;font-size:13.5px;color:#6b4e3b;margin-top:18px;">
+        Chưa có tài khoản?
+        <a href="register.html" id="link-to-register" style="color:#d97706;font-weight:700;">Đăng ký thành viên mới</a>
+      </p>
+    </section>
+  </main>
+
+  <!-- ================= FOOTER DÙNG CHUNG ================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Làm bánh chuẩn vị</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh theo công thức hàng đầu.</p>
+        <p class="footer-col__contact">Slogan: Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Khám phá</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="recipes.html">Công thức</a></li>
+          <li><a href="blog.html">Blog làm bánh</a></li>
+          <li><a href="about.html">Về chúng tôi</a></li>
+          <li><a href="orders.html">Theo dõi đơn hàng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <ul class="footer-policy-list">
+          <li><a href="#" class="js-policy-trigger" data-policy="guide">Hướng dẫn mua hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả</a></li>
+          <li><a href="contact.html#faq-section">Câu hỏi thường gặp (FAQ)</a></li>
+          <li><a href="wishlist.html">Danh sách yêu thích</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Liên hệ</h3>
+        <p class="footer-col__contact">59C Nguyễn Đình Chiểu, Quận 3, TP.HCM</p>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+        <p class="footer-col__contact">Giờ phục vụ: 08:30 – 21:00 (Hằng ngày)</p>
+        <p class="footer-col__contact"><a href="contact.html">Gửi tin nhắn hỗ trợ &rarr;</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/recipes-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/auth-pages.js"></script>
+</body>
+</html>

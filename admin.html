@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bảng điều khiển Quản trị viên BakeMate: Quản lý đơn hàng, sản phẩm, phân quyền RBAC và cảnh báo bảo mật.">
+  <title>Admin Dashboard | BakeMate</title>
+
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="cart-page-body">
+
+  <!-- ================= THANH MÃ GIẢM GIÁ TOÀN HỆ THỐNG ================= -->
+  <div class="promo-topbar" role="region" aria-label="Ưu đãi thành viên BakeMate">
+    <div class="promo-topbar__inner">
+      <span class="promo-topbar__left">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+        </svg>
+        <span>Ưu đãi thành viên BakeMate</span>
+      </span>
+      <div class="promo-topbar__codes">
+        <div class="promo-topbar__item">
+          <span>Giảm 10% đơn đầu:</span>
+          <span class="promo-topbar__code-badge">CHAOBANMOI</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+        <div class="promo-topbar__item">
+          <span>Freeship 20K (đơn từ 200K):</span>
+          <span class="promo-topbar__code-badge">FREESHIP20</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HEADER DÙNG CHUNG ================= -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="index.html" class="site-header__logo-link" aria-label="Trang chủ BakeMate">
+        <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
+      </a>
+
+      <nav class="site-header__nav" aria-label="Điều hướng chính">
+        <ul class="site-header__menu">
+          <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
+          <li class="site-header__menu-item has-megamenu">
+            <a href="products.html" class="site-header__menu-link js-megamenu-trigger" aria-expanded="false">
+              Sản phẩm
+              <svg class="megamenu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="mega-menu" role="region" aria-label="Danh mục sản phẩm BakeMate">
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=B%E1%BB%99t%20v%C3%A0%20nguy%C3%AAn%20li%E1%BB%87u%20kh%C3%B4" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
+                  <li><a href="products.html?sub=Chocolate%20v%C3%A0%20t%E1%BA%A1o%20v%E1%BB%8B" class="mega-menu__link">Chocolate và tạo vị</a></li>
+                  <li><a href="products.html?sub=B%C6%A1%2C%20s%E1%BB%AFa%20v%C3%A0%20kem" class="mega-menu__link">Bơ, sữa và kem</a></li>
+                  <li><a href="products.html?sub=Nguy%C3%AAn%20li%E1%BB%87u%20t%E1%BA%A1o%20c%E1%BA%A5u%20tr%C3%BAc" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=D%E1%BB%A5ng%20c%E1%BB%A5" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=Khu%C3%B4n%20b%C3%A1nh" class="mega-menu__link">Khuôn bánh</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20c%C3%A2n%2C%20%C4%91ong" class="mega-menu__link">Dụng cụ cân, đong</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20tr%E1%BB%99n" class="mega-menu__link">Dụng cụ trộn</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20trang%20tr%C3%AD" class="mega-menu__link">Dụng cụ trang trí</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Ph%E1%BB%A5%20ki%E1%BB%87n%20%26%20%C4%90%C3%B3ng%20g%C3%B3i" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=H%E1%BB%99p%20v%C3%A0%20t%C3%BAi%20%C4%91%E1%BB%B1ng%20b%C3%A1nh" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
+                  <li><a href="products.html?sub=%C4%90%E1%BA%BF%20v%C3%A0%20khay%20b%C3%A1nh" class="mega-menu__link">Đế và khay bánh</a></li>
+                  <li><a href="products.html?sub=Trang%20tr%C3%AD%20b%C3%A1nh" class="mega-menu__link">Trang trí bánh</a></li>
+                  <li><a href="products.html?sub=B%E1%BA%A3o%20qu%E1%BA%A3n%20nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="site-header__menu-item"><a href="recipes.html" class="site-header__menu-link">Công thức</a></li>
+          <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Về chúng tôi</a></li>
+          <li class="site-header__menu-item"><a href="contact.html" class="site-header__menu-link">Liên hệ</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-header__actions">
+        <form class="site-header__search" action="products.html" method="get" role="search">
+          <label class="visually-hidden" for="admin-header-search">Tìm nguyên liệu, dụng cụ làm bánh</label>
+          <input id="admin-header-search" type="search" name="q" placeholder="Tìm nguyên liệu, công thức..." class="site-header__search-input" autocomplete="off">
+          <button type="submit" class="site-header__search-btn">Tìm</button>
+        </form>
+
+        <a href="wishlist.html" class="site-header__icon-btn site-header__wishlist" aria-label="Danh sách yêu thích">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+          <span class="site-header__cart-badge js-wishlist-badge is-empty" id="wishlist-badge">0</span>
+        </a>
+
+        <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
+          <span class="site-header__cart-icon" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+              <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+            </svg>
+          </span>
+          <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
+        </a>
+
+        <div class="account-wrap js-account-wrap">
+          <button type="button" class="site-header__icon-btn account-trigger js-account-trigger" aria-expanded="false" aria-label="Tài khoản">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="account-trigger__name js-account-name" hidden></span>
+          </button>
+          <div class="account-dropdown js-account-menu" role="menu"></div>
+        </div>
+
+        <button type="button" class="mobile-menu-toggle js-mobile-menu-toggle" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= NỘI DUNG ADMIN DASHBOARD (BẢO VỆ RBAC) ================= -->
+  <main class="page-container">
+    <!-- Thông báo từ chối truy cập (Guest / Customer) -->
+    <section id="admin-access-denied" class="cart-empty" hidden aria-live="assertive">
+      <h1 class="cart-empty__title" style="color:#b91c1c;">Quyền truy cập bị hạn chế (RBAC)</h1>
+      <p class="cart-empty__desc" id="admin-denied-desc">
+        Trang Quản trị hệ thống BakeMate chỉ dành cho tài khoản Quản trị viên (Admin).
+      </p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <a href="login.html?redirect=admin.html" class="btn btn--primary">Đăng nhập tài khoản Admin</a>
+        <a href="index.html" class="btn btn--outline-dark">Quay về Trang chủ</a>
+      </div>
+    </section>
+
+    <!-- Giao diện Admin Dashboard (chỉ hiển thị khi verified Admin) -->
+    <div id="admin-dashboard-shell" hidden>
+      <div class="cart-page__header" style="align-items:flex-start;">
+        <div>
+          <span class="account-role-pill is-admin" id="admin-role-pill" style="display:inline-block;margin-bottom:8px;font-size:12px;">
+            Quản trị viên BakeMate
+          </span>
+          <h1 class="cart-page__title">Admin Dashboard &amp; Quản trị hệ thống</h1>
+          <p class="cart-page__subtitle" id="admin-welcome-meta">
+            Quản lý đơn hàng, danh mục sản phẩm, phân quyền tài khoản và phản hồi khách hàng.
+          </p>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="index.html" class="btn btn--outline-dark">Xem giao diện khách hàng</a>
+          <button type="button" id="btn-admin-logout" class="btn-clear-cart">Đăng xuất Admin</button>
+        </div>
+      </div>
+
+      <!-- 4 Thẻ thống kê nhanh -->
+      <section class="admin-stats-grid" aria-label="Thống kê tổng quan">
+        <article class="admin-stat-card">
+          <span>Doanh thu hợp lệ</span>
+          <strong id="stat-revenue">0 ₫</strong>
+        </article>
+        <article class="admin-stat-card">
+          <span>Tổng đơn hàng</span>
+          <strong id="stat-orders">0 đơn</strong>
+        </article>
+        <article class="admin-stat-card">
+          <span>Sản phẩm trong kho</span>
+          <strong id="stat-products">0 SP</strong>
+        </article>
+        <article class="admin-stat-card">
+          <span>Tài khoản &amp; Cảnh báo</span>
+          <strong id="stat-users">0 TK</strong>
+        </article>
+      </section>
+
+      <!-- Thanh Tabs điều hướng Admin -->
+      <nav class="admin-tabs" role="tablist" aria-label="Chức năng quản trị">
+        <button type="button" role="tab" class="blog-filter-btn js-admin-tab active" data-tab="orders" aria-selected="true">Quản lý Đơn hàng</button>
+        <button type="button" role="tab" class="blog-filter-btn js-admin-tab" data-tab="products" aria-selected="false">Quản lý Sản phẩm</button>
+        <button type="button" role="tab" class="blog-filter-btn js-admin-tab" data-tab="users" aria-selected="false">Tài khoản &amp; Bảo mật</button>
+        <button type="button" role="tab" class="blog-filter-btn js-admin-tab" data-tab="contacts" aria-selected="false">Tin nhắn Liên hệ</button>
+      </nav>
+
+      <!-- TAB 1: QUẢN LÝ ĐƠN HÀNG -->
+      <section id="tab-panel-orders" class="js-admin-panel">
+        <div class="blog-toolbar" style="margin-bottom:16px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <label for="admin-order-status-filter" class="form-label" style="margin:0;">Lọc trạng thái:</label>
+            <select id="admin-order-status-filter" class="form-input" style="width:auto;min-width:190px;">
+              <option value="all">Tất cả đơn hàng</option>
+              <option value="Chờ xác nhận">Chờ xác nhận</option>
+              <option value="Đang chuẩn bị">Đang chuẩn bị</option>
+              <option value="Đang giao hàng">Đang giao hàng</option>
+              <option value="Hoàn tất">Hoàn tất</option>
+              <option value="Đã hủy">Đã hủy</option>
+            </select>
+          </div>
+          <input type="search" id="admin-order-search" class="form-input" style="max-width:300px;" placeholder="Tìm mã #BM- hoặc tên khách...">
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Mã đơn &amp; Ngày đặt</th>
+                <th>Khách hàng &amp; Địa chỉ</th>
+                <th>Chi tiết món hàng</th>
+                <th>Thanh toán</th>
+                <th>Trạng thái xử lý</th>
+              </tr>
+            </thead>
+            <tbody id="admin-orders-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: QUẢN LÝ SẢN PHẨM -->
+      <section id="tab-panel-products" class="js-admin-panel" hidden>
+        <div class="blog-toolbar" style="margin-bottom:16px;">
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            <button type="button" id="btn-admin-add-product" class="btn btn--primary">+ Thêm sản phẩm mới</button>
+            <button type="button" id="btn-admin-reset-products" class="btn btn--outline-dark">Khôi phục danh mục gốc</button>
+          </div>
+          <input type="search" id="admin-product-search" class="form-input" style="max-width:280px;" placeholder="Tìm tên hoặc thương hiệu...">
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Giá bán / Quy cách</th>
+                <th>Trạng thái kho</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="admin-products-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: QUẢN LÝ TÀI KHOẢN & BẢO MẬT -->
+      <section id="tab-panel-users" class="js-admin-panel" hidden>
+        <div style="display:grid;gap:22px;">
+          <!-- Danh sách tài khoản -->
+          <div>
+            <h2 style="font-size:18px;font-weight:800;color:#4a2e19;margin-bottom:10px;">Danh sách tài khoản hệ thống</h2>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Họ tên</th>
+                    <th>Email / SĐT</th>
+                    <th>Vai trò</th>
+                    <th>Trạng thái bảo mật</th>
+                    <th>Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-users-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Form Super Admin cấp quyền Admin -->
+          <div id="super-admin-create-box" class="contact-form-card" hidden>
+            <h2 style="font-size:17px;font-weight:800;color:#4a2e19;margin-bottom:6px;">
+              Cấp tài khoản Quản trị viên mới (Chỉ dành cho Super Admin)
+            </h2>
+            <p style="font-size:13px;color:var(--accent-sub);margin-bottom:14px;">
+              Hệ thống không cho phép tự đăng ký Admin tại form công khai. Chỉ Super Admin mới có quyền cấp tài khoản quản trị mới.
+            </p>
+            <form id="admin-create-admin-form" class="checkout-form" novalidate>
+              <div class="contact-form-row-2">
+                <div class="form-group">
+                  <label for="sa-fullname" class="form-label">Họ và tên <span class="required-mark">*</span></label>
+                  <input type="text" id="sa-fullname" class="form-input" placeholder="Trần Minh Quân" required>
+                </div>
+                <div class="form-group">
+                  <label for="sa-email" class="form-label">Email công vụ <span class="required-mark">*</span></label>
+                  <input type="email" id="sa-email" class="form-input" placeholder="admin.moi@bakemate.vn" required>
+                </div>
+              </div>
+              <div class="contact-form-row-2">
+                <div class="form-group">
+                  <label for="sa-phone" class="form-label">Số điện thoại (10 số VN) <span class="required-mark">*</span></label>
+                  <input type="tel" id="sa-phone" class="form-input" placeholder="0908112233" required>
+                </div>
+                <div class="form-group">
+                  <label for="sa-password" class="form-label">Mật khẩu khởi tạo (&ge; 8 ký tự) <span class="required-mark">*</span></label>
+                  <input type="password" id="sa-password" class="form-input" placeholder="Tối thiểu 8 ký tự, gồm chữ hoa &amp; số" required>
+                </div>
+              </div>
+              <p id="sa-form-feedback" class="form-error" aria-live="polite"></p>
+              <div>
+                <button type="submit" class="btn btn--primary">Cấp quyền Quản trị viên</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Nhật ký cảnh báo an ninh -->
+          <div>
+            <h2 style="font-size:18px;font-weight:800;color:#4a2e19;margin-bottom:10px;">Nhật ký Cảnh báo An ninh &amp; Phân quyền</h2>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th>Thời gian</th>
+                    <th>Tài khoản liên quan</th>
+                    <th>Sự kiện bảo mật</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-security-logs-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: TIN NHẮN LIÊN HỆ -->
+      <section id="tab-panel-contacts" class="js-admin-panel" hidden>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Khách hàng</th>
+                <th>Chủ đề &amp; Nội dung</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="admin-contacts-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ================= MODAL THÊM / SỬA SẢN PHẨM ================= -->
+  <div id="admin-product-modal" class="bake-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="admin-prod-modal-title" hidden>
+    <div class="bake-confirm-card bake-policy-card" style="max-height:90vh;overflow-y:auto;">
+      <div class="bake-policy-card__head">
+        <h3 id="admin-prod-modal-title">Thêm sản phẩm mới</h3>
+        <button type="button" class="bake-modal-close js-close-prod-modal" aria-label="Đóng hộp thoại">&times;</button>
+      </div>
+
+      <form id="admin-product-form" class="checkout-form" novalidate>
+        <input type="hidden" id="ap-id" value="">
+
+        <div class="form-group">
+          <label for="ap-name" class="form-label">Tên sản phẩm <span class="required-mark">*</span></label>
+          <input type="text" id="ap-name" class="form-input" placeholder="VD: Hạnh nhân lát Mỹ rang bơ" required>
+        </div>
+
+        <div class="contact-form-row-2">
+          <div class="form-group">
+            <label for="ap-category" class="form-label">Danh mục chính <span class="required-mark">*</span></label>
+            <select id="ap-category" class="form-input">
+              <option value="Nguyên liệu">Nguyên liệu</option>
+              <option value="Dụng cụ">Dụng cụ</option>
+              <option value="Phụ kiện & đóng gói">Phụ kiện &amp; đóng gói</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ap-subcategory" class="form-label">Nhóm phụ Mega Menu</label>
+            <input type="text" id="ap-subcategory" class="form-input" placeholder="Bột và nguyên liệu khô">
+          </div>
+        </div>
+
+        <div class="contact-form-row-2">
+          <div class="form-group">
+            <label for="ap-brand" class="form-label">Thương hiệu</label>
+            <input type="text" id="ap-brand" class="form-input" placeholder="BakeMate">
+          </div>
+          <div class="form-group">
+            <label for="ap-packaging" class="form-label">Quy cách đóng gói</label>
+            <input type="text" id="ap-packaging" class="form-input" placeholder="Gói 500g">
+          </div>
+        </div>
+
+        <div class="contact-form-row-2">
+          <div class="form-group">
+            <label for="ap-price" class="form-label">Giá bán (VNĐ) <span class="required-mark">*</span></label>
+            <input type="number" id="ap-price" class="form-input" min="1000" step="1000" placeholder="55000" required>
+          </div>
+          <div class="form-group">
+            <label for="ap-oldprice" class="form-label">Giá gốc tham chiếu (tùy chọn)</label>
+            <input type="number" id="ap-oldprice" class="form-input" min="0" step="1000" placeholder="68000">
+          </div>
+        </div>
+
+        <div class="contact-form-row-2">
+          <div class="form-group">
+            <label for="ap-stock" class="form-label">Trạng thái hàng</label>
+            <select id="ap-stock" class="form-input">
+              <option value="in_stock">Còn hàng (cho phép mua ngay)</option>
+              <option value="coming_soon">Sắp có hàng (chỉ lưu Yêu thích)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ap-image" class="form-label">Đường dẫn hình ảnh</label>
+            <input type="text" id="ap-image" list="ap-image-presets" class="form-input" value="images/about-ingredients.jpg">
+            <datalist id="ap-image-presets">
+              <option value="images/about-ingredients.jpg"></option>
+              <option value="images/categories/cat-ingredients.jpg"></option>
+              <option value="images/categories/cat-tools.jpg"></option>
+              <option value="images/categories/cat-packaging.jpg"></option>
+              <option value="images/products/bot-mi-so-8-1.jpg"></option>
+            </datalist>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ap-desc" class="form-label">Mô tả sản phẩm</label>
+          <textarea id="ap-desc" class="form-textarea" rows="3" placeholder="Công dụng, xuất xứ và hướng dẫn bảo quản..."></textarea>
+        </div>
+
+        <p id="ap-form-error" class="form-error" aria-live="polite"></p>
+
+        <div style="display:flex;justify-content:flex-end;gap:10px;">
+          <button type="button" class="btn btn--outline-dark js-close-prod-modal">Hủy bỏ</button>
+          <button type="submit" class="btn btn--primary">Lưu sản phẩm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER DÙNG CHUNG ================= -->
+  <footer class="site-footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3 class="footer-col__title">BakeMate - Làm bánh chuẩn vị</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh theo công thức hàng đầu.</p>
+        <p class="footer-col__contact">Slogan: Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Khám phá</h3>
+        <ul class="footer-col__list">
+          <li><a href="index.html">Trang chủ</a></li>
+          <li><a href="products.html">Sản phẩm</a></li>
+          <li><a href="recipes.html">Công thức</a></li>
+          <li><a href="blog.html">Blog làm bánh</a></li>
+          <li><a href="about.html">Về chúng tôi</a></li>
+          <li><a href="orders.html">Theo dõi đơn hàng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <ul class="footer-policy-list">
+          <li><a href="#" class="js-policy-trigger" data-policy="guide">Hướng dẫn mua hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả</a></li>
+          <li><a href="contact.html#faq-section">Câu hỏi thường gặp (FAQ)</a></li>
+          <li><a href="wishlist.html">Danh sách yêu thích</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Liên hệ</h3>
+        <p class="footer-col__contact">59C Nguyễn Đình Chiểu, Quận 3, TP.HCM</p>
+        <p class="footer-col__contact">Hotline: 1900 8888</p>
+        <p class="footer-col__contact">Email: support@bakemate.vn</p>
+        <p class="footer-col__contact">Giờ phục vụ: 08:30 – 21:00 (Hằng ngày)</p>
+        <p class="footer-col__contact"><a href="contact.html">Gửi tin nhắn hỗ trợ &rarr;</a></p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 BakeMate - Dự án học phần TMĐT Nhóm 3. Bản quyền thuộc về Nhóm 3.</p>
+    </div>
+  </footer>
+
+  <script src="js/products.js"></script>
+  <script src="js/recipes-data.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

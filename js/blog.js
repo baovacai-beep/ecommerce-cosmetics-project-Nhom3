@@ -1,168 +1,16 @@
 /*
  * =====================================================
  * BAKEMATE - TRANG BLOG CÔNG THỨC & KIẾN THỨC LÀM BÁNH
- * Tệp: js/blog.js (Tích hợp Recipe-to-Cart cho blog.html)
+ * Tệp: js/blog.js (Hỗ trợ blog.html & blog-detail.html)
  * =====================================================
  */
 
 (function () {
   const FALLBACK_IMG = window.FALLBACK_PRODUCT_IMAGE || "images/logo.jpg";
 
-  const BLOG_POSTS = [
-    {
-      id: "post-bong-lan-chiffon",
-      recipeGroupId: "recipe-bong-lan",
-      title: "Bí quyết làm Bánh Bông Lan Chiffon mềm ẩm, nở cao không xẹp mặt",
-      category: "Công thức chuẩn vị",
-      readTime: "55 phút thực hiện",
-      diff: "Dễ",
-      author: "Minh Thư · BakeMate Studio",
-      publishedAt: "08/11/2026",
-      image: "images/about-baking.jpg",
-      excerpt:
-        "Chọn đúng bột mì số 8 có hàm lượng protein thấp 8–9% và ổn định lòng trắng trứng với Cream of Tartar giúp cốt bánh bông nhẹ tan ngay trong miệng.",
-      steps: [
-        "Tách riêng 5 lòng đỏ và 5 lòng trắng trứng gà ở nhiệt độ phòng; làm nóng trước lò ở 160°C trong 15 phút.",
-        "Trộn đều lòng đỏ với sữa tươi, dầu ăn và rây 120g Bột mì số 8 vào khuấy theo một chiều cho mịn mượt.",
-        "Đánh bông lòng trắng với 1/2 thìa Cream of Tartar và 100g đường tinh luyện theo 3 lần chia cho đến khi đạt chóp mềm uốn cong.",
-        "Trộn nhẹ nhàng (fold) hỗn hợp lòng trắng vào âu lòng đỏ theo kỹ thuật hất từ đáy âu lên để không vỡ bọt khí.",
-        "Đổ bột vào khuôn tròn 20cm và nướng cách thủy hoặc nướng ở 155–160°C trong 45 phút, úp ngược khuôn ngay khi lấy ra."
-      ]
-    },
-    {
-      id: "post-banh-mi-hoa-cuc",
-      recipeGroupId: "recipe-hoa-cuc",
-      title: "Cách làm Bánh Mì Hoa Cúc ngàn lớp thơm lừng bơ sữa tại nhà",
-      category: "Công thức chuẩn vị",
-      readTime: "90 phút thực hiện",
-      diff: "Vừa",
-      author: "Gia Bảo · BakeMate Kitchen",
-      publishedAt: "06/11/2026",
-      image: "images/about-young-bakers.jpg",
-      excerpt:
-        "Bí mật tạo nên từng thớ bánh dai mềm kéo sợi nằm ở bột mì số 11 giàu gluten kết hợp cùng bơ lạt Anchor nguyên chất 82.9% béo sữa.",
-      steps: [
-        "Cân chuẩn 260g Bột mì Baker's Choice số 11, trộn cùng men nở, đường tinh luyện và sữa ấm 38°C.",
-        "Nhồi bột đến khi kết khối dẻo mịn, sau đó cho từng lát bơ lạt Anchor ở nhiệt độ phòng vào nhồi tiếp đến khi kéo được màng mỏng không rách.",
-        "Ủ bột lần 1 trong 50 phút cho nở gấp đôi; chia bột làm 3 hoặc 6 phần bằng nhau, cán dài và thắt bím đặt vào khuôn.",
-        "Ủ lần 2 thêm 35 phút, phết lớp trứng đánh loãng lên mặt bánh rồi nướng ở 175°C khoảng 25–28 phút đến khi chín vàng ruộm."
-      ]
-    },
-    {
-      id: "post-muffin-socola",
-      recipeGroupId: "recipe-muffin-socola",
-      title: "Muffin Chocolate Hạnh Nhân chỉ 40 phút cho buổi trà chiều",
-      category: "Công thức chuẩn vị",
-      readTime: "40 phút thực hiện",
-      diff: "Dễ",
-      author: "Bảo Ngọc · BakeMate Community",
-      publishedAt: "05/11/2026",
-      image: "images/banner.jpg",
-      excerpt:
-        "Không cần máy đánh trứng cầu kỳ — chỉ với phới lồng tay, bột cacao Hershey's nguyên chất và cup giấy nướng bánh là bạn đã có ngay khay muffin thơm nồng.",
-      steps: [
-        "Xếp 12 cup giấy nướng bánh vào khay muffin; làm nóng lò nướng ở 180°C trước 10 phút.",
-        "Đun chảy 80g bơ lạt Anchor cùng một chút dầu ăn, hòa tan đều với 35g bột cacao Hershey's để khơi dậy mùi socola đậm đà.",
-        "Rây 150g bột mì đa dụng Meizan cùng bột nở vào âu hỗn hợp ướt, khuấy vừa quyện hết bột khô (tránh trộn quá tay gây chai bánh).",
-        "Chia đều bột đầy 2/3 cup giấy và nướng ở 180°C trong 22–25 phút cho đến khi tăm xiên vào rút ra sạch."
-      ]
-    },
-    {
-      id: "post-phan-biet-bot-mi",
-      recipeGroupId: "recipe-matcha-cupcake",
-      title: "Phân biệt Bột Mì Số 8, Số 11 và Đa Dụng — Mua đúng khỏi tốn tiền oan",
-      category: "Mẹo chọn nguyên liệu",
-      readTime: "5 phút đọc",
-      diff: "Dễ",
-      author: "Như Hậu · BakeMate Content",
-      publishedAt: "03/11/2026",
-      image: "images/about-ingredients.jpg",
-      excerpt:
-        "Tại sao làm bánh bông lan dùng bột mì số 11 lại bị cứng, còn làm bánh mì dùng bột số 8 lại dễ bở? Tìm hiểu ngay tỉ lệ protein và quy cách túi 100g–1kg tối ưu.",
-      steps: [
-        "Bột mì số 8 (Cake Flour, 8–9% protein): Ít gluten giúp bánh bông lan, chiffon, cupcake matcha mềm xốp và giữ độ ẩm lâu.",
-        "Bột mì số 11 (Bread Flour, 11.5–13% protein): Gluten cao tạo mạng lưới giữ khí khỏe, bắt buộc phải có cho bánh mì hoa cúc, baguette và đế pizza.",
-        "Bột mì đa dụng (All-Purpose, 9.5–11.5% protein): Cân bằng linh hoạt giữa mềm và giòn, phù hợp cho muffin, bánh quy, pancake bữa sáng.",
-        "Mẹo tiết kiệm BakeMate: Nếu mới thử làm 1 mẻ bánh nhỏ, hãy chọn quy cách túi 100g hoặc 300g ngay tại trang chi tiết sản phẩm để tránh tồn bột quá hạn."
-      ]
-    },
-    {
-      id: "post-brownie-giot-am",
-      recipeGroupId: "recipe-brownie",
-      title: "Kỹ thuật nướng Bánh Brownie Chocolate mặt bóng vỡ, ruột ẩm dẻo",
-      category: "Kỹ thuật làm bánh",
-      readTime: "45 phút thực hiện",
-      diff: "Dễ",
-      author: "Nguyễn Thương · BakeMate Baker",
-      publishedAt: "01/11/2026",
-      image: "images/contact-baking.jpg",
-      excerpt:
-        "Hai bí quyết vàng quyết định thành công của khay Brownie chuẩn Mỹ: nhiệt độ bơ-cacao cách thủy 50°C và lót giấy nến chống dính để nhấc nguyên khối.",
-      steps: [
-        "Dùng nhiệt kế điện tử kiểm tra hỗn hợp 120g bơ lạt và 50g bột cacao Hershey's khi đun cách thủy, giữ quanh 50–55°C.",
-        "Đánh trứng và đường đến khi đường tan hoàn toàn và bề mặt hơi sánh sáng — đây là bí quyết tạo lớp mặt bóng nứt đặc trưng.",
-        "Trộn nhẹ 85g bột mì đa dụng (túi nhỏ 100g vừa khít công thức) vào hỗn hợp cacao rồi đổ lên khay đã lót sẵn giấy nến nướng bánh.",
-        "Nướng ở 175°C khoảng 24–26 phút; để nguội hoàn toàn trước khi nhấc hai đầu giấy nến cắt thành 9 miếng vuông gọn sắc."
-      ]
-    },
-    {
-      id: "post-banh-quy-bo",
-      recipeGroupId: "recipe-banh-quy-bo",
-      title: "Cẩm nang cân đo và bắt đui Bánh Quy Bơ Đan Mạch giòn tan sắc nét",
-      category: "Công thức chuẩn vị",
-      readTime: "40 phút thực hiện",
-      diff: "Dễ",
-      author: "Đen Ny · BakeMate Craft",
-      publishedAt: "29/10/2026",
-      image: "images/about-sharing-cakes.jpg",
-      excerpt:
-        "Chỉ cần cân điện tử chia chuẩn 1g, bơ lạt mềm đánh bông trắng ngà và bộ đui bắt kem Inox 304, bạn sẽ dễ dàng cho ra lò mẻ bánh quy hoa hồng giòn rụm.",
-      steps: [
-        "Cân chính xác 150g bơ lạt Anchor để mềm ở nhiệt độ phòng (không chảy nước), đánh bông cùng đường bột đến khi chuyển màu kem nhạt.",
-        "Trộn 180g Bột mì số 8 đã rây mịn vào âu bơ theo kỹ thuật cắt bột để khối bột mềm dẻo nhưng không quá chảy.",
-        "Lắp đui sao mở trong bộ 12 đui Inox vào túi bắt kem vân nhám chống trượt, cho bột vào nửa túi và bắt thành từng bông hoa lên khay lót giấy nến.",
-        "Làm lạnh khay bánh 15 phút trước khi cho vào lò ở 170°C trong 15–18 phút giúp giữ vân bánh sắc nét không bị chảy dẹt."
-      ]
-    },
-    {
-      id: "post-mousse-socola",
-      recipeGroupId: "recipe-mousse-socola",
-      title: "Bánh Mousse Socola Lạnh mịn mượt không cần lò nướng, tách khuôn sắc nét",
-      category: "Kỹ thuật làm bánh",
-      readTime: "75 phút thực hiện",
-      diff: "Vừa",
-      author: "Minh Thư · BakeMate Studio",
-      publishedAt: "27/10/2026",
-      image: "images/about-ingredients.jpg",
-      excerpt:
-        "Chỉ cần Whipping Cream Anchor làm lạnh đúng 2–4°C, bột cacao Hershey's đậm vị, phới lồng Inox và khuôn đế rời 20cm để tạo nên chiếc mousse tan chảy mát lạnh.",
-      steps: [
-        "Hòa tan 35g bột cacao Hershey's với 60ml nước ấm hoặc sữa ấm bằng phới lồng Inox sao cho hỗn hợp bóng mượt không vón cục, để nguội về khoảng 35°C.",
-        "Làm lạnh âu trộn và đánh 250ml Whipping Cream Anchor lạnh với phới lồng đến khi kem sánh đặc, tạo vân mềm nhưng vẫn chảy nhẹ.",
-        "Trộn nhẹ (fold) hỗn hợp cacao vào kem tươi đã đánh theo một chiều cho hòa quyện đều, đổ vào khuôn tròn đế rời 20cm đã lót sẵn đế bánh.",
-        "Giữ lạnh trong ngăn mát ít nhất 4 giờ cho bánh định hình hoàn toàn, dùng khăn ấm lau quanh thành khuôn rồi đẩy nhẹ phần đế rời để tách bánh nguyên vẹn."
-      ]
-    },
-    {
-      id: "post-pancake-mat-ong",
-      recipeGroupId: "recipe-pancake",
-      title: "Bánh Pancake Mật Ong bữa sáng mềm xốp chỉ 25 phút với bột mì đa dụng",
-      category: "Công thức chuẩn vị",
-      readTime: "25 phút thực hiện",
-      diff: "Dễ",
-      author: "Bảo Ngọc · BakeMate Kitchen",
-      publishedAt: "25/10/2026",
-      image: "images/about-beginner.jpg",
-      excerpt:
-        "Công thức bữa sáng nhanh gọn tại nhà: định lượng sữa tươi bằng ca đong chia ml rõ nét, đánh tan trứng gà tươi cùng 150g bột mì đa dụng Meizan cho mẻ pancake vàng ươm.",
-      steps: [
-        "Rây 150g bột mì đa dụng Meizan (chọn túi 300g tiết kiệm) cùng 40g đường tinh luyện và một chút muối vào âu trộn.",
-        "Dùng ca đong đo chuẩn 180ml sữa tươi, đập 2 quả trứng gà tươi vào khuấy nhẹ rồi rót từ từ vào âu bột khô.",
-        "Khuấy đều vừa quyện đến khi hỗn hợp hơi sánh mịn (không cần đánh quá kỹ để bánh giữ độ xốp), để bột nghỉ 10 phút.",
-        "Làm nóng chảo chống dính ở lửa vừa nhỏ, dùng ca đong rót từng muôi bột tròn đều; lật mặt khi bề mặt nổi bọt khí và nướng thêm 1 phút đến khi vàng đều hai mặt."
-      ]
-    }
-  ];
+  function getPosts() {
+    return Array.isArray(window.BLOG_POSTS) ? window.BLOG_POSTS : [];
+  }
 
   function escapeHtml(value) {
     return String(value == null ? "" : value)
@@ -179,6 +27,7 @@
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .replace(/đ/g, "d")
+      .replace(/Đ/g, "d")
       .trim();
   }
 
@@ -188,6 +37,48 @@
       : Number(value).toLocaleString("vi-VN") + " ₫";
   }
 
+  /**
+   * Tô đậm phần từ khóa khớp trong tiêu đề bài viết (an toàn XSS).
+   */
+  function highlightMatch(originalText, rawQuery) {
+    const safeText = String(originalText || "");
+    const cleanQuery = normalizeText(rawQuery);
+    if (!cleanQuery) return escapeHtml(safeText);
+
+    // Tạo mảng ánh xạ từ vị trí ký tự đã chuẩn hóa về chỉ số ký tự gốc
+    const normChars = [];
+    const indexMap = [];
+    for (let i = 0; i < safeText.length; i += 1) {
+      const ch = safeText[i]
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d");
+      for (let j = 0; j < ch.length; j += 1) {
+        normChars.push(ch[j]);
+        indexMap.push(i);
+      }
+    }
+
+    const normJoined = normChars.join("");
+    const matchStartNorm = normJoined.indexOf(cleanQuery);
+    if (matchStartNorm === -1) {
+      return escapeHtml(safeText);
+    }
+
+    const matchEndNorm = matchStartNorm + cleanQuery.length - 1;
+    const origStart = indexMap[matchStartNorm];
+    const origEnd = indexMap[matchEndNorm] + 1;
+
+    return (
+      escapeHtml(safeText.slice(0, origStart)) +
+      "<strong>" +
+      escapeHtml(safeText.slice(origStart, origEnd)) +
+      "</strong>" +
+      escapeHtml(safeText.slice(origEnd))
+    );
+  }
+
   function getComboBreakdown(recipeGroupId) {
     const combo =
       typeof window.getRecipeComboInfo === "function"
@@ -195,7 +86,7 @@
         : null;
 
     if (!combo || !Array.isArray(combo.items)) {
-      return { title: "Combo nguyên liệu", items: [], total: 0 };
+      return { title: "Combo nguyên liệu", servings: "1 công thức", items: [], total: 0 };
     }
 
     let total = 0;
@@ -226,6 +117,77 @@
     };
   }
 
+  function buildBlogCardHtml(post) {
+    const combo = getComboBreakdown(post.recipeGroupId);
+    return `
+      <article class="blog-card" id="${escapeHtml(post.recipeGroupId)}">
+        <div class="blog-card__media">
+          <img
+            src="${escapeHtml(post.image)}"
+            alt="${escapeHtml(post.title)}"
+            class="blog-card__img"
+            loading="lazy"
+            onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+          >
+          <span class="blog-card__category">${escapeHtml(post.category)}</span>
+        </div>
+        <div class="blog-card__body">
+          <div class="blog-card__meta">
+            <span class="meta-inline">
+              <svg class="blog-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+              ${escapeHtml(post.readTime)}
+            </span>
+            <span>·</span>
+            <span>Độ khó: ${escapeHtml(post.diff)}</span>
+          </div>
+          <h2 class="blog-card__title">${escapeHtml(post.title)}</h2>
+          <p class="blog-card__excerpt">${escapeHtml(post.excerpt)}</p>
+          <div class="blog-card__combo-preview">
+            <span>Bộ nguyên liệu (${combo.items.length} món):</span>
+            <strong>${escapeHtml(formatPrice(combo.total))}</strong>
+          </div>
+          <div class="blog-card__actions">
+            <a href="blog-detail.html?id=${encodeURIComponent(post.id)}" class="btn btn--outline-dark">
+              Đọc hướng dẫn
+            </a>
+            <button type="button" class="btn btn--primary js-blog-add-combo" data-recipe-group-id="${escapeHtml(post.recipeGroupId)}">
+              + Thêm combo vào giỏ
+            </button>
+          </div>
+        </div>
+      </article>
+    `;
+  }
+
+  function handleAddCombo(recipeGroupId) {
+    if (typeof window.addRecipeComboToCart !== "function") {
+      return;
+    }
+    const result = window.addRecipeComboToCart(recipeGroupId);
+    if (typeof window.showCartToast === "function") {
+      window.showCartToast(result.message, {
+        type: result.success ? "success" : "warning",
+        showCartLink: Boolean(result.success)
+      });
+    }
+  }
+
+  function matchPostByQuery(post, normKeyword) {
+    if (!normKeyword) return true;
+    const haystacks = [
+      post.title,
+      post.category,
+      post.excerpt,
+      ...(Array.isArray(post.keywords) ? post.keywords : [])
+    ];
+    return haystacks.some((text) => normalizeText(text).includes(normKeyword));
+  }
+
+  /* =====================================================
+   * TRANG DANH SÁCH BLOG (blog.html)
+   * ===================================================== */
   let activeCategory = "all";
 
   function renderBlogList() {
@@ -236,15 +198,11 @@
 
     if (!grid) return;
 
+    const posts = getPosts();
     const keyword = normalizeText(searchInput ? searchInput.value : "");
-    const filtered = BLOG_POSTS.filter((post) => {
+    const filtered = posts.filter((post) => {
       const matchCat = activeCategory === "all" || post.category === activeCategory;
-      const matchKeyword =
-        keyword === "" ||
-        normalizeText(post.title).includes(keyword) ||
-        normalizeText(post.excerpt).includes(keyword) ||
-        normalizeText(post.category).includes(keyword);
-      return matchCat && matchKeyword;
+      return matchCat && matchPostByQuery(post, keyword);
     });
 
     if (countEl) {
@@ -258,159 +216,86 @@
     }
 
     if (emptyEl) emptyEl.hidden = true;
-
-    grid.innerHTML = filtered
-      .map((post) => {
-        const combo = getComboBreakdown(post.recipeGroupId);
-        return `
-          <article class="blog-card" id="${escapeHtml(post.recipeGroupId)}">
-            <div class="blog-card__media">
-              <img
-                src="${escapeHtml(post.image)}"
-                alt="${escapeHtml(post.title)}"
-                class="blog-card__img"
-                loading="lazy"
-                onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
-              >
-              <span class="blog-card__category">${escapeHtml(post.category)}</span>
-            </div>
-            <div class="blog-card__body">
-              <div class="blog-card__meta">
-                <span class="meta-inline">
-                  <svg class="blog-meta-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                  </svg>
-                  ${escapeHtml(post.readTime)}
-                </span>
-                <span>·</span>
-                <span>Độ khó: ${escapeHtml(post.diff)}</span>
-              </div>
-              <h2 class="blog-card__title">${escapeHtml(post.title)}</h2>
-              <p class="blog-card__excerpt">${escapeHtml(post.excerpt)}</p>
-              <div class="blog-card__combo-preview">
-                <span>Bộ nguyên liệu (${combo.items.length} món):</span>
-                <strong>${escapeHtml(formatPrice(combo.total))}</strong>
-              </div>
-              <div class="blog-card__actions">
-                <button type="button" class="btn btn--outline-dark js-open-blog-post" data-post-id="${escapeHtml(post.id)}">
-                  Đọc hướng dẫn
-                </button>
-                <button type="button" class="btn btn--primary js-blog-add-combo" data-recipe-group-id="${escapeHtml(post.recipeGroupId)}">
-                  + Thêm combo vào giỏ
-                </button>
-              </div>
-            </div>
-          </article>
-        `;
-      })
-      .join("");
+    grid.innerHTML = filtered.map(buildBlogCardHtml).join("");
   }
 
-  function openPostModal(post) {
-    const modal = document.getElementById("blog-modal");
-    const modalBody = document.getElementById("blog-modal-body");
-    if (!modal || !modalBody || !post) return;
+  function renderSearchDropdown(rawValue) {
+    const dropdown = document.getElementById("blog-search-dropdown");
+    if (!dropdown) return;
 
-    const combo = getComboBreakdown(post.recipeGroupId);
-
-    modalBody.innerHTML = `
-      <div class="blog-modal__hero">
-        <img
-          src="${escapeHtml(post.image)}"
-          alt="${escapeHtml(post.title)}"
-          class="blog-modal__img"
-          onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
-        >
-      </div>
-      <div class="blog-modal__header">
-        <span class="blog-modal__badge">${escapeHtml(post.category)}</span>
-        <h2 class="blog-modal__title" id="blog-modal-title">${escapeHtml(post.title)}</h2>
-        <p class="blog-modal__meta">${escapeHtml(post.author)} · ${escapeHtml(post.publishedAt)} · ${escapeHtml(post.readTime)}</p>
-      </div>
-      <p class="blog-modal__lead">${escapeHtml(post.excerpt)}</p>
-
-      <div class="blog-modal__section">
-        <h3>Các bước thực hiện chuẩn BakeMate</h3>
-        <ol class="blog-modal__steps">
-          ${post.steps.map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
-        </ol>
-      </div>
-
-      <div class="blog-modal__combo-box">
-        <div class="blog-modal__combo-head">
-          <div>
-            <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
-            <h3>${escapeHtml(combo.title)}</h3>
-            <p>Khẩu phần gợi ý: ${escapeHtml(combo.servings)}</p>
-          </div>
-          <div class="blog-modal__combo-total">
-            <span>Trọn bộ chỉ</span>
-            <strong>${escapeHtml(formatPrice(combo.total))}</strong>
-          </div>
-        </div>
-
-        <ul class="blog-modal__ingredient-list">
-          ${combo.items
-            .map(
-              (item) => `
-              <li>
-                <div>
-                  <a href="product-detail.html?id=${item.productId}">${escapeHtml(item.name)}</a>
-                  ${item.optionLabel ? `<span class="ingredient-opt">(${escapeHtml(item.optionLabel)})</span>` : ""}
-                  <small>${escapeHtml(item.usage)}</small>
-                </div>
-                <strong>${escapeHtml(formatPrice(item.lineTotal))}</strong>
-              </li>
-            `
-            )
-            .join("")}
-        </ul>
-
-        <div class="blog-modal__combo-actions">
-          <button
-            type="button"
-            class="btn btn--primary js-blog-add-combo"
-            data-recipe-group-id="${escapeHtml(post.recipeGroupId)}"
-          >
-            Thêm trọn bộ nguyên liệu vào giỏ
-          </button>
-          <a href="cart.html" class="btn btn--outline-dark">Đi tới giỏ hàng</a>
-        </div>
-      </div>
-    `;
-
-    modal.hidden = false;
-    document.body.style.overflow = "hidden";
-    const closeBtn = document.getElementById("blog-modal-close");
-    if (closeBtn) closeBtn.focus();
-  }
-
-  function closePostModal() {
-    const modal = document.getElementById("blog-modal");
-    if (!modal || modal.hidden) return;
-    modal.hidden = true;
-    document.body.style.overflow = "";
-  }
-
-  function handleAddCombo(recipeGroupId) {
-    if (typeof window.addRecipeComboToCart !== "function") {
+    const norm = normalizeText(rawValue);
+    if (!norm) {
+      dropdown.hidden = true;
+      dropdown.innerHTML = "";
       return;
     }
-    const result = window.addRecipeComboToCart(recipeGroupId);
-    if (typeof window.showCartToast === "function") {
-      window.showCartToast(result.message, {
-        type: result.success ? "success" : "warning"
-      });
+
+    const matched = getPosts().filter((post) => matchPostByQuery(post, norm)).slice(0, 6);
+
+    if (matched.length === 0) {
+      dropdown.innerHTML = `
+        <div class="blog-search-suggest-empty" role="option" aria-selected="false">
+          Rất tiếc, không tìm thấy kết quả phù hợp.
+        </div>
+      `;
+      dropdown.hidden = false;
+      return;
     }
+
+    dropdown.innerHTML = matched
+      .map(
+        (post) => `
+          <button
+            type="button"
+            class="blog-search-suggest-item js-blog-suggest-pick"
+            role="option"
+            data-post-id="${escapeHtml(post.id)}"
+          >
+            <img
+              src="${escapeHtml(post.image)}"
+              alt=""
+              style="width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0;"
+              onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+            >
+            <span style="flex:1;min-width:0;">
+              <span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+                ${highlightMatch(post.title, rawValue)}
+              </span>
+              <small style="display:block;font-size:11.5px;color:#8c6a52;">
+                ${escapeHtml(post.category)} · ${escapeHtml(post.readTime)}
+              </small>
+            </span>
+          </button>
+        `
+      )
+      .join("");
+    dropdown.hidden = false;
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    const filterButtons = document.querySelectorAll(".js-blog-filter");
-    const searchInput = document.getElementById("blog-search");
-    const resetBtn = document.getElementById("blog-reset-btn");
+  function initBlogListPage() {
     const grid = document.getElementById("blog-grid");
-    const modal = document.getElementById("blog-modal");
-    const modalClose = document.getElementById("blog-modal-close");
+    if (!grid) return;
+
+    const filterButtons = document.querySelectorAll(".js-blog-filter");
+    const searchForm = document.getElementById("blog-search-form");
+    const searchInput = document.getElementById("blog-search");
+    const dropdown = document.getElementById("blog-search-dropdown");
+    const resetBtn = document.getElementById("blog-reset-btn");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramCat = (urlParams.get("category") || "").trim();
+    const paramQ = (urlParams.get("q") || "").trim();
+    if (paramCat) {
+      filterButtons.forEach((b) => {
+        if ((b.dataset.category || "") === paramCat) {
+          activeCategory = paramCat;
+        }
+      });
+      filterButtons.forEach((b) => b.classList.toggle("active", (b.dataset.category || "all") === activeCategory));
+    }
+    if (paramQ && searchInput) {
+      searchInput.value = paramQ;
+    }
 
     filterButtons.forEach((btn) => {
       btn.addEventListener("click", function () {
@@ -421,72 +306,215 @@
     });
 
     if (searchInput) {
-      searchInput.addEventListener("input", renderBlogList);
+      searchInput.addEventListener("input", function () {
+        renderSearchDropdown(searchInput.value);
+        renderBlogList();
+      });
+
+      searchInput.addEventListener("focus", function () {
+        if (normalizeText(searchInput.value)) {
+          renderSearchDropdown(searchInput.value);
+        }
+      });
     }
+
+    if (searchForm) {
+      searchForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+        renderBlogList();
+        if (dropdown) dropdown.hidden = true;
+      });
+    }
+
+    if (dropdown) {
+      dropdown.addEventListener("click", function (event) {
+        const pick = event.target.closest(".js-blog-suggest-pick");
+        if (!pick) return;
+        const postId = pick.dataset.postId;
+        if (postId) {
+          window.location.href = `blog-detail.html?id=${encodeURIComponent(postId)}`;
+        }
+      });
+    }
+
+    document.addEventListener("click", function (event) {
+      if (searchForm && dropdown && !searchForm.contains(event.target)) {
+        dropdown.hidden = true;
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && dropdown) {
+        dropdown.hidden = true;
+      }
+    });
 
     if (resetBtn) {
       resetBtn.addEventListener("click", function () {
         activeCategory = "all";
         if (searchInput) searchInput.value = "";
+        if (dropdown) dropdown.hidden = true;
         filterButtons.forEach((b) => b.classList.toggle("active", b.dataset.category === "all"));
         renderBlogList();
       });
     }
 
-    if (grid) {
-      grid.addEventListener("click", function (event) {
-        const openBtn = event.target.closest(".js-open-blog-post");
-        if (openBtn) {
-          const targetPost = BLOG_POSTS.find((p) => p.id === openBtn.dataset.postId);
-          if (targetPost) openPostModal(targetPost);
-          return;
-        }
-
-        const comboBtn = event.target.closest(".js-blog-add-combo");
-        if (comboBtn) {
-          handleAddCombo(comboBtn.dataset.recipeGroupId);
-        }
-      });
-    }
-
-    if (modal) {
-      modal.addEventListener("click", function (event) {
-        if (event.target === modal) {
-          closePostModal();
-          return;
-        }
-        const comboBtn = event.target.closest(".js-blog-add-combo");
-        if (comboBtn) {
-          handleAddCombo(comboBtn.dataset.recipeGroupId);
-        }
-      });
-    }
-
-    if (modalClose) {
-      modalClose.addEventListener("click", closePostModal);
-    }
-
-    document.addEventListener("keydown", function (event) {
-      if (event.key === "Escape") {
-        closePostModal();
+    grid.addEventListener("click", function (event) {
+      const comboBtn = event.target.closest(".js-blog-add-combo");
+      if (comboBtn) {
+        handleAddCombo(comboBtn.dataset.recipeGroupId);
       }
     });
 
     renderBlogList();
 
-    // Nếu điều hướng từ product-detail.html#recipe-... thì mở sẵn bài viết tương ứng
-    function openModalFromHash() {
-      const hash = window.location.hash.replace(/^#/, "").trim();
-      if (!hash) {
-        return;
-      }
-      const matched = BLOG_POSTS.find((p) => p.recipeGroupId === hash || p.id === hash);
-      if (matched) {
-        openPostModal(matched);
+    // Hỗ trợ neo hash #recipe-... cũ nếu có liên kết nội bộ trỏ tới
+    const hash = window.location.hash.replace(/^#/, "").trim();
+    if (hash) {
+      const targetEl = document.getElementById(hash);
+      if (targetEl) {
+        targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
       }
     }
+  }
 
-    openModalFromHash();
-    window.addEventListener("hashchange", openModalFromHash);
+  /* =====================================================
+   * TRANG CHI TIẾT BÀI VIẾT BLOG (blog-detail.html)
+   * ===================================================== */
+  function initBlogDetailPage() {
+    const detailRoot = document.getElementById("blog-detail-root");
+    if (!detailRoot) return;
+
+    const posts = getPosts();
+    const params = new URLSearchParams(window.location.search);
+    const idParam = (params.get("id") || "").trim();
+
+    let post =
+      typeof window.getBlogPostById === "function" ? window.getBlogPostById(idParam) : null;
+    if (!post && idParam) {
+      post = posts.find((p) => p.recipeGroupId === idParam || p.id === idParam) || null;
+    }
+
+    const breadcrumbCurrent = document.getElementById("blog-breadcrumb-current");
+    const relatedGrid = document.getElementById("blog-related-grid");
+
+    if (!post) {
+      document.title = "Không tìm thấy bài viết | Blog BakeMate";
+      if (breadcrumbCurrent) breadcrumbCurrent.textContent = "Không tìm thấy bài viết";
+      detailRoot.innerHTML = `
+        <article class="blog-article-container" style="text-align:center;">
+          <h1 class="blog-modal__title">Rất tiếc, bài viết không tồn tại</h1>
+          <p class="blog-modal__lead">Đường dẫn bài viết có thể đã thay đổi hoặc không còn khả dụng.</p>
+          <a href="blog.html" class="btn btn--primary">Quay lại trang Blog</a>
+        </article>
+      `;
+      if (relatedGrid) {
+        relatedGrid.innerHTML = posts.slice(0, 3).map(buildBlogCardHtml).join("");
+      }
+      return;
+    }
+
+    document.title = `${post.title} | Blog BakeMate`;
+    if (breadcrumbCurrent) breadcrumbCurrent.textContent = post.title;
+
+    const combo = getComboBreakdown(post.recipeGroupId);
+
+    detailRoot.innerHTML = `
+      <article class="blog-article-container">
+        <div class="blog-modal__hero">
+          <img
+            src="${escapeHtml(post.image)}"
+            alt="${escapeHtml(post.title)}"
+            class="blog-modal__img"
+            onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+          >
+        </div>
+
+        <div class="blog-modal__header">
+          <span class="blog-modal__badge">${escapeHtml(post.category)}</span>
+          <h1 class="blog-modal__title">${escapeHtml(post.title)}</h1>
+          <p class="blog-modal__meta">${escapeHtml(post.author)} · ${escapeHtml(post.publishedAt)} · ${escapeHtml(post.readTime)} · Độ khó: ${escapeHtml(post.diff)}</p>
+        </div>
+
+        <p class="blog-modal__lead">${escapeHtml(post.excerpt)}</p>
+
+        <section class="blog-modal__section">
+          <h2>Các bước thực hiện chuẩn BakeMate</h2>
+          <ol class="blog-modal__steps">
+            ${(post.steps || []).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+          </ol>
+        </section>
+
+        <section class="blog-modal__combo-box" aria-label="Combo nguyên liệu Recipe-to-Cart">
+          <div class="blog-modal__combo-head">
+            <div>
+              <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
+              <h3>${escapeHtml(combo.title)}</h3>
+              <p>Khẩu phần gợi ý: ${escapeHtml(combo.servings)}</p>
+            </div>
+            <div class="blog-modal__combo-total">
+              <span>Trọn bộ chỉ</span>
+              <strong>${escapeHtml(formatPrice(combo.total))}</strong>
+            </div>
+          </div>
+
+          <ul class="blog-modal__ingredient-list">
+            ${combo.items
+              .map(
+                (item) => `
+                  <li>
+                    <div>
+                      <a href="product-detail.html?id=${item.productId}">${escapeHtml(item.name)}</a>
+                      ${item.optionLabel ? `<span class="ingredient-opt">(${escapeHtml(item.optionLabel)})</span>` : ""}
+                      <small>${escapeHtml(item.usage)}</small>
+                    </div>
+                    <strong>${escapeHtml(formatPrice(item.lineTotal))}</strong>
+                  </li>
+                `
+              )
+              .join("")}
+          </ul>
+
+          <div class="blog-modal__combo-actions">
+            <button
+              type="button"
+              class="btn btn--primary js-blog-add-combo"
+              data-recipe-group-id="${escapeHtml(post.recipeGroupId)}"
+            >
+              + Thêm trọn bộ nguyên liệu vào giỏ
+            </button>
+            <a href="recipe-detail.html?id=${encodeURIComponent(post.recipeGroupId)}" class="btn btn--outline-dark">
+              Quy đổi khẩu phần trong Công thức &rarr;
+            </a>
+            <a href="cart.html" class="btn btn--outline-dark">Đi tới giỏ hàng</a>
+          </div>
+        </section>
+      </article>
+    `;
+
+    detailRoot.addEventListener("click", function (event) {
+      const comboBtn = event.target.closest(".js-blog-add-combo");
+      if (comboBtn) {
+        handleAddCombo(comboBtn.dataset.recipeGroupId);
+      }
+    });
+
+    if (relatedGrid) {
+      const sameCategory = posts.filter((p) => p.id !== post.id && p.category === post.category);
+      const others = posts.filter((p) => p.id !== post.id && p.category !== post.category);
+      const related = [...sameCategory, ...others].slice(0, 3);
+      relatedGrid.innerHTML = related.map(buildBlogCardHtml).join("");
+      relatedGrid.addEventListener("click", function (event) {
+        const comboBtn = event.target.closest(".js-blog-add-combo");
+        if (comboBtn) {
+          handleAddCombo(comboBtn.dataset.recipeGroupId);
+        }
+      });
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    initBlogListPage();
+    initBlogDetailPage();
   });
 })();

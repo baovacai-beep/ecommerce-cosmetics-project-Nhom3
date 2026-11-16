@@ -13,20 +13,84 @@
 </head>
 <body>
 
+  <!-- ================= THANH MÃ GIẢM GIÁ TOÀN HỆ THỐNG ================= -->
+  <div class="promo-topbar" role="region" aria-label="Ưu đãi thành viên BakeMate">
+    <div class="promo-topbar__inner">
+      <span class="promo-topbar__left">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
+          <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
+        </svg>
+        <span>Ưu đãi thành viên BakeMate</span>
+      </span>
+      <div class="promo-topbar__codes">
+        <div class="promo-topbar__item">
+          <span>Giảm 10% đơn đầu:</span>
+          <span class="promo-topbar__code-badge">CHAOBANMOI</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+        <div class="promo-topbar__item">
+          <span>Freeship 20K (đơn từ 200K):</span>
+          <span class="promo-topbar__code-badge">FREESHIP20</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
+            <span class="js-copy-promo-label">Sao chép</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= HEADER DÙNG CHUNG ================= -->
   <header class="site-header">
     <div class="header-container">
-      <a href="index.html" class="site-header__logo-link">
+      <a href="index.html" class="site-header__logo-link" aria-label="Trang chủ BakeMate">
         <img src="images/logo.jpg" alt="Logo BakeMate" class="site-header__logo-img">
-        <span class="site-header__logo-text">Bake<span>Mate</span></span>
       </a>
 
       <nav class="site-header__nav" aria-label="Điều hướng chính">
         <ul class="site-header__menu">
           <li class="site-header__menu-item"><a href="index.html" class="site-header__menu-link">Trang chủ</a></li>
-          <li class="site-header__menu-item"><a href="products.html" class="site-header__menu-link active" aria-current="page">Sản phẩm</a></li>
+          <li class="site-header__menu-item has-megamenu">
+            <a href="products.html" class="site-header__menu-link active js-megamenu-trigger" aria-current="page" aria-expanded="false">
+              Sản phẩm
+              <svg class="megamenu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </a>
+            <div class="mega-menu" role="region" aria-label="Danh mục sản phẩm BakeMate">
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=B%E1%BB%99t%20v%C3%A0%20nguy%C3%AAn%20li%E1%BB%87u%20kh%C3%B4" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
+                  <li><a href="products.html?sub=Chocolate%20v%C3%A0%20t%E1%BA%A1o%20v%E1%BB%8B" class="mega-menu__link">Chocolate và tạo vị</a></li>
+                  <li><a href="products.html?sub=B%C6%A1%2C%20s%E1%BB%AFa%20v%C3%A0%20kem" class="mega-menu__link">Bơ, sữa và kem</a></li>
+                  <li><a href="products.html?sub=Nguy%C3%AAn%20li%E1%BB%87u%20t%E1%BA%A1o%20c%E1%BA%A5u%20tr%C3%BAc" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=D%E1%BB%A5ng%20c%E1%BB%A5" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=Khu%C3%B4n%20b%C3%A1nh" class="mega-menu__link">Khuôn bánh</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20c%C3%A2n%2C%20%C4%91ong" class="mega-menu__link">Dụng cụ cân, đong</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20tr%E1%BB%99n" class="mega-menu__link">Dụng cụ trộn</a></li>
+                  <li><a href="products.html?sub=D%E1%BB%A5ng%20c%E1%BB%A5%20trang%20tr%C3%AD" class="mega-menu__link">Dụng cụ trang trí</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="products.html?category=Ph%E1%BB%A5%20ki%E1%BB%87n%20%26%20%C4%90%C3%B3ng%20g%C3%B3i" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="products.html?sub=H%E1%BB%99p%20v%C3%A0%20t%C3%BAi%20%C4%91%E1%BB%B1ng%20b%C3%A1nh" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
+                  <li><a href="products.html?sub=%C4%90%E1%BA%BF%20v%C3%A0%20khay%20b%C3%A1nh" class="mega-menu__link">Đế và khay bánh</a></li>
+                  <li><a href="products.html?sub=Trang%20tr%C3%AD%20b%C3%A1nh" class="mega-menu__link">Trang trí bánh</a></li>
+                  <li><a href="products.html?sub=B%E1%BA%A3o%20qu%E1%BA%A3n%20nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
+                </ul>
+              </div>
+            </div>
+          </li>
+          <li class="site-header__menu-item"><a href="recipes.html" class="site-header__menu-link">Công thức</a></li>
           <li class="site-header__menu-item"><a href="blog.html" class="site-header__menu-link">Blog</a></li>
-          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Giới thiệu</a></li>
+          <li class="site-header__menu-item"><a href="about.html" class="site-header__menu-link">Về chúng tôi</a></li>
+          <li class="site-header__menu-item"><a href="contact.html" class="site-header__menu-link">Liên hệ</a></li>
         </ul>
       </nav>
 
@@ -39,123 +103,287 @@
             name="q"
             placeholder="Tìm nguyên liệu, công thức..."
             class="site-header__search-input"
+            autocomplete="off"
           >
           <button type="submit" class="site-header__search-btn">Tìm</button>
         </form>
+
+        <a href="wishlist.html" class="site-header__icon-btn site-header__wishlist" aria-label="Danh sách yêu thích">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+          </svg>
+          <span class="site-header__cart-badge js-wishlist-badge is-empty" id="wishlist-badge">0</span>
+        </a>
+
         <a href="cart.html" class="site-header__cart" aria-label="Giỏ hàng">
           <span class="site-header__cart-icon" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
               <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
             </svg>
           </span>
           <span class="site-header__cart-badge is-empty" id="cart-badge" aria-live="polite">0</span>
         </a>
+
+        <div class="account-wrap js-account-wrap">
+          <button type="button" class="site-header__icon-btn account-trigger js-account-trigger" aria-expanded="false" aria-label="Tài khoản">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="account-trigger__name js-account-name" hidden></span>
+          </button>
+          <div class="account-dropdown js-account-menu" role="menu"></div>
+        </div>
+
+        <button type="button" class="mobile-menu-toggle js-mobile-menu-toggle" aria-expanded="false" aria-label="Mở menu điều hướng">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
 
-  <!-- ================= DANH SÁCH SẢN PHẨM ================= -->
-  <main class="site-main">
-    <section class="products-section" id="san-pham-noi-bat">
-      <h1 class="products-section__title">Danh sách nguyên liệu &amp; dụng cụ làm bánh</h1>
-      <p class="products-section__desc">
-        Lựa chọn nguyên liệu, dụng cụ và phụ kiện đóng gói chuẩn vị cho những chiếc bánh thơm ngon tại nhà.
-      </p>
+  <!-- ================= DANH SÁCH SẢN PHẨM BỐ CỤC 2 CỘT ================= -->
+  <main class="page-container">
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="index.html">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active">Sản phẩm</li>
+      </ul>
+    </nav>
 
-      <!-- KHU VỰC LỌC VÀ SẮP XẾP SẢN PHẨM -->
-      <div class="product-controls">
-        <div class="product-controls__group">
-          <label for="category-filter">Lọc theo danh mục</label>
-          <select id="category-filter">
-            <option value="all">Tất cả danh mục</option>
-            <option value="Nguyên liệu">Nguyên liệu</option>
-            <option value="Dụng cụ">Dụng cụ</option>
-            <option value="Phụ kiện & Đóng gói">Phụ kiện &amp; Đóng gói</option>
-          </select>
+    <div class="products-layout" id="san-pham-noi-bat">
+      <!-- BỘ LỌC BÊN TRÁI (SIDEBAR) -->
+      <aside class="products-sidebar is-mobile-hidden" id="products-sidebar" aria-label="Bộ lọc sản phẩm">
+        <h2 class="products-sidebar__title">Bộ lọc sản phẩm</h2>
+
+        <!-- Nhóm 1: Danh mục sản phẩm -->
+        <div class="filter-group">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="true">
+            <span>Danh mục sản phẩm</span>
+            <span class="js-acc-sign">-</span>
+          </button>
+          <div class="filter-group__body">
+            <label class="filter-check"><input type="checkbox" name="cat" value="Nguyên liệu"> Nguyên liệu tổng hợp</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Bột và nguyên liệu khô"> Bột và nguyên liệu khô</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Chocolate và tạo vị"> Chocolate và tạo vị</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Bơ, sữa và kem"> Bơ, sữa và kem</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Nguyên liệu tạo cấu trúc"> Nguyên liệu tạo cấu trúc</label>
+          </div>
         </div>
 
-        <div class="product-controls__group">
-          <label for="price-sort">Sắp xếp theo giá</label>
-          <select id="price-sort">
-            <option value="default">Mặc định</option>
-            <option value="asc">Giá thấp đến cao</option>
-            <option value="desc">Giá cao đến thấp</option>
-          </select>
+        <!-- Nhóm 2: Dụng cụ làm bánh -->
+        <div class="filter-group is-collapsed">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="false">
+            <span>Dụng cụ làm bánh</span>
+            <span class="js-acc-sign">+</span>
+          </button>
+          <div class="filter-group__body">
+            <label class="filter-check"><input type="checkbox" name="cat" value="Dụng cụ"> Tất cả dụng cụ</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Khuôn bánh"> Khuôn bánh</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Dụng cụ cân, đong"> Dụng cụ cân, đong</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Dụng cụ trộn"> Dụng cụ trộn</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Dụng cụ trang trí"> Dụng cụ trang trí</label>
+          </div>
         </div>
 
-        <div class="product-controls__group product-controls__group--reset">
-          <button type="button" id="reset-filters-btn" class="btn btn--outline-dark product-controls__reset">
-            Đặt lại bộ lọc
+        <!-- Nhóm 3: Phụ kiện & Đóng gói -->
+        <div class="filter-group is-collapsed">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="false">
+            <span>Phụ kiện &amp; Đóng gói</span>
+            <span class="js-acc-sign">+</span>
+          </button>
+          <div class="filter-group__body">
+            <label class="filter-check"><input type="checkbox" name="cat" value="Phụ kiện & Đóng gói"> Tất cả phụ kiện</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Hộp và túi đựng bánh"> Hộp và túi đựng bánh</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Đế và khay bánh"> Đế và khay bánh</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Trang trí bánh"> Trang trí bánh</label>
+            <label class="filter-check"><input type="checkbox" name="sub" value="Bảo quản nguyên liệu"> Bảo quản nguyên liệu</label>
+          </div>
+        </div>
+
+        <!-- Nhóm 4: Khoảng giá -->
+        <div class="filter-group">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="true">
+            <span>Khoảng giá</span>
+            <span class="js-acc-sign">-</span>
+          </button>
+          <div class="filter-group__body">
+            <div class="price-slider-readout" aria-live="polite">
+              <span id="price-readout-min">0 ₫</span>
+              <span>–</span>
+              <span id="price-readout-max">150.000 ₫</span>
+            </div>
+            <div class="price-slider-track-wrap">
+              <div class="price-slider-rail" aria-hidden="true">
+                <div class="price-slider-fill" id="price-slider-fill"></div>
+              </div>
+              <input
+                type="range"
+                id="price-slider-min"
+                class="price-slider-input price-slider-input--min"
+                min="0"
+                max="150000"
+                step="1000"
+                value="0"
+                aria-label="Kéo chọn giá tối thiểu"
+              >
+              <input
+                type="range"
+                id="price-slider-max"
+                class="price-slider-input price-slider-input--max"
+                min="0"
+                max="150000"
+                step="1000"
+                value="150000"
+                aria-label="Kéo chọn giá tối đa"
+              >
+            </div>
+            <div class="filter-price-inputs-grid">
+              <div class="filter-price-field">
+                <label for="filter-price-min" class="filter-price-field__label">Tối thiểu (₫)</label>
+                <input type="number" id="filter-price-min" class="filter-price-input" placeholder="0" min="0" max="150000" step="1000" aria-label="Giá tối thiểu">
+              </div>
+              <div class="filter-price-field">
+                <label for="filter-price-max" class="filter-price-field__label">Tối đa (₫)</label>
+                <input type="number" id="filter-price-max" class="filter-price-input" placeholder="150.000" min="0" max="150000" step="1000" aria-label="Giá tối đa">
+              </div>
+            </div>
+            <div class="price-quick-presets" role="group" aria-label="Chọn nhanh khoảng giá">
+              <button type="button" class="price-preset-btn js-price-preset is-active" data-min="" data-max="">Tất cả</button>
+              <button type="button" class="price-preset-btn js-price-preset" data-min="0" data-max="50000">Dưới 50K</button>
+              <button type="button" class="price-preset-btn js-price-preset" data-min="50000" data-max="100000">50K – 100K</button>
+              <button type="button" class="price-preset-btn js-price-preset" data-min="100000" data-max="">Trên 100K</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nhóm 5: Thương hiệu -->
+        <div class="filter-group is-collapsed">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="false">
+            <span>Thương hiệu</span>
+            <span class="js-acc-sign">+</span>
+          </button>
+          <div class="filter-group__body">
+            <label class="filter-check"><input type="checkbox" name="brand" value="Baker's Choice"> Baker's Choice</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="Meizan"> Meizan</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="Anchor"> Anchor</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="Hershey's"> Hershey's</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="Izumi"> Izumi</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="Biên Hòa"> Biên Hòa</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="BakeMate"> BakeMate</label>
+            <label class="filter-check"><input type="checkbox" name="brand" value="BakeMate Fresh"> BakeMate Fresh</label>
+          </div>
+        </div>
+
+        <!-- Nhóm 6: Tình trạng sản phẩm -->
+        <div class="filter-group">
+          <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="true">
+            <span>Tình trạng sản phẩm</span>
+            <span class="js-acc-sign">-</span>
+          </button>
+          <div class="filter-group__body">
+            <label class="filter-check"><input type="checkbox" name="status" value="in_stock"> Còn hàng</label>
+            <label class="filter-check"><input type="checkbox" name="status" value="is_new"> Sản phẩm mới</label>
+            <label class="filter-check"><input type="checkbox" name="status" value="on_sale"> Đang giảm giá</label>
+            <label class="filter-check"><input type="checkbox" name="status" value="coming_soon"> Sắp có hàng</label>
+          </div>
+        </div>
+
+        <div class="products-sidebar__actions">
+          <button type="button" id="apply-filters-btn" class="btn btn--primary products-sidebar__apply">
+            Áp dụng bộ lọc
+          </button>
+          <button type="button" id="reset-filters-btn" class="products-sidebar__reset-link">
+            Xóa bộ lọc
           </button>
         </div>
-      </div>
+      </aside>
 
-      <p id="product-result-count" class="product-result-count" aria-live="polite"></p>
+      <!-- CỘT PHẢI: HEADER SẮP XẾP + LƯỚI SẢN PHẨM -->
+      <section aria-label="Danh sách sản phẩm">
+        <div class="products-main-header">
+          <div>
+            <h1 class="products-main-header__title" id="products-page-heading">Tất cả sản phẩm</h1>
+            <p id="product-result-count" class="products-main-header__sub" aria-live="polite">
+              Số lượng được cập nhật theo danh mục
+            </p>
+          </div>
 
-      <div class="product-grid" id="product-list">
-        <!-- Danh sách 21 sản phẩm sẽ được js/search-filter.js hiển thị -->
-      </div>
-
-      <div id="no-products-message" class="no-products-message" hidden>
-        <span class="no-products-message__icon" aria-hidden="true">
-          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/>
-          </svg>
-        </span>
-        <strong>Không tìm thấy sản phẩm nào phù hợp</strong>
-        <p>Hãy thử từ khóa khác hoặc nhấn "Đặt lại bộ lọc" để xem toàn bộ danh mục của BakeMate.</p>
-      </div>
-    </section>
-  </main>
-
-  <!-- ================= BANNER VOUCHER KHUYẾN MÃI ================= -->
-  <section class="promo-ticket-band" aria-label="Ưu đãi thành viên mới">
-    <div class="promo-ticket-band__inner">
-      <div class="footer-promo promo-ticket-bar" role="region" aria-label="Mã giảm giá thành viên mới">
-        <div class="promo-ticket-bar__icon" aria-hidden="true">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
-            <path d="M9 9h.01"/><path d="M15 15h.01"/><path d="m15 9-6 6"/>
-          </svg>
+          <div class="products-sort-wrap">
+            <button type="button" class="btn btn--outline-dark mobile-filter-toggle js-mobile-filter-toggle">
+              Bộ lọc
+            </button>
+            <label class="visually-hidden" for="price-sort">Sắp xếp sản phẩm</label>
+            <select id="price-sort" class="products-sort-select">
+              <option value="default">Sắp xếp: Mặc định</option>
+              <option value="asc">Giá: Thấp đến cao</option>
+              <option value="desc">Giá: Cao đến thấp</option>
+              <option value="newest">Sản phẩm mới trước</option>
+              <option value="name-asc">Tên: A - Z</option>
+            </select>
+          </div>
         </div>
-        <div class="promo-ticket-bar__content">
-          <span>Ưu đãi khách hàng mới: Nhập mã</span>
-          <span class="promo-badge">CHAOBANMOI</span>
-          <span>để được giảm <strong>10%</strong> cho đơn hàng đầu tiên!</span>
+
+        <div class="product-grid" id="product-list">
+          <!-- Danh sách sản phẩm được js/search-filter.js hiển thị -->
         </div>
-        <button type="button" class="promo-ticket-bar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã giảm giá CHAOBANMOI">
-          <svg class="promo-copy-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
-            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
-          </svg>
-          <span class="js-copy-promo-label">Sao chép mã</span>
-        </button>
-      </div>
+
+        <div id="no-products-message" class="no-products-message" hidden>
+          <span class="no-products-message__icon" aria-hidden="true">
+            <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/><path d="M8 11h6"/>
+            </svg>
+          </span>
+          <strong>Không tìm thấy sản phẩm nào phù hợp</strong>
+          <p id="no-products-hint">Hãy thử từ khóa khác, nới rộng khoảng giá hoặc nhấn "Xóa bộ lọc" để xem toàn bộ danh mục của BakeMate.</p>
+          <button type="button" id="empty-reset-btn" class="btn btn--primary" style="margin-top: 8px;">Xem tất cả sản phẩm</button>
+        </div>
+      </section>
     </div>
-  </section>
+
+    <!-- Sản phẩm đã xem gần đây (Ghi nhớ sản phẩm) -->
+    <section class="recent-viewed-section" id="recent-viewed-section" aria-labelledby="recent-viewed-title" hidden></section>
+  </main>
 
   <!-- ================= FOOTER DÙNG CHUNG ================= -->
   <footer class="site-footer">
     <div class="footer-container">
       <div class="footer-col">
-        <h3 class="footer-col__title">BakeMate - Đồng hành cùng gian bếp</h3>
-        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu và dụng cụ làm bánh theo công thức hàng đầu.</p>
+        <h3 class="footer-col__title">BakeMate - Làm bánh chuẩn vị</h3>
+        <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh theo công thức hàng đầu.</p>
+        <p class="footer-col__contact">Slogan: Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
       </div>
       <div class="footer-col">
-        <h3 class="footer-col__title">Lối tắt</h3>
+        <h3 class="footer-col__title">Khám phá</h3>
         <ul class="footer-col__list">
           <li><a href="index.html">Trang chủ</a></li>
           <li><a href="products.html">Sản phẩm</a></li>
-          <li><a href="blog.html">Blog</a></li>
-          <li><a href="cart.html">Giỏ hàng</a></li>
-          <li><a href="about.html">Giới thiệu</a></li>
+          <li><a href="recipes.html">Công thức</a></li>
+          <li><a href="blog.html">Blog làm bánh</a></li>
+          <li><a href="about.html">Về chúng tôi</a></li>
+          <li><a href="orders.html">Theo dõi đơn hàng</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h3 class="footer-col__title">Hỗ trợ khách hàng</h3>
+        <ul class="footer-policy-list">
+          <li><a href="#" class="js-policy-trigger" data-policy="guide">Hướng dẫn mua hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng</a></li>
+          <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả</a></li>
+          <li><a href="contact.html#faq-section">Câu hỏi thường gặp (FAQ)</a></li>
+          <li><a href="wishlist.html">Danh sách yêu thích</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3 class="footer-col__title">Liên hệ</h3>
+        <p class="footer-col__contact">59C Nguyễn Đình Chiểu, Quận 3, TP.HCM</p>
         <p class="footer-col__contact">Hotline: 1900 8888</p>
         <p class="footer-col__contact">Email: support@bakemate.vn</p>
+        <p class="footer-col__contact">Giờ phục vụ: 08:30 – 21:00 (Hằng ngày)</p>
+        <p class="footer-col__contact"><a href="contact.html">Gửi tin nhắn hỗ trợ &rarr;</a></p>
       </div>
     </div>
     <div class="footer-bottom">
@@ -164,7 +392,10 @@
   </footer>
 
   <script src="js/products.js"></script>
+  <script src="js/recipes-data.js"></script>
   <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/layout.js"></script>
   <script src="js/search-filter.js"></script>
 </body>
 </html>

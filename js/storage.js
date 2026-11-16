@@ -1,33 +1,76 @@
 /*
  * =====================================================
- * BAKEMATE - QUẢN LÝ LOCALSTORAGE & HÀM GIỎ HÀNG DÙNG CHUNG
- * Tệp: js/storage.js (Bước 6 + Recipe-to-Cart + Mã giảm giá + F13)
- * Khóa localStorage: "bakemate_cart", "bakemate_orders", "bakemate_coupon"
- * Cấu trúc mỗi phần tử giỏ hàng:
- * { productId: Number, optionIndex: Number, quantity: Number, recipeGroupId: String | null }
+ * BAKEMATE - QUẢN LÝ LOCALSTORAGE & HÀM DÙNG CHUNG TOÀN HỆ THỐNG
+ * Tệp: js/storage.js
+ * Hỗ trợ: Giỏ hàng (bakemate_cart + cart), Yêu thích (Wishlist),
+ * Coupon (CHAOBANMOI, FREESHIP20), Vận chuyển theo khu vực,
+ * Sổ địa chỉ, Đánh giá sản phẩm/công thức, Đơn hàng COD, Toast & Confirm Modal.
  * =====================================================
  */
 
 (function () {
   const CART_STORAGE_KEY = "bakemate_cart";
+  const LEGACY_CART_KEY = "cart";
   const ORDERS_STORAGE_KEY = "bakemate_orders";
+  const LAST_ORDER_KEY = "bakemate_last_order";
   const COUPON_STORAGE_KEY = "bakemate_coupon";
+  const COUPONS_STORAGE_KEY = "bakemate_coupons";
+  const CART_SELECTION_KEY = "bakemate_cart_selection";
+  const RECENT_PRODUCTS_KEY = "bakemate_recent_products";
+  const WISHLIST_STORAGE_KEY = "bakemate_wishlist";
+  const ADDRESSES_STORAGE_KEY = "bakemate_addresses";
+  const REVIEWS_STORAGE_KEY = "bakemate_reviews";
+  const CONTACTS_STORAGE_KEY = "bakemate_contacts";
   const MAX_CART_QUANTITY = 99;
+  const MAX_RECENT_PRODUCTS = 8;
+  const DEFAULT_SHIPPING_FEE = 25000;
   const FALLBACK_PRODUCT_IMAGE = "images/logo.jpg";
 
   /**
-   * Danh sách mã giảm giá hợp lệ hỗ trợ khi đặt hàng.
+   * Danh sách mã giảm giá hỗ trợ.
    */
   const VALID_COUPONS = {
     CHAOBANMOI: {
       code: "CHAOBANMOI",
+      type: "percent",
       discountRate: 0.1,
+      discountAmount: 0,
+      minSubtotal: 0,
       description: "Giảm 10% cho đơn hàng đầu tiên"
+    },
+    FREESHIP20: {
+      code: "FREESHIP20",
+      type: "shipping",
+      discountRate: 0,
+      discountAmount: 20000,
+      minSubtotal: 200000,
+      description: "Freeship 20.000 ₫ cho đơn từ 200.000 ₫"
     }
   };
 
   /**
-   * Quy cách đóng gói chuẩn theo từng ID sản phẩm (1..21) trong js/products.js.
+   * Bảng phương thức vận chuyển theo khu vực giao hàng.
+   */
+  const SHIPPING_ZONES = {
+    hcm: {
+      label: "Nội thành TP.HCM",
+      methods: [
+        { id: "pickup", name: "Lấy tại cửa hàng", fee: 0, eta: "Nhận trong ngày tại 59C Nguyễn Đình Chiểu, Q.3" },
+        { id: "fast", name: "Giao hàng nhanh", fee: 20000, eta: "Dự kiến giao trong 4–6 giờ" },
+        { id: "express", name: "Hỏa tốc (2h)", fee: 40000, eta: "Giao ngay trong vòng 2 giờ" }
+      ]
+    },
+    province: {
+      label: "Ngoại thành / Tỉnh khác",
+      methods: [
+        { id: "ghn", name: "Giao Hàng Nhanh (GHN)", fee: 30000, eta: "Dự kiến 2–3 ngày làm việc" },
+        { id: "ghtk", name: "Giao Hàng Tiết Kiệm (GHTK)", fee: 20000, eta: "Dự kiến 3–4 ngày làm việc" }
+      ]
+    }
+  };
+
+  /**
+   * Quy cách đóng gói chuẩn theo từng ID sản phẩm (1..23) trong js/products.js.
    * Mục đầu tiên (index 0) luôn đồng bộ 100% với đơn giá gốc product.price.
    */
   const PRODUCT_PACKAGING_OPTIONS = {
@@ -62,40 +105,40 @@
       { shortLabel: "Hộp 1 Lít", price: 155000, oldPrice: 180000 }
     ],
     7: [
-      { shortLabel: "Mẫu tiêu chuẩn (5kg/1g)", price: 120000, oldPrice: 150000 },
-      { shortLabel: "Kèm khay & pin dự phòng", price: 145000, oldPrice: 175000 }
+      { shortLabel: "Mẫu tiêu chuẩn (5kg/1g)", price: 120000, oldPrice: 120000 },
+      { shortLabel: "Kèm khay & pin dự phòng", price: 145000, oldPrice: 145000 }
     ],
     8: [
-      { shortLabel: "Ca 500ml", price: 45000, oldPrice: 55000 },
-      { shortLabel: "Ca 1000ml", price: 68000, oldPrice: 82000 }
+      { shortLabel: "Ca 500ml", price: 45000, oldPrice: 45000 },
+      { shortLabel: "Ca 1000ml", price: 68000, oldPrice: 68000 }
     ],
     9: [
-      { shortLabel: "Bộ 5 thìa tiêu chuẩn", price: 35000, oldPrice: 44000 },
-      { shortLabel: "Bộ 8 thìa inox", price: 58000, oldPrice: 70000 }
+      { shortLabel: "Bộ 5 thìa tiêu chuẩn", price: 35000, oldPrice: 35000 },
+      { shortLabel: "Bộ 8 thìa inox", price: 58000, oldPrice: 58000 }
     ],
     10: [
       { shortLabel: "Đầu dò tiêu chuẩn", price: 95000, oldPrice: 115000 },
       { shortLabel: "Đầu dò dài chuyên dụng", price: 118000, oldPrice: 140000 }
     ],
     11: [
-      { shortLabel: "Túi 50 cái cỡ vừa", price: 25000, oldPrice: 32000 },
-      { shortLabel: "Túi 100 cái cỡ lớn", price: 42000, oldPrice: 52000 }
+      { shortLabel: "Túi 50 cái cỡ vừa", price: 25000, oldPrice: 25000 },
+      { shortLabel: "Túi 100 cái cỡ lớn", price: 42000, oldPrice: 42000 }
     ],
     12: [
       { shortLabel: "Khối 227g", price: 68000, oldPrice: 82000 },
       { shortLabel: "Combo 2 khối (454g)", price: 130000, oldPrice: 158000 }
     ],
     13: [
-      { shortLabel: "Túi 1kg", price: 28000, oldPrice: 35000 },
-      { shortLabel: "Túi 500g", price: 16000, oldPrice: 20000 }
+      { shortLabel: "Túi 1kg", price: 28000, oldPrice: 28000 },
+      { shortLabel: "Túi 500g", price: 16000, oldPrice: 16000 }
     ],
     14: [
       { shortLabel: "Hộp 100g", price: 48000, oldPrice: 58000 },
       { shortLabel: "Gói 50g dùng thử", price: 27000, oldPrice: 34000 }
     ],
     15: [
-      { shortLabel: "Vỉ 10 quả", price: 34000, oldPrice: 40000 },
-      { shortLabel: "Hộp 6 quả", price: 22000, oldPrice: 27000 }
+      { shortLabel: "Vỉ 10 quả", price: 34000, oldPrice: 34000 },
+      { shortLabel: "Hộp 6 quả", price: 22000, oldPrice: 22000 }
     ],
     16: [
       { shortLabel: "Cỡ 25cm tiêu chuẩn", price: 42000, oldPrice: 52000 },
@@ -106,47 +149,83 @@
       { shortLabel: "Đường kính 22cm (Đế rời)", price: 135000, oldPrice: 165000 }
     ],
     18: [
-      { shortLabel: "Cuộn 5m × 30cm", price: 29000, oldPrice: 36000 },
-      { shortLabel: "Cuộn 10m × 30cm", price: 52000, oldPrice: 64000 }
+      { shortLabel: "Cuộn 5m × 30cm", price: 29000, oldPrice: 29000 },
+      { shortLabel: "Cuộn 10m × 30cm", price: 52000, oldPrice: 52000 }
     ],
     19: [
-      { shortLabel: "Lốc 50 cup tiêu chuẩn", price: 24000, oldPrice: 30000 },
-      { shortLabel: "Lốc 100 cup", price: 44000, oldPrice: 55000 }
+      { shortLabel: "Lốc 50 cup tiêu chuẩn", price: 24000, oldPrice: 24000 },
+      { shortLabel: "Lốc 100 cup", price: 44000, oldPrice: 44000 }
     ],
     20: [
       { shortLabel: "Bộ 12 đui + khớp nối", price: 65000, oldPrice: 79000 },
       { shortLabel: "Bộ 24 đui chuyên nghiệp", price: 115000, oldPrice: 140000 }
     ],
     21: [
-      { shortLabel: "Set 2 hộp (25×25×18cm)", price: 38000, oldPrice: 48000 },
-      { shortLabel: "Set 5 hộp tiết kiệm", price: 88000, oldPrice: 110000 }
+      { shortLabel: "Set 2 hộp (25×25×18cm)", price: 38000, oldPrice: 38000 },
+      { shortLabel: "Set 5 hộp tiết kiệm", price: 88000, oldPrice: 88000 }
+    ],
+    22: [
+      { shortLabel: "Bộ 6 khuôn Tart mini", price: 135000, oldPrice: 135000 }
+    ],
+    23: [
+      { shortLabel: "Gói 500g", price: 58000, oldPrice: 58000 }
     ]
   };
 
   /**
-   * Kho Combo Recipe-to-Cart dùng chung giữa Chi tiết sản phẩm, Blog và Giỏ hàng.
+   * Kho Combo Recipe-to-Cart dùng chung.
    */
   const RECIPE_COMBO_CATALOG = {
     "recipe-bong-lan": {
       id: "recipe-bong-lan",
-      title: "Combo Bánh Bông Lan Chiffon Mềm Tan",
+      title: "Combo Bánh Bông Lan Cơ Bản (Chiffon)",
       time: "55 phút",
       diff: "Dễ",
-      servings: "1 ổ bánh 20cm (6–8 phần)",
+      servings: "4 khẩu phần (1 ổ 20cm)",
       image: "images/about-baking.jpg",
       items: [
         { productId: 1, optionIndex: 2, quantity: 1, usage: "120g Bột mì số 8 (chọn túi 300g tiết kiệm)" },
-        { productId: 15, optionIndex: 0, quantity: 1, usage: "5 quả Trứng gà tươi (vỉ 10 quả)" },
+        { productId: 15, optionIndex: 1, quantity: 1, usage: "4 quả Trứng gà tươi (hộp 6 quả)" },
         { productId: 13, optionIndex: 1, quantity: 1, usage: "100g Đường tinh luyện (túi 500g)" },
-        { productId: 14, optionIndex: 1, quantity: 1, usage: "1/2 thìa Cream of Tartar ổn định lòng trắng" }
+        { productId: 14, optionIndex: 1, quantity: 1, usage: "4g Cream of Tartar ổn định lòng trắng" }
+      ]
+    },
+    "recipe-matcha-cupcake": {
+      id: "recipe-matcha-cupcake",
+      title: "Combo Cupcake Vanilla & Matcha",
+      time: "45 phút",
+      diff: "Dễ",
+      servings: "6 chiếc Cupcake",
+      image: "images/about-sharing-cakes.jpg",
+      items: [
+        { productId: 1, optionIndex: 2, quantity: 1, usage: "140g Bột mì số 8 mềm mịn (túi 300g)" },
+        { productId: 5, optionIndex: 0, quantity: 1, usage: "12g Bột Matcha Nhật Bản" },
+        { productId: 6, optionIndex: 0, quantity: 1, usage: "200ml Whipping Cream Anchor đánh bông" },
+        { productId: 12, optionIndex: 0, quantity: 1, usage: "85g Bơ lạt Anchor mềm" },
+        { productId: 19, optionIndex: 0, quantity: 1, usage: "12 Cup giấy xếp ly nướng cupcake" }
+      ]
+    },
+    "recipe-banh-quy-bo": {
+      id: "recipe-banh-quy-bo",
+      title: "Combo Cookies Bơ Đan Mạch Giòn Tan",
+      time: "35 phút",
+      diff: "Trung bình",
+      servings: "6 phần (~30 chiếc)",
+      image: "images/about-beginner.jpg",
+      items: [
+        { productId: 1, optionIndex: 2, quantity: 1, usage: "180g Bột mì số 8 (túi 300g)" },
+        { productId: 12, optionIndex: 0, quantity: 1, usage: "150g Bơ lạt Anchor đánh bông" },
+        { productId: 13, optionIndex: 1, quantity: 1, usage: "75g Đường tinh luyện (túi 500g)" },
+        { productId: 11, optionIndex: 0, quantity: 1, usage: "Túi bắt kem PE dày bóp bột quy" },
+        { productId: 20, optionIndex: 0, quantity: 1, usage: "Bộ đui bắt kem tạo vân hoa cúc sắc nét" }
       ]
     },
     "recipe-hoa-cuc": {
       id: "recipe-hoa-cuc",
-      title: "Combo Bánh Mì Hoa Cúc Thơm Lừng Bơ Sữa",
+      title: "Combo Bánh Mì Hoa Cúc Ngàn Lớp",
       time: "90 phút",
-      diff: "Vừa",
-      servings: "2 ổ bánh hoa cúc 450g",
+      diff: "Trung bình",
+      servings: "4 phần (2 ổ 450g)",
       image: "images/about-young-bakers.jpg",
       items: [
         { productId: 2, optionIndex: 2, quantity: 1, usage: "260g Bột mì số 11 dai khỏe (túi 300g)" },
@@ -160,7 +239,7 @@
       title: "Combo Bánh Muffin Chocolate Hạnh Nhân",
       time: "40 phút",
       diff: "Dễ",
-      servings: "12 chiếc Muffin vừa",
+      servings: "6 chiếc Muffin",
       image: "images/banner.jpg",
       items: [
         { productId: 3, optionIndex: 2, quantity: 1, usage: "150g Bột mì đa dụng Meizan (túi 300g)" },
@@ -169,40 +248,26 @@
         { productId: 19, optionIndex: 0, quantity: 1, usage: "12 Cup giấy nướng bánh chống thấm" }
       ]
     },
-    "recipe-matcha-cupcake": {
-      id: "recipe-matcha-cupcake",
-      title: "Combo Cupcake Matcha Kem Phô Mai",
-      time: "50 phút",
-      diff: "Dễ",
-      servings: "12 chiếc Cupcake trà xanh",
-      image: "images/about-sharing-cakes.jpg",
-      items: [
-        { productId: 1, optionIndex: 2, quantity: 1, usage: "140g Bột mì số 8 mềm mịn (túi 300g)" },
-        { productId: 5, optionIndex: 0, quantity: 1, usage: "12g Bột Matcha Nhật Bản" },
-        { productId: 6, optionIndex: 0, quantity: 1, usage: "200ml Whipping Cream Anchor đánh bông" },
-        { productId: 19, optionIndex: 0, quantity: 1, usage: "12 Cup giấy xếp ly nướng cupcake" }
-      ]
-    },
     "recipe-brownie": {
       id: "recipe-brownie",
       title: "Combo Bánh Brownie Chocolate Đậm Vị",
       time: "45 phút",
       diff: "Dễ",
-      servings: "Khay 20×20cm (9 miếng vuông)",
+      servings: "6 miếng vuông",
       image: "images/contact-baking.jpg",
       items: [
         { productId: 3, optionIndex: 3, quantity: 1, usage: "85g Bột mì đa dụng Meizan (gói 100g)" },
         { productId: 4, optionIndex: 0, quantity: 1, usage: "50g Bột cacao Hershey's" },
         { productId: 12, optionIndex: 0, quantity: 1, usage: "120g Bơ lạt Anchor" },
-        { productId: 18, optionIndex: 0, quantity: 1, usage: "1 tờ Giấy nến lót khuôn chống dính" }
+        { productId: 18, optionIndex: 0, quantity: 1, usage: "1 cuộn Giấy nến lót khuôn chống dính" }
       ]
     },
     "recipe-mousse-socola": {
       id: "recipe-mousse-socola",
       title: "Combo Bánh Mousse Socola Lạnh Mịn Mượt",
       time: "75 phút",
-      diff: "Vừa",
-      servings: "1 bánh tròn 20cm không cần lò",
+      diff: "Trung bình",
+      servings: "4 phần (1 bánh 20cm)",
       image: "images/about-ingredients.jpg",
       items: [
         { productId: 6, optionIndex: 0, quantity: 1, usage: "250ml Whipping Cream Anchor lạnh" },
@@ -211,27 +276,13 @@
         { productId: 17, optionIndex: 0, quantity: 1, usage: "1 Khuôn đế rời 20cm dễ tách bánh lạnh" }
       ]
     },
-    "recipe-banh-quy-bo": {
-      id: "recipe-banh-quy-bo",
-      title: "Combo Bánh Quy Bơ Đan Mạch Giòn Xốp",
-      time: "40 phút",
-      diff: "Dễ",
-      servings: "35–40 chiếc bánh quy bơ",
-      image: "images/about-beginner.jpg",
-      items: [
-        { productId: 1, optionIndex: 2, quantity: 1, usage: "180g Bột mì số 8 (túi 300g)" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "150g Bơ lạt Anchor đánh bông" },
-        { productId: 11, optionIndex: 0, quantity: 1, usage: "Túi bắt kem PE dày bóp bột quy" },
-        { productId: 20, optionIndex: 0, quantity: 1, usage: "Bộ đui bắt kem tạo vân hoa cúc sắc nét" }
-      ]
-    },
     "recipe-pancake": {
       id: "recipe-pancake",
       title: "Combo Bánh Pancake Mật Ong Bữa Sáng",
       time: "25 phút",
       diff: "Dễ",
-      servings: "8 chiếc Pancake vàng ươm",
-      image: "images/about-baking.jpg",
+      servings: "4 phần (8 chiếc)",
+      image: "images/products/bot-mi-meizan-1.jpg",
       items: [
         { productId: 3, optionIndex: 2, quantity: 1, usage: "150g Bột mì đa dụng Meizan (túi 300g)" },
         { productId: 15, optionIndex: 1, quantity: 1, usage: "2 quả Trứng gà tươi (hộp 6 quả)" },
@@ -241,18 +292,12 @@
     }
   };
 
-  /**
-   * Định dạng số tiền VND theo chuẩn Việt Nam.
-   */
   function formatCurrency(amount) {
     const numericAmount = Number(amount);
     const safeAmount = Number.isFinite(numericAmount) ? numericAmount : 0;
     return new Intl.NumberFormat("vi-VN").format(safeAmount) + " ₫";
   }
 
-  /**
-   * Chuẩn hóa recipeGroupId: null nếu mua lẻ, hoặc chuỗi mã công thức (ví dụ 'recipe-bong-lan').
-   */
   function normalizeRecipeGroupId(value) {
     if (typeof value !== "string") {
       return null;
@@ -261,15 +306,36 @@
     return trimmed.length > 0 ? trimmed : null;
   }
 
-  /**
-   * Lấy thông tin mô tả combo công thức theo recipeGroupId.
-   */
   function getRecipeComboInfo(recipeGroupId) {
     const normalized = normalizeRecipeGroupId(recipeGroupId);
     if (!normalized) {
       return null;
     }
-    return RECIPE_COMBO_CATALOG[normalized] || {
+    if (RECIPE_COMBO_CATALOG[normalized]) {
+      return RECIPE_COMBO_CATALOG[normalized];
+    }
+    if (typeof window.getRecipeById === "function") {
+      const fromData = window.getRecipeById(normalized);
+      if (fromData) {
+        return {
+          id: fromData.id,
+          title: `Combo ${fromData.title}`,
+          time: fromData.time,
+          diff: fromData.diff,
+          servings: `${fromData.defaultServings} ${fromData.servingsUnit || "phần"}`,
+          image: fromData.image,
+          items: (fromData.ingredients || [])
+            .filter((ing) => ing.productId)
+            .map((ing) => ({
+              productId: ing.productId,
+              optionIndex: ing.optionIndex || 0,
+              quantity: 1,
+              usage: `${ing.baseAmount}${ing.unit} ${ing.name}`
+            }))
+        };
+      }
+    }
+    return {
       id: normalized,
       title: `Combo công thức (${normalized})`,
       time: "Chuẩn vị BakeMate",
@@ -280,19 +346,18 @@
     };
   }
 
-  /**
-   * Lấy danh sách sản phẩm dùng chung từ products.js.
-   */
   function getProductCatalog() {
-    if (typeof window !== "undefined" && Array.isArray(window.products)) {
-      return window.products;
+    if (typeof window !== "undefined") {
+      if (typeof window.buildMergedProducts === "function") {
+        return window.buildMergedProducts();
+      }
+      if (Array.isArray(window.products)) {
+        return window.products;
+      }
     }
     return [];
   }
 
-  /**
-   * Tìm sản phẩm theo ID (Number).
-   */
   function getProduct(productId) {
     const id = Number(productId);
     if (!Number.isInteger(id) || id <= 0) {
@@ -302,9 +367,6 @@
     return catalog.find((item) => Number(item.id) === id) || null;
   }
 
-  /**
-   * Lấy danh sách quy cách đóng gói hợp lệ cho một sản phẩm.
-   */
   function getProductOptions(productId) {
     const id = Number(productId);
     const product = getProduct(id);
@@ -314,13 +376,17 @@
     if (Array.isArray(preset) && preset.length > 0) {
       return preset.map((opt, idx) => {
         const price = idx === 0 && product ? basePrice : Number(opt.price);
-        const oldPrice = Number(opt.oldPrice) > price ? Number(opt.oldPrice) : Math.round(price * 1.2);
+        const explicitOld =
+          idx === 0 && product && Number(product.oldPrice) > 0
+            ? Number(product.oldPrice)
+            : Number(opt.oldPrice);
+        const oldPrice = explicitOld > price ? explicitOld : price;
         const saveAmount = Math.max(0, oldPrice - price);
         const discountPercent = oldPrice > price ? Math.round((saveAmount / oldPrice) * 100) : 0;
         return {
           optionIndex: idx,
-          shortLabel: opt.shortLabel,
-          label: `${opt.shortLabel} - ${formatCurrency(price)}`,
+          shortLabel: idx === 0 && product && product.packagingLabel ? product.packagingLabel : opt.shortLabel,
+          label: `${idx === 0 && product && product.packagingLabel ? product.packagingLabel : opt.shortLabel} - ${formatCurrency(price)}`,
           price,
           oldPrice,
           saveAmount,
@@ -329,24 +395,22 @@
       });
     }
 
-    const fallbackOld = Math.round(basePrice * 1.2);
-    const fallbackSave = Math.max(0, fallbackOld - basePrice);
+    const labelName = (product && product.packagingLabel) || "Tiêu chuẩn";
+    const explicitOld = product && Number(product.oldPrice) > basePrice ? Number(product.oldPrice) : basePrice;
+    const saveAmount = Math.max(0, explicitOld - basePrice);
     return [
       {
         optionIndex: 0,
-        shortLabel: "Tiêu chuẩn",
-        label: `Tiêu chuẩn - ${formatCurrency(basePrice)}`,
+        shortLabel: labelName,
+        label: `${labelName} - ${formatCurrency(basePrice)}`,
         price: basePrice,
-        oldPrice: fallbackOld,
-        saveAmount: fallbackSave,
-        discountPercent: fallbackOld > basePrice ? Math.round((fallbackSave / fallbackOld) * 100) : 0
+        oldPrice: explicitOld,
+        saveAmount,
+        discountPercent: explicitOld > basePrice ? Math.round((saveAmount / explicitOld) * 100) : 0
       }
     ];
   }
 
-  /**
-   * Chuẩn hóa chỉ số quy cách đóng gói (optionIndex).
-   */
   function normalizeOptionIndex(productId, optionIndex) {
     const options = getProductOptions(productId);
     const parsed = Math.floor(Number(optionIndex));
@@ -356,19 +420,12 @@
     return parsed;
   }
 
-  /**
-   * Lấy chi tiết một quy cách cụ thể theo productId và optionIndex.
-   */
   function getProductOption(productId, optionIndex = 0) {
     const options = getProductOptions(productId);
     const normalizedIdx = normalizeOptionIndex(productId, optionIndex);
     return options[normalizedIdx] || options[0];
   }
 
-  /**
-   * Làm sạch dữ liệu giỏ hàng: loại bỏ bản ghi sai định dạng,
-   * gộp trùng theo (productId, optionIndex, recipeGroupId) và giới hạn số lượng [1, 99].
-   */
   function sanitizeCartItems(rawItems) {
     if (!Array.isArray(rawItems)) {
       return [];
@@ -407,12 +464,11 @@
     return Array.from(mergedMap.values());
   }
 
-  /**
-   * Đọc dữ liệu giỏ hàng từ localStorage.
-   */
   function getCart() {
     try {
-      const raw = window.localStorage.getItem(CART_STORAGE_KEY);
+      const raw =
+        window.localStorage.getItem(CART_STORAGE_KEY) ||
+        window.localStorage.getItem(LEGACY_CART_KEY);
       if (!raw) {
         return [];
       }
@@ -424,21 +480,18 @@
     }
   }
 
-  /**
-   * Aliases tương thích tên hàm theo tài liệu nhóm.
-   */
   function loadCart() {
     return getCart();
   }
 
-  /**
-   * Lưu dữ liệu giỏ hàng vào localStorage, cập nhật badge và phát sự kiện đồng bộ.
-   */
   function saveCart(cartItems) {
     const cleanCart = sanitizeCartItems(cartItems);
+    const serialized = JSON.stringify(cleanCart);
 
     try {
-      window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cleanCart));
+      window.localStorage.setItem(CART_STORAGE_KEY, serialized);
+      window.localStorage.setItem(LEGACY_CART_KEY, serialized);
+      syncCartSelectionWithCart(cleanCart);
     } catch (error) {
       console.error("Không thể lưu giỏ hàng vào localStorage:", error);
     }
@@ -460,34 +513,120 @@
     return cleanCart;
   }
 
-  /**
-   * Thêm sản phẩm (kèm quy cách và recipeGroupId) vào giỏ hàng hoặc cộng dồn số lượng.
-   */
+  function getCartItemKey(item) {
+    if (!item) return "";
+    return `${Number(item.productId)}|${Number(item.optionIndex || 0)}|${normalizeRecipeGroupId(item.recipeGroupId) || ""}`;
+  }
+
+  function syncCartSelectionWithCart(cartItems) {
+    try {
+      const list = Array.isArray(cartItems) ? cartItems : getCart();
+      if (list.length === 0) {
+        window.localStorage.removeItem(CART_SELECTION_KEY);
+        return;
+      }
+      const rawSel = window.localStorage.getItem(CART_SELECTION_KEY);
+      if (rawSel === null) return;
+      const parsed = JSON.parse(rawSel);
+      if (!Array.isArray(parsed)) return;
+      const validKeys = new Set(list.map(getCartItemKey));
+      const pruned = parsed.map(String).filter((k) => validKeys.has(k));
+      window.localStorage.setItem(CART_SELECTION_KEY, JSON.stringify(Array.from(new Set(pruned))));
+    } catch (e) {
+      console.warn("Không thể đồng bộ lựa chọn giỏ hàng:", e);
+    }
+  }
+
+  function getSelectedCartKeys(cartOverride) {
+    const cart = Array.isArray(cartOverride) ? cartOverride : getCart();
+    if (cart.length === 0) return [];
+    const allKeys = cart.map(getCartItemKey);
+    try {
+      const raw = window.localStorage.getItem(CART_SELECTION_KEY);
+      if (raw === null) return allKeys;
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return allKeys;
+      const validSet = new Set(allKeys);
+      return Array.from(new Set(parsed.map(String).filter((k) => validSet.has(k))));
+    } catch (e) {
+      return allKeys;
+    }
+  }
+
+  function setSelectedCartKeys(keys) {
+    const cart = getCart();
+    const validSet = new Set(cart.map(getCartItemKey));
+    const clean = Array.from(new Set((Array.isArray(keys) ? keys : []).map(String).filter((k) => validSet.has(k))));
+    try {
+      window.localStorage.setItem(CART_SELECTION_KEY, JSON.stringify(clean));
+    } catch (e) {
+      console.warn("Không thể lưu danh sách chọn trong giỏ hàng:", e);
+    }
+    return clean;
+  }
+
+  function getSelectedCartItems(cartOverride) {
+    const cart = Array.isArray(cartOverride) ? cartOverride : getCart();
+    if (cart.length === 0) return [];
+    const selectedSet = new Set(getSelectedCartKeys(cart));
+    return cart.filter((item) => selectedSet.has(getCartItemKey(item)));
+  }
+
+  function removeOrderedCartItems(orderedItems) {
+    const orderedKeys = new Set(
+      (Array.isArray(orderedItems) ? orderedItems : []).map(getCartItemKey).filter(Boolean)
+    );
+    if (orderedKeys.size === 0) {
+      return getCart();
+    }
+    const cart = getCart();
+    const remaining = cart.filter((item) => !orderedKeys.has(getCartItemKey(item)));
+    return saveCart(remaining);
+  }
+
+  const externalPerishableCheck =
+    typeof window !== "undefined" && typeof window.isProductPerishable === "function"
+      ? window.isProductPerishable
+      : null;
+
+  function isProductPerishable(productOrId) {
+    if (externalPerishableCheck && externalPerishableCheck !== isProductPerishable) {
+      return externalPerishableCheck(productOrId);
+    }
+    if (!productOrId) return false;
+    const id = typeof productOrId === "object" ? Number(productOrId.id || productOrId.productId) : Number(productOrId);
+    const prod = typeof productOrId === "object" && productOrId.isPerishable === true ? productOrId : getProduct(id);
+    return Boolean((prod && prod.isPerishable === true) || [6, 12, 15].includes(id));
+  }
+
+  function hasPerishableItems(items) {
+    const list = Array.isArray(items) ? items : [];
+    return list.some((item) => isProductPerishable(item.productId || item.id || item));
+  }
+
   function addToCart(productId, quantity = 1, optionIndex = 0, recipeGroupId = null) {
     const id = Number(productId);
     const parsedQty = Math.floor(Number(quantity));
     const normalizedGroupId = normalizeRecipeGroupId(recipeGroupId);
 
     if (!Number.isInteger(id) || id <= 0) {
-      return {
-        success: false,
-        message: "Mã sản phẩm không hợp lệ."
-      };
+      return { success: false, message: "Mã sản phẩm không hợp lệ." };
     }
 
     if (!Number.isFinite(parsedQty) || parsedQty < 1) {
-      return {
-        success: false,
-        message: "Số lượng thêm vào giỏ phải lớn hơn hoặc bằng 1."
-      };
+      return { success: false, message: "Số lượng thêm vào giỏ phải lớn hơn hoặc bằng 1." };
     }
 
     const catalog = getProductCatalog();
     const product = getProduct(id);
     if (catalog.length > 0 && !product) {
+      return { success: false, message: "Sản phẩm không tồn tại trong hệ thống." };
+    }
+
+    if (product && product.stockStatus === "coming_soon") {
       return {
         success: false,
-        message: "Sản phẩm không tồn tại trong hệ thống."
+        message: `"${product.name}" hiện đang sắp về hàng, bạn có thể lưu vào Yêu thích để nhận thông báo sớm.`
       };
     }
 
@@ -531,6 +670,18 @@
         normalizeRecipeGroupId(item.recipeGroupId) === normalizedGroupId
     );
 
+    if (savedItem) {
+      try {
+        if (window.localStorage.getItem(CART_SELECTION_KEY) !== null) {
+          const currentSelected = getSelectedCartKeys(updatedCart);
+          const itemKey = getCartItemKey(savedItem);
+          if (!currentSelected.includes(itemKey)) {
+            setSelectedCartKeys([...currentSelected, itemKey]);
+          }
+        }
+      } catch (e) {}
+    }
+
     const optionSuffix = option && option.shortLabel ? ` (${option.shortLabel})` : "";
     let message = product
       ? `Đã thêm "${product.name}"${optionSuffix} vào giỏ hàng.`
@@ -550,103 +701,101 @@
     };
   }
 
-  /**
-   * Thêm trọn bộ nguyên liệu theo combo công thức (Recipe-to-Cart).
-   */
   function addRecipeComboToCart(recipeGroupId, customItems) {
     const normalizedGroupId = normalizeRecipeGroupId(recipeGroupId);
     if (!normalizedGroupId) {
-      return {
-        success: false,
-        addedCount: 0,
-        message: "Mã công thức không hợp lệ."
-      };
+      return { success: false, message: "Mã công thức không hợp lệ." };
     }
 
     const comboInfo = getRecipeComboInfo(normalizedGroupId);
-    const itemsToAdd = Array.isArray(customItems) && customItems.length > 0
-      ? customItems
-      : comboInfo.items || [];
+    const itemsToAdd =
+      Array.isArray(customItems) && customItems.length > 0
+        ? customItems
+        : comboInfo
+        ? comboInfo.items
+        : [];
 
-    if (itemsToAdd.length === 0) {
-      return {
-        success: false,
-        addedCount: 0,
-        message: "Không tìm thấy nguyên liệu trong combo công thức này."
-      };
+    if (!itemsToAdd || itemsToAdd.length === 0) {
+      return { success: false, message: "Công thức chưa có danh sách nguyên liệu." };
     }
 
     let addedCount = 0;
+    let cappedAny = false;
+
     itemsToAdd.forEach((entry) => {
-      const res = addToCart(entry.productId, entry.quantity || 1, entry.optionIndex || 0, normalizedGroupId);
-      if (res && res.success) {
+      const pid = Number(entry.productId);
+      if (!Number.isInteger(pid) || pid <= 0) return;
+      const result = addToCart(
+        pid,
+        Math.max(1, Math.floor(Number(entry.quantity) || 1)),
+        Number(entry.optionIndex) || 0,
+        normalizedGroupId
+      );
+      if (result.success) {
         addedCount += 1;
+        if (result.capped) cappedAny = true;
       }
     });
 
     if (addedCount === 0) {
-      return {
-        success: false,
-        addedCount: 0,
-        message: "Không thể thêm nguyên liệu của công thức vào giỏ hàng."
-      };
+      return { success: false, message: "Không có nguyên liệu khả dụng để thêm vào giỏ." };
     }
 
+    const comboTitle = comboInfo ? comboInfo.title : normalizedGroupId;
     return {
       success: true,
+      capped: cappedAny,
       addedCount,
-      recipeGroupId: normalizedGroupId,
-      comboTitle: comboInfo.title,
       cart: getCart(),
-      message: `Đã thêm trọn bộ ${addedCount} món của "${comboInfo.title}" vào giỏ hàng.`
+      message: `Đã thêm trọn bộ ${addedCount} sản phẩm của "${comboTitle}" vào giỏ!`
     };
   }
 
-  /**
-   * Cập nhật số lượng của một dòng sản phẩm theo (productId, optionIndex, recipeGroupId).
-   */
   function updateQuantity(productId, newQuantity, optionIndex = 0, recipeGroupId = null) {
     const id = Number(productId);
-    const parsedQty = Math.floor(Number(newQuantity));
-    const normalizedGroupId = normalizeRecipeGroupId(recipeGroupId);
-
-    if (!Number.isInteger(id) || id <= 0) {
-      return { success: false, message: "Mã sản phẩm không hợp lệ." };
-    }
-    if (!Number.isFinite(parsedQty)) {
-      return { success: false, message: "Số lượng không hợp lệ." };
-    }
-
     const normalizedOptionIndex = normalizeOptionIndex(id, optionIndex);
-    const clampedQty = Math.max(1, Math.min(MAX_CART_QUANTITY, parsedQty));
+    const normalizedGroupId = normalizeRecipeGroupId(recipeGroupId);
+    const parsedQty = Math.floor(Number(newQuantity));
     const cart = getCart();
-    const target = cart.find(
+    const targetIndex = cart.findIndex(
       (item) =>
         item.productId === id &&
         Number(item.optionIndex || 0) === normalizedOptionIndex &&
         normalizeRecipeGroupId(item.recipeGroupId) === normalizedGroupId
     );
 
-    if (!target) {
-      return { success: false, message: "Sản phẩm không có trong giỏ hàng." };
+    if (targetIndex === -1) {
+      return { success: false, cart, message: "Không tìm thấy sản phẩm trong giỏ." };
     }
 
-    target.quantity = clampedQty;
-    const updatedCart = saveCart(cart);
+    if (!Number.isFinite(parsedQty) || parsedQty < 1) {
+      cart.splice(targetIndex, 1);
+      const updated = saveCart(cart);
+      return { success: true, removed: true, cart: updated, message: "Đã xóa sản phẩm khỏi giỏ hàng." };
+    }
+
+    let capped = false;
+    let safeQty = parsedQty;
+    if (safeQty > MAX_CART_QUANTITY) {
+      safeQty = MAX_CART_QUANTITY;
+      capped = true;
+    }
+
+    cart[targetIndex].quantity = safeQty;
+    const updated = saveCart(cart);
 
     return {
       success: true,
-      capped: parsedQty > MAX_CART_QUANTITY,
-      quantity: clampedQty,
-      optionIndex: normalizedOptionIndex,
-      recipeGroupId: normalizedGroupId,
-      cart: updatedCart
+      removed: false,
+      capped,
+      quantity: safeQty,
+      cart: updated,
+      message: capped
+        ? `Số lượng tối đa cho mỗi sản phẩm là ${MAX_CART_QUANTITY}.`
+        : "Đã cập nhật số lượng."
     };
   }
 
-  /**
-   * Xóa một dòng sản phẩm khỏi giỏ hàng theo (productId, optionIndex, recipeGroupId).
-   */
   function removeFromCart(productId, optionIndex = 0, recipeGroupId = null) {
     const id = Number(productId);
     const normalizedOptionIndex = normalizeOptionIndex(id, optionIndex);
@@ -663,9 +812,6 @@
     return saveCart(nextCart);
   }
 
-  /**
-   * Xóa toàn bộ sản phẩm thuộc một nhóm combo công thức (recipeGroupId).
-   */
   function removeRecipeGroup(recipeGroupId) {
     const normalizedGroupId = normalizeRecipeGroupId(recipeGroupId);
     if (!normalizedGroupId) {
@@ -678,24 +824,15 @@
     return saveCart(nextCart);
   }
 
-  /**
-   * Xóa toàn bộ sản phẩm trong giỏ hàng.
-   */
   function clearCart() {
     return saveCart([]);
   }
 
-  /**
-   * Tính tổng số lượng sản phẩm trong giỏ.
-   */
   function getCartCount(cartOverride) {
     const cart = Array.isArray(cartOverride) ? cartOverride : getCart();
     return cart.reduce((sum, item) => sum + (Number(item.quantity) || 0), 0);
   }
 
-  /**
-   * Tính tổng tiền giỏ hàng dựa trên đơn giá quy cách hợp lệ và dữ liệu trong products.js.
-   */
   function getCartTotal(cartOverride) {
     const cart = Array.isArray(cartOverride) ? cartOverride : getCart();
     return cart.reduce((sum, item) => {
@@ -709,10 +846,9 @@
     }, 0);
   }
 
-  /**
-   * Kiểm tra và áp dụng mã giảm giá (CHAOBANMOI -> giảm 10%).
-   */
-  function validateCouponCode(rawCode) {
+  // ==================== COUPON & SHIPPING LOGIC ====================
+
+  function validateCouponCode(rawCode, subtotalOverride) {
     const normalized = String(rawCode || "").trim().toUpperCase();
     if (!normalized) {
       return {
@@ -729,85 +865,551 @@
         valid: false,
         code: normalized,
         discountRate: 0,
-        message: "Mã giảm giá không hợp lệ hoặc đã hết hạn. Gợi ý: nhập CHAOBANMOI để được giảm 10%."
+        message: "Mã giảm giá không hợp lệ. Gợi ý: CHAOBANMOI (-10%) hoặc FREESHIP20 (Freeship 20K đơn từ 200K)."
+      };
+    }
+
+    const subtotalToCheck =
+      typeof subtotalOverride === "number" ? subtotalOverride : getCartTotal();
+
+    if (coupon.minSubtotal > 0 && subtotalToCheck < coupon.minSubtotal) {
+      return {
+        valid: false,
+        code: coupon.code,
+        discountRate: 0,
+        minSubtotal: coupon.minSubtotal,
+        message: `Mã ${coupon.code} chỉ áp dụng cho đơn từ ${formatCurrency(coupon.minSubtotal)} (bạn cần mua thêm ${formatCurrency(coupon.minSubtotal - subtotalToCheck)}).`
       };
     }
 
     return {
       valid: true,
       code: coupon.code,
+      type: coupon.type,
       discountRate: coupon.discountRate,
+      discountAmount: coupon.discountAmount,
+      minSubtotal: coupon.minSubtotal,
       description: coupon.description,
       message: `Áp dụng thành công mã ${coupon.code}: ${coupon.description}!`
     };
   }
 
+  function getSavedCoupons() {
+    try {
+      const rawMulti = window.localStorage.getItem(COUPONS_STORAGE_KEY);
+      if (rawMulti) {
+        const parsed = JSON.parse(rawMulti);
+        if (Array.isArray(parsed)) {
+          return Array.from(
+            new Set(
+              parsed
+                .map((c) => String(c || "").trim().toUpperCase())
+                .filter((c) => Boolean(VALID_COUPONS[c]))
+            )
+          );
+        }
+      }
+      const rawSingle = window.localStorage.getItem(COUPON_STORAGE_KEY);
+      if (rawSingle) {
+        const normalized = String(rawSingle).trim().toUpperCase();
+        if (VALID_COUPONS[normalized]) return [normalized];
+      }
+      return [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function persistCouponCodes(codes) {
+    const clean = Array.from(
+      new Set(
+        (Array.isArray(codes) ? codes : [])
+          .map((c) => String(c || "").trim().toUpperCase())
+          .filter((c) => Boolean(VALID_COUPONS[c]))
+      )
+    );
+    try {
+      if (clean.length === 0) {
+        window.localStorage.removeItem(COUPONS_STORAGE_KEY);
+        window.localStorage.removeItem(COUPON_STORAGE_KEY);
+      } else {
+        window.localStorage.setItem(COUPONS_STORAGE_KEY, JSON.stringify(clean));
+        window.localStorage.setItem(COUPON_STORAGE_KEY, clean[0]);
+      }
+    } catch (error) {
+      console.warn("Không thể lưu danh sách mã giảm giá:", error);
+    }
+    return clean;
+  }
+
   function getSavedCoupon() {
     try {
       const raw = window.localStorage.getItem(COUPON_STORAGE_KEY);
-      if (!raw) {
-        return null;
+      if (raw) {
+        const normalized = String(raw).trim().toUpperCase();
+        if (VALID_COUPONS[normalized]) return normalized;
       }
-      const res = validateCouponCode(raw);
-      return res.valid ? res.code : null;
+      const list = getSavedCoupons();
+      return list.length > 0 ? list[0] : null;
     } catch (error) {
       return null;
     }
   }
 
-  function setSavedCoupon(rawCode) {
-    const res = validateCouponCode(rawCode);
+  function setSavedCoupon(rawCode, subtotalOverride) {
+    const res = validateCouponCode(rawCode, subtotalOverride);
     if (!res.valid) {
       return res;
     }
     try {
       window.localStorage.setItem(COUPON_STORAGE_KEY, res.code);
+      window.localStorage.setItem(COUPONS_STORAGE_KEY, JSON.stringify([res.code]));
     } catch (error) {
       console.warn("Không thể lưu mã giảm giá vào localStorage:", error);
     }
     return res;
   }
 
+  function addCouponCode(rawCode, subtotalOverride) {
+    const res = validateCouponCode(rawCode, subtotalOverride);
+    if (!res.valid) {
+      return res;
+    }
+    const current = getSavedCoupons();
+    if (current.includes(res.code)) {
+      return {
+        valid: false,
+        code: res.code,
+        message: `Mã ${res.code} đã được áp dụng cho đơn hàng này.`
+      };
+    }
+
+    const incomingGroup = res.type === "shipping" ? "shipping" : "product";
+    const filtered = current.filter((code) => {
+      const meta = VALID_COUPONS[code];
+      const existingGroup = meta && meta.type === "shipping" ? "shipping" : "product";
+      return existingGroup !== incomingGroup;
+    });
+
+    const nextCodes = persistCouponCodes([...filtered, res.code]);
+    return Object.assign({}, res, {
+      coupons: nextCodes,
+      message:
+        nextCodes.length > 1
+          ? `Áp dụng cộng dồn thành công mã ${nextCodes.join(" + ")}!`
+          : res.message
+    });
+  }
+
+  function removeSavedCoupon(rawCode) {
+    const target = String(rawCode || "").trim().toUpperCase();
+    const current = getSavedCoupons();
+    return persistCouponCodes(current.filter((code) => code !== target));
+  }
+
   function clearSavedCoupon() {
     try {
       window.localStorage.removeItem(COUPON_STORAGE_KEY);
+      window.localStorage.removeItem(COUPONS_STORAGE_KEY);
     } catch (error) {
       console.warn("Không thể xóa mã giảm giá:", error);
     }
   }
 
-  function calculateDiscount(subtotal, couponCode) {
+  function clearSavedCoupons() {
+    clearSavedCoupon();
+  }
+
+  function calculateDiscount(subtotal, couponInput, baseShippingFee = DEFAULT_SHIPPING_FEE) {
     const safeSubtotal = Math.max(0, Number(subtotal) || 0);
-    const check = validateCouponCode(couponCode);
+    const safeShip = Math.max(0, Number(baseShippingFee) || 0);
+
+    if (Array.isArray(couponInput)) {
+      const uniqueCodes = Array.from(
+        new Set(couponInput.map((c) => String(c || "").trim().toUpperCase()).filter(Boolean))
+      );
+      let productCoupon = null;
+      let shippingCoupon = null;
+      const activeCoupons = [];
+      const droppedCoupons = [];
+
+      uniqueCodes.forEach((code) => {
+        const check = validateCouponCode(code, safeSubtotal);
+        if (!check.valid || safeSubtotal === 0) {
+          droppedCoupons.push({ code, reason: check.message });
+          return;
+        }
+        if (check.type === "shipping") {
+          if (!shippingCoupon) {
+            shippingCoupon = check;
+            activeCoupons.push(check);
+          }
+        } else if (!productCoupon) {
+          productCoupon = check;
+          activeCoupons.push(check);
+        }
+      });
+
+      const discountAmount = productCoupon
+        ? Math.min(safeSubtotal, Math.round(safeSubtotal * (Number(productCoupon.discountRate) || 0)))
+        : 0;
+      const afterDiscount = Math.max(0, safeSubtotal - discountAmount);
+      const shippingDiscount = shippingCoupon
+        ? Math.min(safeShip, Number(shippingCoupon.discountAmount) || 0)
+        : 0;
+      const effectiveShippingFee = Math.max(0, safeShip - shippingDiscount);
+      const activeCodes = activeCoupons.map((c) => c.code);
+
+      return {
+        couponCode: activeCodes.length > 0 ? activeCodes.join(" + ") : null,
+        couponCodes: activeCodes,
+        activeCoupons,
+        droppedCoupons,
+        productCoupon: productCoupon ? productCoupon.code : null,
+        shippingCoupon: shippingCoupon ? shippingCoupon.code : null,
+        couponType:
+          productCoupon && shippingCoupon
+            ? "stacked"
+            : productCoupon
+            ? productCoupon.type
+            : shippingCoupon
+            ? "shipping"
+            : null,
+        discountRate: productCoupon ? Number(productCoupon.discountRate) || 0 : 0,
+        discountAmount,
+        shippingDiscount,
+        totalSavings: discountAmount + shippingDiscount,
+        baseShippingFee: safeShip,
+        effectiveShippingFee,
+        finalTotal: afterDiscount + effectiveShippingFee,
+        productSubtotalAfterDiscount: afterDiscount
+      };
+    }
+
+    const check = couponInput ? validateCouponCode(couponInput, safeSubtotal) : { valid: false };
+
     if (!check.valid || safeSubtotal === 0) {
       return {
         couponCode: null,
+        couponCodes: [],
+        couponType: null,
         discountRate: 0,
         discountAmount: 0,
-        finalTotal: safeSubtotal
+        shippingDiscount: 0,
+        totalSavings: 0,
+        baseShippingFee: safeShip,
+        effectiveShippingFee: safeShip,
+        finalTotal: safeSubtotal + safeShip,
+        productSubtotalAfterDiscount: safeSubtotal
       };
     }
-    const discountAmount = Math.round(safeSubtotal * check.discountRate);
+
+    if (check.type === "shipping") {
+      const shippingDiscount = Math.min(safeShip, Number(check.discountAmount) || 0);
+      const effectiveShippingFee = Math.max(0, safeShip - shippingDiscount);
+      return {
+        couponCode: check.code,
+        couponCodes: [check.code],
+        couponType: "shipping",
+        discountRate: 0,
+        discountAmount: shippingDiscount,
+        shippingDiscount,
+        totalSavings: shippingDiscount,
+        baseShippingFee: safeShip,
+        effectiveShippingFee,
+        finalTotal: safeSubtotal + effectiveShippingFee,
+        productSubtotalAfterDiscount: safeSubtotal
+      };
+    }
+
+    const discountAmount = Math.round(safeSubtotal * (Number(check.discountRate) || 0));
+    const afterDiscount = Math.max(0, safeSubtotal - discountAmount);
     return {
       couponCode: check.code,
+      couponCodes: [check.code],
+      couponType: "percent",
       discountRate: check.discountRate,
       discountAmount,
-      finalTotal: Math.max(0, safeSubtotal - discountAmount)
+      shippingDiscount: 0,
+      totalSavings: discountAmount,
+      baseShippingFee: safeShip,
+      effectiveShippingFee: safeShip,
+      finalTotal: afterDiscount + safeShip,
+      productSubtotalAfterDiscount: afterDiscount
     };
   }
 
-  /**
-   * Đồng bộ số lượng hiển thị trên biểu tượng giỏ hàng ở Header.
-   */
+  // ==================== RECENTLY VIEWED (SẢN PHẨM ĐÃ XEM GẦN ĐÂY) ====================
+
+  function getRecentProducts() {
+    try {
+      const raw = window.localStorage.getItem(RECENT_PRODUCTS_KEY);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      return parsed
+        .map(Number)
+        .filter((id) => Number.isInteger(id) && id > 0 && Boolean(getProduct(id)))
+        .slice(0, MAX_RECENT_PRODUCTS);
+    } catch (error) {
+      return [];
+    }
+  }
+
+  function addRecentProduct(productId) {
+    const id = Number(productId);
+    if (!Number.isInteger(id) || id <= 0 || !getProduct(id)) {
+      return getRecentProducts();
+    }
+    const current = getRecentProducts().filter((x) => x !== id);
+    const next = [id, ...current].slice(0, MAX_RECENT_PRODUCTS);
+    try {
+      window.localStorage.setItem(RECENT_PRODUCTS_KEY, JSON.stringify(next));
+    } catch (error) {
+      console.warn("Không thể lưu sản phẩm vừa xem:", error);
+    }
+    window.dispatchEvent(new CustomEvent("bakemate:recentProductsChanged", { detail: { ids: next } }));
+    return next;
+  }
+
+  function clearRecentProducts() {
+    try {
+      window.localStorage.removeItem(RECENT_PRODUCTS_KEY);
+    } catch (error) {}
+    window.dispatchEvent(new CustomEvent("bakemate:recentProductsChanged", { detail: { ids: [] } }));
+  }
+
+  // ==================== WISHLIST (YÊU THÍCH) ====================
+
+  function getWishlist() {
+    try {
+      const raw = window.localStorage.getItem(WISHLIST_STORAGE_KEY);
+      if (!raw) return { products: [], recipes: [] };
+      const parsed = JSON.parse(raw);
+      return {
+        products: Array.isArray(parsed.products) ? parsed.products.map(Number).filter(Boolean) : [],
+        recipes: Array.isArray(parsed.recipes) ? parsed.recipes.map(String).filter(Boolean) : []
+      };
+    } catch (error) {
+      return { products: [], recipes: [] };
+    }
+  }
+
+  function saveWishlist(wl) {
+    const clean = {
+      products: Array.from(new Set((wl.products || []).map(Number).filter(Boolean))),
+      recipes: Array.from(new Set((wl.recipes || []).map(String).filter(Boolean)))
+    };
+    try {
+      window.localStorage.setItem(WISHLIST_STORAGE_KEY, JSON.stringify(clean));
+    } catch (error) {
+      console.warn("Không thể lưu danh sách yêu thích:", error);
+    }
+    updateWishlistBadge(clean);
+    window.dispatchEvent(new CustomEvent("bakemate:wishlistChanged", { detail: clean }));
+    return clean;
+  }
+
+  function isProductWishlisted(productId) {
+    return getWishlist().products.includes(Number(productId));
+  }
+
+  function isRecipeWishlisted(recipeId) {
+    return getWishlist().recipes.includes(String(recipeId));
+  }
+
+  function toggleWishlistProduct(productId) {
+    const id = Number(productId);
+    const wl = getWishlist();
+    const exists = wl.products.includes(id);
+    if (exists) {
+      wl.products = wl.products.filter((x) => x !== id);
+    } else {
+      wl.products.unshift(id);
+    }
+    saveWishlist(wl);
+    const product = getProduct(id);
+    const name = product ? product.name : "sản phẩm";
+    return {
+      wishlisted: !exists,
+      wishlist: wl,
+      message: exists ? `Đã bỏ "${name}" khỏi danh sách yêu thích.` : `Đã thêm "${name}" vào danh sách yêu thích!`
+    };
+  }
+
+  function toggleWishlistRecipe(recipeId) {
+    const id = String(recipeId || "").trim();
+    const wl = getWishlist();
+    const exists = wl.recipes.includes(id);
+    if (exists) {
+      wl.recipes = wl.recipes.filter((x) => x !== id);
+    } else {
+      wl.recipes.unshift(id);
+    }
+    saveWishlist(wl);
+    const recipe = typeof window.getRecipeById === "function" ? window.getRecipeById(id) : null;
+    const title = recipe ? recipe.title : "công thức";
+    return {
+      wishlisted: !exists,
+      wishlist: wl,
+      message: exists ? `Đã bỏ lưu "${title}" khỏi yêu thích.` : `Đã lưu công thức "${title}" vào yêu thích!`
+    };
+  }
+
+  function getWishlistCount(wlOverride) {
+    const wl = wlOverride || getWishlist();
+    return (wl.products ? wl.products.length : 0) + (wl.recipes ? wl.recipes.length : 0);
+  }
+
+  function updateWishlistBadge(wlOverride) {
+    const count = getWishlistCount(wlOverride);
+    const badges = document.querySelectorAll(".js-wishlist-badge, #wishlist-badge");
+    badges.forEach((badge) => {
+      badge.textContent = count > 99 ? "99+" : String(count);
+      badge.classList.toggle("is-empty", count === 0);
+    });
+    const links = document.querySelectorAll(".site-header__wishlist");
+    links.forEach((link) => {
+      link.setAttribute("aria-label", `Danh sách yêu thích (${count} mục)`);
+      link.setAttribute("title", `Danh sách yêu thích (${count} mục)`);
+    });
+    return count;
+  }
+
+  // ==================== ADDRESS BOOK (ĐỊA CHỈ GIAO HÀNG) ====================
+
+  const SEED_SAMPLE_ADDRESSES = [
+    {
+      id: "addr-default-1",
+      fullName: "Bảo Ngọc",
+      phone: "0912345678",
+      zone: "hcm",
+      areaLabel: "Phường 6, Quận 3, TP. Hồ Chí Minh",
+      street: "59C Nguyễn Đình Chiểu",
+      type: "Nhà Riêng",
+      isDefault: true
+    },
+    {
+      id: "addr-default-2",
+      fullName: "Minh Thư (Văn phòng)",
+      phone: "0987654321",
+      zone: "province",
+      areaLabel: "Phường Hiệp Phú, TP. Thủ Đức (Ngoại thành)",
+      street: "279 Nguyễn Văn Tăng, Tòa nhà S2",
+      type: "Văn Phòng",
+      isDefault: false
+    }
+  ];
+
+  function getAddresses() {
+    try {
+      const raw = window.localStorage.getItem(ADDRESSES_STORAGE_KEY);
+      if (!raw) {
+        window.localStorage.setItem(ADDRESSES_STORAGE_KEY, JSON.stringify(SEED_SAMPLE_ADDRESSES));
+        return [...SEED_SAMPLE_ADDRESSES];
+      }
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) && parsed.length > 0 ? parsed : [...SEED_SAMPLE_ADDRESSES];
+    } catch (error) {
+      return [...SEED_SAMPLE_ADDRESSES];
+    }
+  }
+
+  function saveAddressesList(list) {
+    try {
+      window.localStorage.setItem(ADDRESSES_STORAGE_KEY, JSON.stringify(list));
+    } catch (e) {
+      console.warn("Không thể lưu sổ địa chỉ:", e);
+    }
+    return list;
+  }
+
+  function addAddress(newAddr) {
+    const list = getAddresses();
+    const id = `addr-${Date.now()}`;
+    const entry = {
+      id,
+      fullName: String(newAddr.fullName || "").trim(),
+      phone: String(newAddr.phone || "").trim(),
+      zone: newAddr.zone === "province" ? "province" : "hcm",
+      areaLabel: String(newAddr.areaLabel || "").trim(),
+      street: String(newAddr.street || "").trim(),
+      type: newAddr.type === "Văn Phòng" ? "Văn Phòng" : "Nhà Riêng",
+      isDefault: Boolean(newAddr.isDefault)
+    };
+    const nextList = entry.isDefault
+      ? list.map((a) => Object.assign({}, a, { isDefault: false }))
+      : [...list];
+    nextList.unshift(entry);
+    saveAddressesList(nextList);
+    return entry;
+  }
+
+  function setDefaultAddress(addressId) {
+    const list = getAddresses().map((a) =>
+      Object.assign({}, a, { isDefault: a.id === addressId })
+    );
+    saveAddressesList(list);
+    return list;
+  }
+
+  // ==================== REVIEWS (ĐÁNH GIÁ SẢN PHẨM & CÔNG THỨC) ====================
+
+  function getReviews(targetType, targetId) {
+    try {
+      const raw = window.localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const all = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(all)) return [];
+      return all.filter(
+        (r) => r.targetType === targetType && String(r.targetId) === String(targetId)
+      );
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function addReview(entry) {
+    try {
+      const raw = window.localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const all = raw ? JSON.parse(raw) : [];
+      const list = Array.isArray(all) ? all : [];
+      const safeImage =
+        typeof entry.imageDataUrl === "string" &&
+        entry.imageDataUrl.startsWith("data:image/") &&
+        entry.imageDataUrl.length <= 450000
+          ? entry.imageDataUrl
+          : "";
+      const record = {
+        id: `rev-${Date.now()}`,
+        targetType: entry.targetType || "product",
+        targetId: String(entry.targetId),
+        userId: entry.userId || "guest",
+        userName: entry.userName || "Khách hàng BakeMate",
+        rating: Math.max(1, Math.min(5, Number(entry.rating) || 5)),
+        comment: String(entry.comment || "").trim(),
+        imageDataUrl: safeImage,
+        createdAt: new Date().toISOString()
+      };
+      list.unshift(record);
+      window.localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(list));
+      return record;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ==================== HEADER BADGES & NOTIFICATIONS ====================
+
   function updateCartBadge(cartOverride) {
     const count = getCartCount(cartOverride);
     const cartLinks = document.querySelectorAll(".site-header__cart");
 
     cartLinks.forEach((link) => {
-      let badge = link.querySelector(".site-header__cart-badge");
+      let badge = link.querySelector(".site-header__cart-badge") || link.querySelector("#cart-badge");
       if (!badge) {
         badge = document.createElement("span");
         badge.className = "site-header__cart-badge";
+        badge.id = "cart-badge";
         badge.setAttribute("aria-live", "polite");
         link.appendChild(badge);
       }
@@ -821,12 +1423,9 @@
     return count;
   }
 
-  /**
-   * Hiển thị thông báo ngắn (toast) khi thao tác với giỏ hàng.
-   */
   let toastTimer = null;
   function showCartToast(message, options = {}) {
-    const { type = "success", showCartLink = true, duration = 3200 } = options;
+    const { type = "success", showCartLink = false, duration = 3000 } = options;
 
     let container = document.getElementById("bakemate-toast-container");
     if (!container) {
@@ -879,14 +1478,74 @@
   }
 
   /**
-   * Đọc danh sách đơn hàng COD đã đặt (lưu cục bộ trên trình duyệt - F13).
+   * Hộp thoại xác nhận chuẩn UI BakeMate (thay thế window.confirm mặc định).
    */
+  function showBakeConfirm(options = {}) {
+    const {
+      title = "Xác nhận thao tác",
+      message = "Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?",
+      confirmText = "Đồng ý",
+      cancelText = "Hủy bỏ"
+    } = options;
+
+    return new Promise((resolve) => {
+      const existing = document.getElementById("bakemate-confirm-modal");
+      if (existing) existing.remove();
+
+      const backdrop = document.createElement("div");
+      backdrop.id = "bakemate-confirm-modal";
+      backdrop.className = "bake-modal-backdrop";
+      backdrop.setAttribute("role", "dialog");
+      backdrop.setAttribute("aria-modal", "true");
+      backdrop.innerHTML = `
+        <div class="bake-confirm-card">
+          <div class="bake-confirm-card__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/>
+            </svg>
+          </div>
+          <h3 class="bake-confirm-card__title"></h3>
+          <p class="bake-confirm-card__message"></p>
+          <div class="bake-confirm-card__actions">
+            <button type="button" class="btn btn--outline-dark js-confirm-cancel"></button>
+            <button type="button" class="btn btn--primary js-confirm-ok"></button>
+          </div>
+        </div>
+      `;
+
+      backdrop.querySelector(".bake-confirm-card__title").textContent = title;
+      backdrop.querySelector(".bake-confirm-card__message").textContent = message;
+      backdrop.querySelector(".js-confirm-cancel").textContent = cancelText;
+      backdrop.querySelector(".js-confirm-ok").textContent = confirmText;
+
+      function closeWith(value) {
+        backdrop.remove();
+        document.removeEventListener("keydown", onEsc);
+        resolve(value);
+      }
+
+      function onEsc(e) {
+        if (e.key === "Escape") closeWith(false);
+      }
+
+      backdrop.querySelector(".js-confirm-ok").addEventListener("click", () => closeWith(true));
+      backdrop.querySelector(".js-confirm-cancel").addEventListener("click", () => closeWith(false));
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) closeWith(false);
+      });
+      document.addEventListener("keydown", onEsc);
+
+      document.body.appendChild(backdrop);
+      backdrop.querySelector(".js-confirm-ok").focus();
+    });
+  }
+
+  // ==================== ORDERS (ĐƠN HÀNG COD) ====================
+
   function getOrders() {
     try {
       const raw = window.localStorage.getItem(ORDERS_STORAGE_KEY);
-      if (!raw) {
-        return [];
-      }
+      if (!raw) return [];
       const parsed = JSON.parse(raw);
       return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
@@ -895,31 +1554,58 @@
     }
   }
 
-  /**
-   * Sinh mã đơn hàng dạng #BM-XXXXXX.
-   */
   function createOrderCode() {
     const randomDigits = Math.floor(100000 + Math.random() * 900000);
     return `#BM-${randomDigits}`;
   }
 
-  /**
-   * Lưu đơn hàng mới vào localStorage.
-   */
   function saveOrder(order) {
     const orders = getOrders();
-    const nextOrders = [order, ...orders].slice(0, 20);
+    const normalizedOrder = Object.assign(
+      {
+        status: "Chờ xác nhận",
+        shippingFee: DEFAULT_SHIPPING_FEE
+      },
+      order
+    );
+    const nextOrders = [normalizedOrder, ...orders].slice(0, 30);
     try {
       window.localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(nextOrders));
+      window.localStorage.setItem(LAST_ORDER_KEY, JSON.stringify(normalizedOrder));
     } catch (error) {
       console.error("Không thể lưu đơn hàng vào localStorage:", error);
     }
-    return order;
+    return normalizedOrder;
   }
 
-  /**
-   * Xóa lịch sử đơn hàng demo trong localStorage.
-   */
+  function getLastOrderSnapshot(orderCode) {
+    try {
+      if (orderCode) {
+        const found = getOrders().find((o) => String(o.orderCode) === String(orderCode));
+        if (found) return found;
+      }
+      const raw = window.localStorage.getItem(LAST_ORDER_KEY);
+      if (raw) return JSON.parse(raw);
+      const list = getOrders();
+      return list.length > 0 ? list[0] : null;
+    } catch (error) {
+      return null;
+    }
+  }
+
+  function updateOrderStatus(orderCode, nextStatus) {
+    const orders = getOrders();
+    const updated = orders.map((ord) =>
+      ord.orderCode === orderCode ? Object.assign({}, ord, { status: nextStatus }) : ord
+    );
+    try {
+      window.localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated));
+    } catch (e) {
+      console.warn(e);
+    }
+    return updated;
+  }
+
   function clearOrders() {
     try {
       window.localStorage.removeItem(ORDERS_STORAGE_KEY);
@@ -928,18 +1614,29 @@
     }
   }
 
-  /**
-   * Sao chép chuỗi văn bản an toàn vào Clipboard (hỗ trợ cả HTTPS và file:// cục bộ).
-   */
+  // ==================== CONTACT MESSAGES ====================
+
+  function saveContactMessage(msg) {
+    try {
+      const raw = window.localStorage.getItem(CONTACTS_STORAGE_KEY);
+      const list = raw ? JSON.parse(raw) : [];
+      const next = [Object.assign({ id: `msg-${Date.now()}`, createdAt: new Date().toISOString() }, msg), ...(Array.isArray(list) ? list : [])];
+      window.localStorage.setItem(CONTACTS_STORAGE_KEY, JSON.stringify(next.slice(0, 30)));
+      return next[0];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // ==================== CLIPBOARD & PROMO COPY ====================
+
   function copyTextToClipboard(text) {
     if (
       typeof navigator !== "undefined" &&
       navigator.clipboard &&
       typeof navigator.clipboard.writeText === "function"
     ) {
-      return navigator.clipboard.writeText(text).catch(() => {
-        return fallbackCopyText(text);
-      });
+      return navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
     }
     return Promise.resolve(fallbackCopyText(text));
   }
@@ -961,58 +1658,46 @@
     }
   }
 
-  /**
-   * Gắn sự kiện sao chép mã ưu đãi CHAOBANMOI trên thanh Promo Ticket toàn website.
-   */
   function initPromoCopyButtons() {
     const copyButtons = document.querySelectorAll(".js-copy-promo");
-    if (!copyButtons || copyButtons.length === 0) {
-      return;
-    }
+    if (!copyButtons || copyButtons.length === 0) return;
 
     copyButtons.forEach((btn) => {
-      if (btn.dataset.copyBound === "true") {
-        return;
-      }
+      if (btn.dataset.copyBound === "true") return;
       btn.dataset.copyBound = "true";
 
       let resetTimer = null;
       btn.addEventListener("click", function () {
         const couponCode = (btn.dataset.coupon || "CHAOBANMOI").trim().toUpperCase();
+        const couponMeta = VALID_COUPONS[couponCode];
         copyTextToClipboard(couponCode).then(() => {
           btn.classList.add("is-copied");
           const labelEl = btn.querySelector(".js-copy-promo-label");
-          if (labelEl) {
-            labelEl.textContent = "Đã sao chép!";
-          }
+          if (labelEl) labelEl.textContent = "Đã sao chép!";
 
           showCartToast(
-            `Đã sao chép mã ${couponCode} (-10% cho đơn hàng đầu tiên).`,
+            `Đã sao chép mã ${couponCode}${couponMeta ? ` (${couponMeta.description})` : ""}.`,
             { type: "success" }
           );
 
-          if (resetTimer) {
-            window.clearTimeout(resetTimer);
-          }
+          if (resetTimer) window.clearTimeout(resetTimer);
           resetTimer = window.setTimeout(() => {
             btn.classList.remove("is-copied");
-            if (labelEl) {
-              labelEl.textContent = "Sao chép mã";
-            }
+            if (labelEl) labelEl.textContent = "Sao chép";
           }, 2200);
         });
       });
     });
   }
 
-  // Tự động đồng bộ badge Header khi tải trang và khi có thay đổi giữa các tab
   document.addEventListener("DOMContentLoaded", function () {
     updateCartBadge();
+    updateWishlistBadge();
     initPromoCopyButtons();
   });
 
   window.addEventListener("storage", function (event) {
-    if (event.key === CART_STORAGE_KEY) {
+    if (event.key === CART_STORAGE_KEY || event.key === LEGACY_CART_KEY) {
       const updatedCart = getCart();
       updateCartBadge(updatedCart);
       window.dispatchEvent(
@@ -1025,13 +1710,24 @@
         })
       );
     }
+    if (event.key === WISHLIST_STORAGE_KEY) {
+      updateWishlistBadge();
+      window.dispatchEvent(new CustomEvent("bakemate:wishlistChanged", { detail: getWishlist() }));
+    }
   });
 
-  // Gắn vào window để các trang và script dùng chung thuận tiện
   if (typeof window !== "undefined") {
     window.CART_STORAGE_KEY = CART_STORAGE_KEY;
     window.ORDERS_STORAGE_KEY = ORDERS_STORAGE_KEY;
+    window.LAST_ORDER_KEY = LAST_ORDER_KEY;
     window.COUPON_STORAGE_KEY = COUPON_STORAGE_KEY;
+    window.COUPONS_STORAGE_KEY = COUPONS_STORAGE_KEY;
+    window.CART_SELECTION_KEY = CART_SELECTION_KEY;
+    window.RECENT_PRODUCTS_KEY = RECENT_PRODUCTS_KEY;
+    window.WISHLIST_STORAGE_KEY = WISHLIST_STORAGE_KEY;
+    window.DEFAULT_SHIPPING_FEE = DEFAULT_SHIPPING_FEE;
+    window.SHIPPING_ZONES = SHIPPING_ZONES;
+    window.VALID_COUPONS = VALID_COUPONS;
     window.FALLBACK_PRODUCT_IMAGE = FALLBACK_PRODUCT_IMAGE;
     window.RECIPE_COMBO_CATALOG = RECIPE_COMBO_CATALOG;
     window.getRecipeComboInfo = getRecipeComboInfo;
@@ -1040,9 +1736,16 @@
     window.getProduct = getProduct;
     window.getProductOptions = getProductOptions;
     window.getProductOption = getProductOption;
+    window.isProductPerishable = isProductPerishable;
+    window.hasPerishableItems = hasPerishableItems;
     window.getCart = getCart;
     window.loadCart = loadCart;
     window.saveCart = saveCart;
+    window.getCartItemKey = getCartItemKey;
+    window.getSelectedCartKeys = getSelectedCartKeys;
+    window.setSelectedCartKeys = setSelectedCartKeys;
+    window.getSelectedCartItems = getSelectedCartItems;
+    window.removeOrderedCartItems = removeOrderedCartItems;
     window.addToCart = addToCart;
     window.addRecipeComboToCart = addRecipeComboToCart;
     window.updateQuantity = updateQuantity;
@@ -1055,12 +1758,37 @@
     window.getSavedCoupon = getSavedCoupon;
     window.setSavedCoupon = setSavedCoupon;
     window.clearSavedCoupon = clearSavedCoupon;
+    window.getSavedCoupons = getSavedCoupons;
+    window.addCouponCode = addCouponCode;
+    window.removeSavedCoupon = removeSavedCoupon;
+    window.clearSavedCoupons = clearSavedCoupons;
     window.calculateDiscount = calculateDiscount;
+    window.getRecentProducts = getRecentProducts;
+    window.addRecentProduct = addRecentProduct;
+    window.clearRecentProducts = clearRecentProducts;
+    window.getWishlist = getWishlist;
+    window.saveWishlist = saveWishlist;
+    window.isProductWishlisted = isProductWishlisted;
+    window.isRecipeWishlisted = isRecipeWishlisted;
+    window.toggleWishlistProduct = toggleWishlistProduct;
+    window.toggleWishlistRecipe = toggleWishlistRecipe;
+    window.getWishlistCount = getWishlistCount;
+    window.updateWishlistBadge = updateWishlistBadge;
+    window.getAddresses = getAddresses;
+    window.addAddress = addAddress;
+    window.setDefaultAddress = setDefaultAddress;
+    window.getReviews = getReviews;
+    window.addReview = addReview;
     window.updateCartBadge = updateCartBadge;
     window.showCartToast = showCartToast;
+    window.showBakeConfirm = showBakeConfirm;
     window.getOrders = getOrders;
     window.saveOrder = saveOrder;
+    window.getLastOrderSnapshot = getLastOrderSnapshot;
+    window.updateOrderStatus = updateOrderStatus;
     window.clearOrders = clearOrders;
     window.createOrderCode = createOrderCode;
+    window.saveContactMessage = saveContactMessage;
+    window.initPromoCopyButtons = initPromoCopyButtons;
   }
 })();
