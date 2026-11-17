@@ -1,0 +1,26 @@
+DirectoryIndex index.php index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Chan truy cap truc tiep vao cac thu muc & file noi bo nhay cam
+    RewriteRule ^(\.env|\.env\.example|\.git|config/|core/|database/|models/|controllers/|views/) - [F,L,NC]
+    RewriteRule \.(sql|md|log|sh)$ - [F,L,NC]
+
+    # Chuyen cac duong dan .html cu sang phien ban PHP MVC (giu nguyen tham so query)
+    RewriteRule ^index\.html$ index.php [R=302,L,QSA,NC]
+    RewriteRule ^([a-z0-9-]+)\.html$ index.php?route=$1 [R=302,L,QSA,NC]
+
+    # Ho tro duong dan chua ten thu muc du an khi deploy / subfolder
+    RewriteRule ^bakemate-ecommerce-project/(.*)$ $1 [L,QSA]
+
+    # Cho phep file & thu muc tinh co that (public/css, public/js, public/images, public/uploads)
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Dieu huong moi route con lai ve Front Controller index.php
+    RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+</IfModule>
+
+Options -Indexes
