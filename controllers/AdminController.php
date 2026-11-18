@@ -1,6 +1,26 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * ============================================================================
+ * BAKEMATE E-COMMERCE SYSTEM - ADMIN CONTROLLER
+ * Project: BakeMate (bakemate-ecommerce-project)
+ * Module: Feature Admin Dashboard 8 Tabs (feature/admin-dashboard)
+ * Author: Tran Thi Bao Ngoc (Bao Ngoc - Admin / PM / Data Lead)
+ * Description:
+ *   Trung tâm điều khiển Quản trị viên 8 Tab nghiệp vụ:
+ *   1. Quản lý Đơn hàng & Duyệt yêu cầu hủy đơn hoàn kho (F17, F23)
+ *   2. Quản lý Sản phẩm, Phân loại, Giá bán & Tồn kho (F14, F16)
+ *   3. Quản lý Công thức làm bánh & Định lượng (F15)
+ *   4. Quản lý Voucher khuyến mãi & Giảm giá (F22)
+ *   5. Quản trị Bài viết & Blog CMS
+ *   6. Kiểm duyệt Đánh giá sản phẩm (F21)
+ *   7. Quản lý Người dùng, Phân quyền Super Admin & Security Logs (NFR04, NFR05)
+ *   8. Xử lý Tin nhắn Phản hồi & Liên hệ Khách hàng
+ * Security: RBAC (Role-Based Access Control) cho Admin / Super Admin, JSON CSRF
+ * ============================================================================
+ */
+
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Controller.php';
 
 class AdminController extends Controller
