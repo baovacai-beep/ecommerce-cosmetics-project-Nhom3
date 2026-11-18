@@ -114,6 +114,7 @@ class ProductModel extends Model
             'price-asc' => ' ORDER BY default_price ASC, p.id ASC',
             'price-desc' => ' ORDER BY default_price DESC, p.id ASC',
             'name-asc' => ' ORDER BY p.name ASC',
+            'name-desc' => ' ORDER BY p.name DESC',
             'newest' => ' ORDER BY p.is_new DESC, p.id DESC',
             default => ' ORDER BY p.is_featured DESC, p.id ASC',
         };

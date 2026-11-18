@@ -5,22 +5,67 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARAT
 
 class ProductController extends Controller
 {
+    private function sanitizeCatalogFilters(array $source): array
+    {
+        $category = $source['category'] ?? [];
+        if (!is_array($category)) {
+            $category = $category !== '' ? [$category] : [];
+        }
+
+        $sub = $source['sub'] ?? [];
+        if (!is_array($sub)) {
+            $sub = $sub !== '' ? [$sub] : [];
+        }
+
+        $brand = $source['brand'] ?? [];
+        if (!is_array($brand)) {
+            $brand = $brand !== '' ? [$brand] : [];
+        }
+
+        $stock = $source['stock'] ?? [];
+        if (!is_array($stock)) {
+            $stock = $stock !== '' ? [$stock] : [];
+        }
+
+        $minPrice = $source['min_price'] ?? '';
+        if ($minPrice !== '' && is_numeric($minPrice)) {
+            $minPrice = max(0, (int) $minPrice);
+        } else {
+            $minPrice = '';
+        }
+
+        $maxPrice = $source['max_price'] ?? '';
+        if ($maxPrice !== '' && is_numeric($maxPrice)) {
+            $maxPrice = max(0, (int) $maxPrice);
+        } else {
+            $maxPrice = '';
+        }
+
+        $allowedSorts = ['featured', 'price-asc', 'price-desc', 'name-asc', 'name-desc', 'newest'];
+        $sort = trim((string) ($source['sort'] ?? 'featured'));
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'featured';
+        }
+
+        return [
+            'q' => trim((string) ($source['q'] ?? '')),
+            'category' => array_values(array_filter(array_map('trim', $category))),
+            'sub' => array_values(array_filter(array_map('trim', $sub))),
+            'brand' => array_values(array_filter(array_map('trim', $brand))),
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+            'stock' => array_values(array_filter(array_map('trim', $stock))),
+            'sort' => $sort,
+        ];
+    }
+
     public function catalog(): void
     {
         $productModel = $this->model('ProductModel');
         $contentModel = $this->model('ContentModel');
         $user = Rbac::currentUser();
 
-        $filters = [
-            'q' => trim((string) ($_GET['q'] ?? '')),
-            'category' => $_GET['category'] ?? [],
-            'sub' => $_GET['sub'] ?? [],
-            'brand' => $_GET['brand'] ?? [],
-            'min_price' => $_GET['min_price'] ?? '',
-            'max_price' => $_GET['max_price'] ?? '',
-            'stock' => $_GET['stock'] ?? [],
-            'sort' => trim((string) ($_GET['sort'] ?? 'featured')),
-        ];
+        $filters = $this->sanitizeCatalogFilters($_GET);
 
         $meta = $productModel->getFilterMetadata();
         $products = $productModel->getCatalog($filters, false);
@@ -84,16 +129,7 @@ class ProductController extends Controller
         $contentModel = $this->model('ContentModel');
         $user = Rbac::currentUser();
 
-        $filters = [
-            'q' => trim((string) ($_GET['q'] ?? '')),
-            'category' => $_GET['category'] ?? [],
-            'sub' => $_GET['sub'] ?? [],
-            'brand' => $_GET['brand'] ?? [],
-            'min_price' => $_GET['min_price'] ?? '',
-            'max_price' => $_GET['max_price'] ?? '',
-            'stock' => $_GET['stock'] ?? [],
-            'sort' => trim((string) ($_GET['sort'] ?? 'featured')),
-        ];
+        $filters = $this->sanitizeCatalogFilters($_GET);
         $products = $productModel->getCatalog($filters, false);
         $wishlistIds = $contentModel->getWishlistIds($user ? (int) $user['id'] : null);
 
