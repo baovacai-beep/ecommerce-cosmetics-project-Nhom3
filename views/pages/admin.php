@@ -1,6 +1,28 @@
 <?php
 declare(strict_types=1);
+
+/**
+ * ============================================================================
+ * BAKEMATE E-COMMERCE SYSTEM - ADMIN DASHBOARD VIEW (8 TABS)
+ * Project: BakeMate (bakemate-ecommerce-project)
+ * Module: Feature Admin Dashboard 8 Tabs (feature/admin-dashboard)
+ * Author: Tran Thi Bao Ngoc (Bao Ngoc - Admin / PM / Data Lead)
+ * Description:
+ *   Giao diện Trung tâm Quản trị toàn diện gồm 4 thẻ KPI chỉ số & 8 tab nghiệp vụ:
+ *   - Tab 1: Đơn hàng & Duyệt yêu cầu hủy đơn hoàn kho tự động (F17, F23)
+ *   - Tab 2: Quản lý Sản phẩm & Kho hàng (F14, F16)
+ *   - Tab 3: Quản lý Công thức làm bánh (F15)
+ *   - Tab 4: Quản lý Voucher & Khuyến mãi (F22)
+ *   - Tab 5: Quản trị Bài viết Blog CMS
+ *   - Tab 6: Kiểm duyệt Đánh giá sản phẩm (F21)
+ *   - Tab 7: Quản lý Tài khoản, Phân quyền Super Admin & Security Logs (NFR04, NFR05)
+ *   - Tab 8: Xử lý Liên hệ & Phản hồi từ Khách hàng
+ * ============================================================================
+ */
+
 $statusLabels = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn bị', 'shipping' => 'Đang giao hàng', 'completed' => 'Hoàn tất', 'cancelled' => 'Đã hủy'];
+$pendingCancelCount = count($cancelRequests ?? []);
+$newContactCount = (int) ($stats['new_contacts'] ?? 0);
 ?>
 <main class="php-page-container">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
@@ -25,19 +47,24 @@ $statusLabels = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn
     <div class="php-card"><span style="font-size:12px;color:#7c5c46;">Tài khoản / Liên hệ mới</span><div style="font-size:22px;font-weight:800;color:#70452b;"><?= (int) ($stats['total_users'] ?? 0) ?> / <?= (int) ($stats['new_contacts'] ?? 0) ?></div></div>
   </div>
 
-  <!-- Tabs Navigation -->
+  <!-- Tabs Navigation (8 Tabs) -->
   <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
     <?php foreach ([
-        'orders' => 'Đơn hàng & Hủy đơn',
-        'products' => 'Sản phẩm & Kho',
-        'recipes' => 'Công thức (F15)',
-        'coupons' => 'Voucher (F22)',
-        'blog' => 'Blog CMS',
-        'reviews' => 'Đánh giá (F21)',
-        'users' => 'Tài khoản & Logs',
-        'contacts' => 'Liên hệ',
-    ] as $tk => $tl): ?>
-      <button type="button" class="btn btn--sm <?= $tk === 'orders' ? 'btn--primary' : 'btn--outline' ?> js-admin-tab-btn" data-tab="<?= $tk ?>"><?= App::e($tl) ?></button>
+        'orders' => ['label' => 'Đơn hàng & Hủy đơn', 'badge' => $pendingCancelCount, 'badgeColor' => '#dc2626'],
+        'products' => ['label' => 'Sản phẩm & Kho', 'badge' => 0, 'badgeColor' => ''],
+        'recipes' => ['label' => 'Công thức (F15)', 'badge' => 0, 'badgeColor' => ''],
+        'coupons' => ['label' => 'Voucher (F22)', 'badge' => 0, 'badgeColor' => ''],
+        'blog' => ['label' => 'Blog CMS', 'badge' => 0, 'badgeColor' => ''],
+        'reviews' => ['label' => 'Đánh giá (F21)', 'badge' => 0, 'badgeColor' => ''],
+        'users' => ['label' => 'Tài khoản & Logs', 'badge' => 0, 'badgeColor' => ''],
+        'contacts' => ['label' => 'Liên hệ', 'badge' => $newContactCount, 'badgeColor' => '#d97706'],
+    ] as $tk => $tinfo): ?>
+      <button type="button" class="btn btn--sm <?= $tk === 'orders' ? 'btn--primary' : 'btn--outline' ?> js-admin-tab-btn" data-tab="<?= $tk ?>">
+        <?= App::e($tinfo['label']) ?>
+        <?php if (!empty($tinfo['badge'])): ?>
+          <span style="display:inline-block;padding:2px 7px;font-size:11px;border-radius:999px;background:<?= $tinfo['badgeColor'] ?>;color:#fff;margin-left:5px;font-weight:700;"><?= (int) $tinfo['badge'] ?></span>
+        <?php endif; ?>
+      </button>
     <?php endforeach; ?>
   </div>
 
