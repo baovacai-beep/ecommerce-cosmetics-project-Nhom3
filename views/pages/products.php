@@ -156,8 +156,9 @@ foreach ($filterMeta['subcategories'] as $sc) {
             <option value="featured" <?= ($filters['sort'] ?? '') === 'featured' ? 'selected' : '' ?>>Sắp xếp: Mặc định</option>
             <option value="price-asc" <?= ($filters['sort'] ?? '') === 'price-asc' ? 'selected' : '' ?>>Giá: Thấp đến cao</option>
             <option value="price-desc" <?= ($filters['sort'] ?? '') === 'price-desc' ? 'selected' : '' ?>>Giá: Cao đến thấp</option>
-            <option value="newest" <?= ($filters['sort'] ?? '') === 'newest' ? 'selected' : '' ?>>Sản phẩm mới trước</option>
             <option value="name-asc" <?= ($filters['sort'] ?? '') === 'name-asc' ? 'selected' : '' ?>>Tên: A - Z</option>
+            <option value="name-desc" <?= ($filters['sort'] ?? '') === 'name-desc' ? 'selected' : '' ?>>Tên: Z - A</option>
+            <option value="newest" <?= ($filters['sort'] ?? '') === 'newest' ? 'selected' : '' ?>>Sản phẩm mới trước</option>
           </select>
         </div>
       </div>
@@ -256,6 +257,10 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     try {
+      if (grid) {
+        grid.style.opacity = "0.55";
+        grid.style.pointerEvents = "none";
+      }
       const res = await fetch(window.BakeApp.apiUrl("product", "ajaxFilter", params));
       const json = await res.json();
       const items = (json.data && json.data.products) || [];
@@ -264,7 +269,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!grid) return;
 
       if (!items.length) {
-        grid.innerHTML = '<div class="no-products-message" style="grid-column:1 / -1;"><strong>Không tìm thấy sản phẩm nào phù hợp</strong><p>Hãy thử từ khóa khác hoặc nới rộng khoảng giá.</p></div>';
+        grid.innerHTML = `
+          <div class="no-products-message" style="grid-column:1 / -1;text-align:center;padding:48px 20px;">
+            <strong style="display:block;font-size:18px;margin-bottom:8px;color:#70452b;">Không tìm thấy sản phẩm nào phù hợp</strong>
+            <p style="margin:0 0 16px;color:#7c5c46;">Hãy thử từ khóa khác, nới rộng khoảng giá hoặc nhấn đặt lại bộ lọc.</p>
+            <button type="button" class="btn btn--primary" id="btn-reset-filters-empty">Xóa bộ lọc và xem tất cả</button>
+          </div>
+        `;
+        document.getElementById("btn-reset-filters-empty")?.addEventListener("click", () => {
+          window.location.href = window.BakeApp.apiUrl("product", "catalog");
+        });
         return;
       }
 
@@ -320,6 +334,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }).join("");
     } catch (e) {
       window.BakeApp.showToast("Không thể tải bộ lọc sản phẩm.", "error");
+    } finally {
+      if (grid) {
+        grid.style.opacity = "1";
+        grid.style.pointerEvents = "auto";
+      }
     }
   }
 
