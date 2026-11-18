@@ -73,6 +73,33 @@ Env::load($rootDir . DIRECTORY_SEPARATOR . '.env');
 $appConfig = require $rootDir . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'app.php';
 date_default_timezone_set((string) ($appConfig['timezone'] ?? 'Asia/Ho_Chi_Minh'));
 
+$isDebug = (bool) ($appConfig['debug'] ?? false);
+set_exception_handler(static function (Throwable $e) use ($isDebug): void {
+    while (ob_get_level() > 0) {
+        ob_end_clean();
+    }
+    http_response_code(500);
+    if (App::isAjaxRequest()) {
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode([
+            'status' => 'error',
+            'code' => 500,
+            'data' => $isDebug ? [
+                'exception' => get_class($e),
+                'file' => basename($e->getFile()),
+                'line' => $e->getLine(),
+            ] : new stdClass(),
+            'message' => $isDebug ? $e->getMessage() : 'Hệ thống đang bận, vui lòng thử lại sau.',
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        return;
+    }
+    header('Content-Type: text/html; charset=utf-8');
+    $detail = $isDebug
+        ? '<p><code>' . App::e(get_class($e) . ': ' . $e->getMessage() . ' (' . basename($e->getFile()) . ':' . $e->getLine() . ')') . '</code></p>'
+        : '<p>Vui lòng quay lại sau hoặc liên hệ quản trị viên BakeMate.</p>';
+    echo '<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><title>500 - Lỗi hệ thống | BakeMate</title></head><body><h1>500 - Đã xảy ra lỗi máy chủ</h1>' . $detail . '</body></html>';
+});
+
 ob_start();
 App::initSession();
 
