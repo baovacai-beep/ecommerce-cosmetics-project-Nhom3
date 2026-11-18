@@ -168,6 +168,14 @@ class ProductModel extends Model
         return array_slice($featured ?: $all, 0, $limit);
     }
 
+    public function getProductDetailBySlug(string $slug): ?array
+    {
+        $stmt = $this->db->prepare('SELECT id FROM products WHERE slug = ? AND is_hidden = 0 LIMIT 1');
+        $stmt->execute([trim($slug)]);
+        $id = (int) $stmt->fetchColumn();
+        return $id > 0 ? $this->getProductDetail($id) : null;
+    }
+
     public function getProductDetail(int $productId): ?array
     {
         $stmt = $this->db->prepare(
