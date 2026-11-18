@@ -92,4 +92,14 @@ abstract class Controller
         }
         $this->requireCsrfJson();
     }
+
+    protected function redirect(string $path, int $status = 302): never
+    {
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        http_response_code($status);
+        header('Location: ' . App::url($path));
+        exit;
+    }
 }

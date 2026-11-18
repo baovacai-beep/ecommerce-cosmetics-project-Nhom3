@@ -56,4 +56,28 @@ class Database
         }
         return (string) (self::$config['mode'] ?? 'localhost');
     }
+
+    public static function ping(): bool
+    {
+        try {
+            $stmt = self::getInstance()->query('SELECT 1');
+            return $stmt !== false;
+        } catch (Throwable $e) {
+            return false;
+        }
+    }
+
+    public static function getSafeInfo(): array
+    {
+        if (empty(self::$config)) {
+            self::getInstance();
+        }
+        return [
+            'mode' => (string) (self::$config['mode'] ?? 'localhost'),
+            'host' => (string) (self::$config['host'] ?? ''),
+            'port' => (int) (self::$config['port'] ?? 3306),
+            'dbname' => (string) (self::$config['dbname'] ?? ''),
+            'charset' => (string) (self::$config['charset'] ?? 'utf8mb4'),
+        ];
+    }
 }

@@ -122,6 +122,19 @@ class App
         return htmlspecialchars((string) ($value ?? ''), ENT_QUOTES, 'UTF-8');
     }
 
+    public static function isAjaxRequest(): bool
+    {
+        $requestedWith = strtolower((string) ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? ''));
+        $accept = strtolower((string) ($_SERVER['HTTP_ACCEPT'] ?? ''));
+        $contentType = strtolower((string) ($_SERVER['CONTENT_TYPE'] ?? ''));
+        $action = (string) ($_GET['a'] ?? '');
+
+        return $requestedWith === 'xmlhttprequest'
+            || str_contains($accept, 'application/json')
+            || str_contains($contentType, 'application/json')
+            || str_starts_with($action, 'ajax');
+    }
+
     public static function formatCurrency(int|float|string $amount): string
     {
         return number_format((float) $amount, 0, ',', '.') . ' ₫';
@@ -188,7 +201,7 @@ class App
         require_once $controllerFile;
 
         $controller = new $controllerClass();
-        if (!method_exists($controller, $action) || !is_callable([$controller, $action])) {
+        if (str_starts_with($action, '__') || !method_exists($controller, $action) || !is_callable([$controller, $action])) {
             $action = 'notFound';
             $controller = new HomeController();
         }
