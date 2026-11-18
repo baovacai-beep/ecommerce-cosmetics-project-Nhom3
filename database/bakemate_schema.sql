@@ -1,3 +1,15 @@
+-- ============================================================================
+-- BAKEMATE E-COMMERCE SYSTEM DATABASE SCHEMA (3NF) & SEED DATA
+-- Project: BakeMate (bakemate-ecommerce-project)
+-- Module: Feature Database 3NF & Seed Data (feature/database-3nf-seed)
+-- Author: Tran Thi Bao Ngoc (Bao Ngoc - Admin / Data Lead)
+-- Engine: MySQL 8.0+ / MariaDB 10.4+ | Charset: utf8mb4 | Collation: utf8mb4_unicode_ci
+-- Specification:
+--   - 27 Normalized Tables (3NF - Third Normal Form)
+--   - 2 Stored Procedures with Transaction Locking (`sp_adjust_variant_stock`, `sp_cancel_order_restore_stock`)
+--   - Full Seed Data: 23 Products, 8 Recipes, 8 Blog Posts, 4 Seed Users, 2 Coupons
+-- ============================================================================
+
 CREATE DATABASE IF NOT EXISTS db_bakemate CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE db_bakemate;
 

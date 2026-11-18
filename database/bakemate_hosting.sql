@@ -1,4 +1,14 @@
--- BakeMate Shared Hosting SQL (Khong chua CREATE DATABASE hay Stored Procedure DEFINER)
+-- ============================================================================
+-- BAKEMATE E-COMMERCE SYSTEM DATABASE SCHEMA (3NF) - SHARED HOSTING EDITION
+-- Project: BakeMate (bakemate-ecommerce-project)
+-- Module: Feature Database 3NF & Seed Data (feature/database-3nf-seed)
+-- Author: Tran Thi Bao Ngoc (Bao Ngoc - Admin / Data Lead)
+-- Note: Khong chua CREATE DATABASE / USE va khong chua Stored Procedure DEFINER
+--       giup import tuong thich 100% tren phpMyAdmin / cPanel Shared Hosting.
+-- Specification:
+--   - 27 Normalized Tables (3NF - Third Normal Form)
+--   - Full Seed Data: 23 Products, 8 Recipes, 8 Blog Posts, 4 Seed Users, 2 Coupons
+-- ============================================================================
 
 SET NAMES utf8mb4;
 SET time_zone = '+07:00';
