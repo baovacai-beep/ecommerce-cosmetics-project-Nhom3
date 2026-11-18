@@ -90,11 +90,19 @@ class ProductController extends Controller
         $user = Rbac::currentUser();
 
         $id = (int) ($_GET['id'] ?? 0);
-        $product = $id > 0 ? $productModel->getProductDetail($id) : null;
+        $slug = trim((string) ($_GET['slug'] ?? ''));
+
+        $product = null;
+        if ($id > 0) {
+            $product = $productModel->getProductDetail($id);
+        } elseif ($slug !== '') {
+            $product = $productModel->getProductDetailBySlug($slug);
+        }
+
         if ($product) {
             $productModel->trackRecentlyViewed((int) $product['id']);
         }
-        $recentProducts = $productModel->getRecentlyViewed($id, 4);
+        $recentProducts = $productModel->getRecentlyViewed($product ? (int) $product['id'] : $id, 4);
         $wishlistIds = $contentModel->getWishlistIds($user ? (int) $user['id'] : null);
 
         $this->view('pages/product-detail', [
