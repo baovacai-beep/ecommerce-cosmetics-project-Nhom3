@@ -1,16 +1,34 @@
 <?php
 declare(strict_types=1);
 
-require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'interfaces' . DIRECTORY_SEPARATOR . 'PaymentMethodInterface.php';
+require_once __DIR__ . DIRECTORY_SEPARATOR . 'AbstractPaymentMethod.php';
 
-class EWalletPayment implements PaymentMethodInterface
+class EWalletPayment extends AbstractPaymentMethod
 {
-    private string $provider;
+    public const SUPPORTED_PROVIDERS = ['MoMo', 'VNPAY', 'ZaloPay'];
+
+    private string $provider = 'MoMo';
 
     public function __construct(string $provider = 'MoMo')
     {
-        $allowed = ['MoMo', 'VNPAY', 'ZaloPay'];
-        $this->provider = in_array($provider, $allowed, true) ? $provider : 'MoMo';
+        $this->setProvider($provider);
+    }
+
+    public function setProvider(string $provider): void
+    {
+        $normalized = strtolower(trim($provider));
+        foreach (self::SUPPORTED_PROVIDERS as $supported) {
+            if (strtolower($supported) === $normalized) {
+                $this->provider = $supported;
+                return;
+            }
+        }
+        $this->provider = 'MoMo';
+    }
+
+    public function getProvider(): string
+    {
+        return $this->provider;
     }
 
     public function getMethodCode(): string
@@ -18,16 +36,23 @@ class EWalletPayment implements PaymentMethodInterface
         return 'ewallet';
     }
 
-    public function pay(string $orderCode, int $amount): array
+    public function getDisplayName(): string
     {
-        return [
-            'payment_status' => 'paid',
-            'message' => 'Đã ghi nhận thanh toán ví điện tử ' . $this->provider . ' cho đơn hàng ' . $orderCode . '.',
-            'payload' => [
+        return 'Ví điện tử (' . $this->provider . ')';
+    }
+
+    protected function executePayment(string $orderCode, int $amount): array
+    {
+        return $this->buildPayResult(
+            'paid',
+            'Đã ghi nhận thanh toán ví điện tử ' . $this->provider . ' cho đơn hàng ' . $orderCode . '.',
+            [
                 'order_code' => $orderCode,
+                'method' => $this->getMethodCode(),
                 'provider' => $this->provider,
                 'amount' => $amount,
-            ],
-        ];
+                'currency' => $this->getCurrency(),
+            ]
+        );
     }
 }

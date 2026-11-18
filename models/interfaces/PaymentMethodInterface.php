@@ -9,6 +9,10 @@ interface PaymentMethodInterface
 {
     public function getMethodCode(): string;
 
+    public function getDisplayName(): string;
+
+    public function supportsAutoVerification(): bool;
+
     /**
      * Thực hiện xử lý giao dịch cho đơn hàng.
      *
