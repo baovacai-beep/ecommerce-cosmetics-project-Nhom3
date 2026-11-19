@@ -63,37 +63,46 @@ $isAdminArea = in_array($active, ['admin', 'staff'], true);
           <a href="<?= App::e(App::url('')) ?>" class="site-header__menu-link <?= $active === 'home' ? 'active' : '' ?>" <?= $active === 'home' ? 'aria-current="page"' : '' ?>>Trang chủ</a>
         </li>
         <li class="site-header__menu-item has-megamenu">
-          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="site-header__menu-link js-megamenu-trigger <?= $active === 'products' ? 'active' : '' ?>" aria-expanded="false">
+          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="site-header__menu-link js-megamenu-trigger <?= $active === 'products' ? 'active' : '' ?>" aria-expanded="false" aria-haspopup="true" aria-controls="desktop-megamenu">
             Sản phẩm
             <svg class="megamenu-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
           </a>
-          <div class="mega-menu" role="region" aria-label="Danh mục sản phẩm BakeMate">
-            <div class="mega-menu__col">
-              <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
-              <ul class="mega-menu__list">
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bột và nguyên liệu khô'))) ?>" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Chocolate và tạo vị'))) ?>" class="mega-menu__link">Chocolate và tạo vị</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bơ, sữa và kem'))) ?>" class="mega-menu__link">Bơ, sữa và kem</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Nguyên liệu tạo cấu trúc'))) ?>" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
-              </ul>
+          <div class="mega-menu" id="desktop-megamenu" role="region" aria-label="Danh mục sản phẩm BakeMate">
+            <div class="mega-menu__grid">
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>" class="mega-menu__col-link">Nguyên liệu làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bột và nguyên liệu khô'))) ?>" class="mega-menu__link">Bột và nguyên liệu khô</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Chocolate và tạo vị'))) ?>" class="mega-menu__link">Chocolate và tạo vị</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bơ, sữa và kem'))) ?>" class="mega-menu__link">Bơ, sữa và kem</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Nguyên liệu tạo cấu trúc'))) ?>" class="mega-menu__link">Nguyên liệu tạo cấu trúc</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Khuôn bánh'))) ?>" class="mega-menu__link">Khuôn bánh</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ cân, đong'))) ?>" class="mega-menu__link">Dụng cụ cân, đong</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trộn'))) ?>" class="mega-menu__link">Dụng cụ trộn</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trang trí'))) ?>" class="mega-menu__link">Dụng cụ trang trí</a></li>
+                </ul>
+              </div>
+              <div class="mega-menu__col">
+                <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Phụ kiện & Đóng gói'))) ?>" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
+                <ul class="mega-menu__list">
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Hộp và túi đựng bánh'))) ?>" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Đế và khay bánh'))) ?>" class="mega-menu__link">Đế và khay bánh</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Trang trí bánh'))) ?>" class="mega-menu__link">Trang trí bánh</a></li>
+                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bảo quản nguyên liệu'))) ?>" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
+                </ul>
+              </div>
             </div>
-            <div class="mega-menu__col">
-              <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>" class="mega-menu__col-link">Dụng cụ làm bánh</a></h3>
-              <ul class="mega-menu__list">
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Khuôn bánh'))) ?>" class="mega-menu__link">Khuôn bánh</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ cân, đong'))) ?>" class="mega-menu__link">Dụng cụ cân, đong</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trộn'))) ?>" class="mega-menu__link">Dụng cụ trộn</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trang trí'))) ?>" class="mega-menu__link">Dụng cụ trang trí</a></li>
-              </ul>
-            </div>
-            <div class="mega-menu__col">
-              <h3 class="mega-menu__col-title"><a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Phụ kiện & Đóng gói'))) ?>" class="mega-menu__col-link">Phụ kiện &amp; đóng gói</a></h3>
-              <ul class="mega-menu__list">
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Hộp và túi đựng bánh'))) ?>" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Đế và khay bánh'))) ?>" class="mega-menu__link">Đế và khay bánh</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Trang trí bánh'))) ?>" class="mega-menu__link">Trang trí bánh</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bảo quản nguyên liệu'))) ?>" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
-              </ul>
+            <div class="mega-menu__footer">
+              <span class="mega-menu__footer-promo">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                Freeship đơn từ 200K · Giảm 10% đơn đầu (mã: <strong>CHAOBANMOI</strong>)
+              </span>
+              <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="mega-menu__footer-cta">Xem tất cả sản phẩm &rarr;</a>
             </div>
           </div>
         </li>
@@ -173,30 +182,124 @@ $isAdminArea = in_array($active, ['admin', 'staff'], true);
   </div>
 </header>
 
-<div class="mobile-drawer js-mobile-drawer" hidden>
+<div class="mobile-drawer js-mobile-drawer" id="mobile-nav-drawer" hidden aria-modal="true" role="dialog" aria-label="Menu điều hướng di động">
+  <div class="mobile-drawer__backdrop js-mobile-drawer-close"></div>
   <div class="mobile-drawer__panel">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-      <strong style="color:#70452b;">Menu BakeMate</strong>
-      <button type="button" class="btn btn--outline btn--sm js-mobile-drawer-close">Đóng</button>
+    <div class="mobile-drawer__head">
+      <div class="mobile-drawer__brand">
+        <img src="<?= App::e(App::asset('images/logo.jpg')) ?>" alt="BakeMate" class="mobile-drawer__logo">
+        <div>
+          <strong class="mobile-drawer__title">BakeMate</strong>
+          <span class="mobile-drawer__tagline">Làm bánh chuẩn vị</span>
+        </div>
+      </div>
+      <button type="button" class="mobile-drawer__close-btn js-mobile-drawer-close" aria-label="Đóng menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
     </div>
-    <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;">
-      <li><a href="<?= App::e(App::url('')) ?>">Trang chủ</a></li>
-      <li><a href="<?= App::e(App::url('?c=product&a=catalog')) ?>">Sản phẩm</a></li>
-      <li><a href="<?= App::e(App::url('?c=recipe&a=index')) ?>">Công thức</a></li>
-      <li><a href="<?= App::e(App::url('?c=home&a=blog')) ?>">Blog</a></li>
-      <li><a href="<?= App::e(App::url('?c=home&a=about')) ?>">Về chúng tôi</a></li>
-      <li><a href="<?= App::e(App::url('?c=home&a=contact')) ?>">Liên hệ</a></li>
-      <li><a href="<?= App::e(App::url('?c=order&a=orders')) ?>">Theo dõi đơn hàng</a></li>
+
+    <div class="mobile-drawer__promo">
+      <span class="mobile-drawer__promo-badge">Ưu đãi</span>
+      <span>Nhập <strong>CHAOBANMOI</strong> giảm 10% đơn đầu!</span>
+    </div>
+
+    <nav class="mobile-drawer__nav" aria-label="Menu chính trên di động">
+      <ul class="mobile-drawer__list">
+        <li class="mobile-drawer__item">
+          <a href="<?= App::e(App::url('')) ?>" class="mobile-drawer__link <?= $active === 'home' ? 'is-active' : '' ?>">
+            Trang chủ
+          </a>
+        </li>
+
+        <li class="mobile-drawer__item mobile-drawer__item--has-sub js-mobile-megamenu-item">
+          <div class="mobile-drawer__item-row">
+            <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="mobile-drawer__link <?= $active === 'products' ? 'is-active' : '' ?>">
+              Sản phẩm
+            </a>
+            <button type="button" class="mobile-drawer__sub-toggle js-mobile-sub-toggle" aria-expanded="false" aria-label="Mở rộng danh mục sản phẩm">
+              <svg class="mobile-sub-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+          </div>
+
+          <div class="mobile-sub-menu js-mobile-sub-menu" hidden>
+            <div class="mobile-sub-col">
+              <div class="mobile-sub-col__title">
+                <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>">Nguyên liệu làm bánh</a>
+              </div>
+              <ul class="mobile-sub-col__list">
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bột và nguyên liệu khô'))) ?>">Bột và nguyên liệu khô</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Chocolate và tạo vị'))) ?>">Chocolate và tạo vị</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bơ, sữa và kem'))) ?>">Bơ, sữa và kem</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Nguyên liệu tạo cấu trúc'))) ?>">Nguyên liệu tạo cấu trúc</a></li>
+              </ul>
+            </div>
+
+            <div class="mobile-sub-col">
+              <div class="mobile-sub-col__title">
+                <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>">Dụng cụ làm bánh</a>
+              </div>
+              <ul class="mobile-sub-col__list">
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Khuôn bánh'))) ?>">Khuôn bánh</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ cân, đong'))) ?>">Dụng cụ cân, đong</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trộn'))) ?>">Dụng cụ trộn</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Dụng cụ trang trí'))) ?>">Dụng cụ trang trí</a></li>
+              </ul>
+            </div>
+
+            <div class="mobile-sub-col">
+              <div class="mobile-sub-col__title">
+                <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Phụ kiện & Đóng gói'))) ?>">Phụ kiện &amp; đóng gói</a>
+              </div>
+              <ul class="mobile-sub-col__list">
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Hộp và túi đựng bánh'))) ?>">Hộp và túi đựng bánh</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Đế và khay bánh'))) ?>">Đế và khay bánh</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Trang trí bánh'))) ?>">Trang trí bánh</a></li>
+                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bảo quản nguyên liệu'))) ?>">Bảo quản nguyên liệu</a></li>
+              </ul>
+            </div>
+
+            <div class="mobile-sub-all">
+              <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>">Xem toàn bộ sản phẩm &rarr;</a>
+            </div>
+          </div>
+        </li>
+
+        <li class="mobile-drawer__item"><a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="mobile-drawer__link <?= $active === 'recipes' ? 'is-active' : '' ?>">Công thức</a></li>
+        <li class="mobile-drawer__item"><a href="<?= App::e(App::url('?c=home&a=blog')) ?>" class="mobile-drawer__link <?= $active === 'blog' ? 'is-active' : '' ?>">Blog làm bánh</a></li>
+        <li class="mobile-drawer__item"><a href="<?= App::e(App::url('?c=home&a=about')) ?>" class="mobile-drawer__link <?= $active === 'about' ? 'is-active' : '' ?>">Về chúng tôi</a></li>
+        <li class="mobile-drawer__item"><a href="<?= App::e(App::url('?c=home&a=contact')) ?>" class="mobile-drawer__link <?= $active === 'contact' ? 'is-active' : '' ?>">Liên hệ</a></li>
+        <li class="mobile-drawer__item"><a href="<?= App::e(App::url('?c=order&a=orders')) ?>" class="mobile-drawer__link <?= $active === 'orders' ? 'is-active' : '' ?>">Theo dõi đơn hàng</a></li>
+      </ul>
+    </nav>
+
+    <div class="mobile-drawer__footer">
       <?php if ($user): ?>
-        <li><a href="<?= App::e(App::url('?c=auth&a=profile')) ?>">Hồ sơ tài khoản</a></li>
-        <?php if ($user['role'] === 'admin'): ?>
-          <li><a href="<?= App::e(App::url('?c=admin&a=index')) ?>">Admin Dashboard</a></li>
-        <?php endif; ?>
-        <li><a href="<?= App::e(App::url('?c=auth&a=logout')) ?>">Đăng xuất</a></li>
+        <div class="mobile-drawer__user-box">
+          <div class="mobile-drawer__user-info">
+            <strong><?= App::e($user['full_name']) ?></strong>
+            <span><?= App::e($user['email']) ?></span>
+            <span class="mobile-drawer__role-badge"><?= App::e(strtoupper((string) $user['role'])) ?></span>
+          </div>
+          <div class="mobile-drawer__user-links">
+            <a href="<?= App::e(App::url('?c=auth&a=profile')) ?>" class="btn btn--outline btn--sm btn--block">Hồ sơ cá nhân</a>
+            <a href="<?= App::e(App::url('?c=product&a=wishlist')) ?>" class="btn btn--outline btn--sm btn--block">Yêu thích (<?= $wishCount ?>)</a>
+            <?php if (in_array($user['role'], ['staff', 'admin'], true)): ?>
+              <a href="<?= App::e(App::url('?c=staff&a=index')) ?>" class="btn btn--outline btn--sm btn--block">Bàn làm việc Staff</a>
+            <?php endif; ?>
+            <?php if ($user['role'] === 'admin'): ?>
+              <a href="<?= App::e(App::url('?c=admin&a=index')) ?>" class="btn btn--primary btn--sm btn--block">Admin Dashboard</a>
+            <?php endif; ?>
+            <a href="<?= App::e(App::url('?c=auth&a=logout')) ?>" class="btn btn--danger btn--sm btn--block">Đăng xuất</a>
+          </div>
+        </div>
       <?php else: ?>
-        <li><a href="<?= App::e(App::url('?c=auth&a=login')) ?>">Đăng nhập</a></li>
-        <li><a href="<?= App::e(App::url('?c=auth&a=register')) ?>">Đăng ký</a></li>
+        <div class="mobile-drawer__auth-actions">
+          <a href="<?= App::e(App::url('?c=auth&a=login')) ?>" class="btn btn--primary btn--sm btn--block">Đăng nhập</a>
+          <a href="<?= App::e(App::url('?c=auth&a=register')) ?>" class="btn btn--outline btn--sm btn--block">Đăng ký tài khoản</a>
+        </div>
       <?php endif; ?>
-    </ul>
+    </div>
   </div>
 </div>
