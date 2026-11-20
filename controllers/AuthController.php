@@ -5,14 +5,55 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARAT
 
 class AuthController extends Controller
 {
-    private function sanitizeRedirect(string $redirect): string
-    {
-        $clean = trim($redirect);
-        if ($clean === '' || str_starts_with($clean, 'http://') || str_starts_with($clean, 'https://') || str_starts_with($clean, '//')) {
-            return '';
-        }
-        return $clean;
+    
+private function sanitizeRedirect(string $redirect): string
+{
+    $clean = trim($redirect);
+
+    // Không cho phép giá trị rỗng hoặc ký tự điều khiển.
+    if ($clean === '' || preg_match('/[\x00-\x1F\x7F]/', $clean)) {
+        return '';
     }
+
+   
+    // Chặn backslash và đường dẫn bắt đầu bằng //.
+    if (str_contains($clean, '\\') || str_starts_with($clean, '//')) {
+        return '';
+    }
+
+
+    // Chặn URL tuyệt đối, URL có giao thức và URL bắt đầu bằng //.
+    if (
+        str_starts_with($clean, '//')
+        || preg_match('/^[a-z][a-z0-9+.-]*:/i', $clean)
+    ) {
+        return '';
+    }
+
+    // Chỉ chấp nhận đường dẫn nội bộ bắt đầu bằng /.
+    if (!str_starts_with($clean, '/')) {
+        return '';
+    }
+
+    // Chặn một số dạng mã hóa có thể làm thay đổi cách hiểu URL.
+    if (preg_match('/%(?:2f|5c|0[0-9a-f]|1[0-9a-f]|7f)/i', $clean)) {
+        return '';
+    }
+
+    // Đảm bảo đường dẫn thuộc ứng dụng BakeMate.
+    $base = App::basePath();
+
+    if (
+        $base !== ''
+        && $clean !== $base
+        && !str_starts_with($clean, $base . '/')
+    ) {
+        return '';
+    }
+
+    return $clean;
+}
+
 
     public function login(): void
     {
