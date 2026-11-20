@@ -5,14 +5,51 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARAT
 
 class RecipeController extends Controller
 {
+    private const RECIPE_TAGS = [
+        'Tất cả',
+        'Bánh ngọt',
+        'Bánh kem',
+        'Bánh quy',
+        'Bánh mì',
+        'Tráng miệng',
+        'Bánh không cần lò nướng',
+    ];
+
+    private const RECIPE_DIFFICULTIES = ['Tất cả', 'Dễ', 'Trung bình'];
+    private const RECIPE_TIME_FILTERS = [0, 30, 60, 61];
+
     public function index(): void
     {
         $recipeModel = $this->model('RecipeModel');
+
+        $rawQuery = $_GET['q'] ?? '';
+        $rawTag = $_GET['tag'] ?? 'Tất cả';
+        $rawDifficulty = $_GET['difficulty'] ?? 'Tất cả';
+        $rawMaxMinutes = $_GET['max_minutes'] ?? 0;
+
+        $query = is_string($rawQuery) ? trim($rawQuery) : '';
+        $tag = is_string($rawTag) ? trim($rawTag) : 'Tất cả';
+        $difficulty = is_string($rawDifficulty) ? trim($rawDifficulty) : 'Tất cả';
+
+        if (!in_array($tag, self::RECIPE_TAGS, true)) {
+            $tag = 'Tất cả';
+        }
+        if (!in_array($difficulty, self::RECIPE_DIFFICULTIES, true)) {
+            $difficulty = 'Tất cả';
+        }
+
+        $maxMinutes = is_scalar($rawMaxMinutes)
+            ? filter_var((string) $rawMaxMinutes, FILTER_VALIDATE_INT)
+            : false;
+        if ($maxMinutes === false || !in_array($maxMinutes, self::RECIPE_TIME_FILTERS, true)) {
+            $maxMinutes = 0;
+        }
+
         $filters = [
-            'q' => trim((string) ($_GET['q'] ?? '')),
-            'tag' => trim((string) ($_GET['tag'] ?? 'Tất cả')),
-            'difficulty' => trim((string) ($_GET['difficulty'] ?? 'Tất cả')),
-            'max_minutes' => (int) ($_GET['max_minutes'] ?? 0),
+            'q' => $query,
+            'tag' => $tag,
+            'difficulty' => $difficulty,
+            'max_minutes' => $maxMinutes,
         ];
         $recipes = $recipeModel->getAllRecipes($filters, false);
 
@@ -21,6 +58,7 @@ class RecipeController extends Controller
             'activeNav' => 'recipes',
             'recipes' => $recipes,
             'filters' => $filters,
+            'tagsList' => self::RECIPE_TAGS,
         ]);
     }
 

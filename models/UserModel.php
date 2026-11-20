@@ -166,6 +166,22 @@ class UserModel extends Model
         $ins->execute([$cleanEmail, $otpHash, 'forgot_password', $expiresAt, $cooldownUntil]);
 
         $mailRes = Mailer::sendOtp($cleanEmail, $otpCode, (string) $user['full_name']);
+        
+        // Không báo cấp OTP thành công nếu gửi mail thất bại trên production.
+        $previewAllowed = in_array(
+            (string) ($mailRes['mode'] ?? ''),
+            ['local_preview', 'local_fallback'],
+            true
+        );
+
+        if (empty($mailRes['sent']) && !$previewAllowed) {
+            return [
+                'ok' => false,
+                'code' => 503,
+                'message' => (string) ($mailRes['message'] ?? 'Dịch vụ gửi OTP tạm thời không khả dụng.'),
+            ];
+        }
+
         $this->logSecurity((int) $user['id'], $cleanEmail, 'otp_requested', 'Yêu cầu cấp mã OTP khôi phục mật khẩu.');
 
         return [

@@ -4,7 +4,7 @@ declare(strict_types=1);
 $activeTag = (string) ($filters['tag'] ?? 'Tất cả');
 $activeDiff = (string) ($filters['difficulty'] ?? 'Tất cả');
 $activeTime = (int) ($filters['max_minutes'] ?? 0);
-$tagsList = ['Tất cả', 'Bánh ngọt', 'Bánh kem', 'Bánh quy', 'Bánh mì', 'Tráng miệng', 'Bánh không cần lò nướng'];
+$activeQuery = (string) ($filters['q'] ?? '');
 ?>
 <main class="page-container">
   <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
@@ -25,7 +25,14 @@ $tagsList = ['Tất cả', 'Bánh ngọt', 'Bánh kem', 'Bánh quy', 'Bánh mì'
 
   <div class="recipes-filter-bar" role="group" aria-label="Lọc công thức theo nhóm bánh">
     <?php foreach ($tagsList as $tag): ?>
-      <a href="<?= App::e(App::url('?c=recipe&a=index&tag=' . urlencode($tag))) ?>"
+      <a href="<?= App::e(App::url('?' . http_build_query([
+          'c' => 'recipe',
+          'a' => 'index',
+          'tag' => $tag,
+          'q' => $activeQuery,
+          'difficulty' => $activeDiff,
+          'max_minutes' => $activeTime,
+      ]))) ?>"
          class="blog-filter-btn <?= $activeTag === $tag ? 'active' : '' ?>"><?= App::e($tag) ?></a>
     <?php endforeach; ?>
   </div>
@@ -48,8 +55,8 @@ $tagsList = ['Tất cả', 'Bánh ngọt', 'Bánh kem', 'Bánh quy', 'Bánh mì'
       <select id="recipe-filter-time" name="max_minutes" class="form-input" style="width:auto;min-width:165px;">
         <option value="0">Mọi thời gian</option>
         <option value="30" <?= $activeTime === 30 ? 'selected' : '' ?>>Nhanh (&le; 35 phút)</option>
-        <option value="60" <?= $activeTime === 60 ? 'selected' : '' ?>>Vừa (36 – 60 phút)</option>
-        <option value="61" <?= $activeTime === 61 ? 'selected' : '' ?>>Công phu (&gt; 60 phút)</option>
+        <option value="60" <?= $activeTime === 60 ? 'selected' : '' ?>>Vừa (36 – 65 phút)</option>
+        <option value="61" <?= $activeTime === 61 ? 'selected' : '' ?>>Công phu (&gt; 65 phút)</option>
       </select>
       <button type="submit" class="btn btn--primary btn--sm">Lọc</button>
       <span class="blog-count-pill"><?= count($recipes) ?> công thức</span>
