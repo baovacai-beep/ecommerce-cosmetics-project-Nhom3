@@ -42,6 +42,20 @@
   }
 
   /**
+   * Build safe public asset URL from relative or normalized path
+   */
+  function assetUrl(relativePath) {
+    const raw = String(relativePath || "images/logo.jpg").trim();
+    if (/^https?:\/\//i.test(raw) || raw.startsWith("/")) {
+      return raw;
+    }
+    const clean = raw.replace(/^\/+/, "");
+    const normalized = clean.startsWith("public/") ? clean : "public/" + clean;
+    const base = String(cfg.baseUrl || "/").replace(/\/+$/, "") + "/";
+    return base + normalized;
+  }
+
+  /**
    * Build MVC URL with query parameters
    */
   function apiUrl(controller, action, queryParams) {
@@ -578,7 +592,7 @@
 
             suggestBox.innerHTML = items.map((it) => `
               <a href="${escapeHtml(apiUrl("product", "detail", { id: it.id }))}" class="search-suggest-item">
-                <img src="${escapeHtml(cfg.baseUrl + "public/" + it.image)}" alt="${escapeHtml(it.name)}" width="38" height="38" style="border-radius:6px;object-fit:cover;flex-shrink:0;">
+                <img src="${escapeHtml(assetUrl(it.image))}" alt="${escapeHtml(it.name)}" width="38" height="38" style="border-radius:6px;object-fit:cover;flex-shrink:0;">
                 <div style="flex:1;min-width:0;">
                   <div style="font-weight:600;color:#70452b;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${escapeHtml(it.name)}</div>
                   <div style="font-size:12px;color:#c88b52;font-weight:700;">${formatPrice(it.price)}</div>
@@ -745,6 +759,7 @@
    */
   window.BakeApp = {
     cfg,
+    assetUrl,
     apiUrl,
     getJson,
     postJson,

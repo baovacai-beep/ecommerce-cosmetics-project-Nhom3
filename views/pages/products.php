@@ -290,7 +290,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const pid = Number(p.id);
         const price = Number(p.default_price || 0);
         const oldPrice = Number(p.default_old_price || price);
-        const imgUrl = esc(cfg.baseUrl + "public/" + (p.primary_image || "images/logo.jpg"));
+        const imgUrl = esc(window.BakeApp.assetUrl(p.primary_image || "images/logo.jpg"));
         const detailUrl = esc(window.BakeApp.apiUrl("product", "detail", { id: pid }));
         const isWish = wishIds.includes(pid);
         let tagHtml = "";
