@@ -39,6 +39,9 @@ class StaffController extends Controller
         $this->requirePostJson();
         $in = $this->jsonInput();
         $res = $this->model('OrderModel')->markOrderPaid((int) ($in['order_id'] ?? 0));
+        if (empty($res['ok'])) {
+            $this->jsonResponse('error', 422, [], $res['message']);
+        }
         $this->jsonResponse('success', 200, [], $res['message']);
     }
 
