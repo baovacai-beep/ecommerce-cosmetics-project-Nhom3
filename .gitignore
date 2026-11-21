@@ -15,3 +15,21 @@ public/uploads/products/*
 !public/uploads/recipes/
 public/uploads/recipes/*
 !public/uploads/recipes/.gitkeep
+
+# Bao ve file cau hinh moi truong
+.env.*
+!.env.example
+
+# File chua thong tin xac thuc va cau hinh rieng
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+
+# File tam va ban sao luu
+*.bak
+*.backup
+*.tmp
+*.swp
