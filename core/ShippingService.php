@@ -115,13 +115,16 @@ class ShippingService
             }
         }
 
-        $fallback = $check['methods'][0] ?? ['id' => 'fast', 'name' => 'Giao hàng nhanh', 'fee' => self::DEFAULT_SHIPPING_FEE];
+        // Không tự đổi sang phương thức khác: đặc biệt tránh việc đơn hàng tươi lạnh
+        // gửi lên phương thức thường nhưng server âm thầm chuyển sang pickup/express.
         return [
-            'valid' => true,
-            'fee' => (int) $fallback['fee'],
-            'method_id' => (string) $fallback['id'],
-            'method_name' => (string) $fallback['name'],
-            'reason' => '',
+            'valid' => false,
+            'fee' => 0,
+            'method_id' => $methodId,
+            'method_name' => '',
+            'reason' => $hasPerishable
+                ? 'Phương thức giao hàng đã chọn không hỗ trợ sản phẩm tươi/lạnh. Vui lòng chọn Hỏa tốc (2h) hoặc Lấy tại cửa hàng.'
+                : 'Phương thức giao hàng không hợp lệ với khu vực nhận hàng đã chọn.',
         ];
     }
 }
