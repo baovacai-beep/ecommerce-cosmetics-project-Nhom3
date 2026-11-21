@@ -43,7 +43,9 @@ class OrderController extends Controller
     {
         $orderModel = $this->model('OrderModel');
         $code = trim((string) ($_GET['code'] ?? $_SESSION['bakemate_last_order_code'] ?? ''));
-        $order = $code !== '' ? $orderModel->getOrderByCode($code) : null;
+        $user = Rbac::currentUser();
+        $uid = $user ? (int) $user['id'] : null;
+        $order = $code !== '' ? $orderModel->getOrderByCodeForViewer($code, $uid) : null;
         $vietQr = ($order && $order['payment_method'] === 'vietqr')
             ? VietQrBankService::buildPaymentPayload((string) $order['order_code'], (int) $order['total_amount'])
             : null;
@@ -220,8 +222,8 @@ class OrderController extends Controller
 
         $this->jsonResponse('success', 200, [
             'zone' => $zone,
-            'blocked' => $avail['blocked'],
-            'reason' => $avail['reason'],
+            'blocked' => $avail['blocked'] || !$feeInfo['valid'],
+            'reason' => $feeInfo['valid'] ? $avail['reason'] : $feeInfo['reason'],
             'methods' => $avail['methods'],
             'selected_method' => $feeInfo['method_id'],
             'shipping_fee' => (int) $feeInfo['fee'],
@@ -304,14 +306,19 @@ class OrderController extends Controller
         $in = $this->jsonInput();
         $orderCode = trim((string) ($in['order_code'] ?? ''));
         $orderModel = $this->model('OrderModel');
-        $order = $orderModel->getOrderByCode($orderCode);
+        $user = Rbac::currentUser();
+        $uid = $user ? (int) $user['id'] : null;
+        $order = $orderModel->getOrderByCodeForViewer($orderCode, $uid);
         if (!$order) {
-            $this->jsonResponse('error', 404, [], 'Không tìm thấy đơn hàng.');
+            $this->jsonResponse('error', 404, [], 'Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập.');
         }
 
         $res = CassoService::verifyTransfer((string) $order['order_code'], (int) $order['total_amount']);
         if ($res['verified']) {
-            $orderModel->markOrderPaid((int) $order['id']);
+            $paid = $orderModel->markOrderPaid((int) $order['id']);
+            if (empty($paid['ok'])) {
+                $this->jsonResponse('error', 409, [], $paid['message']);
+            }
             $this->jsonResponse('success', 200, ['payment_status' => 'paid', 'mode' => $res['mode']], $res['message']);
         }
         $this->jsonResponse('error', 402, ['payment_status' => $order['payment_status']], $res['message']);
