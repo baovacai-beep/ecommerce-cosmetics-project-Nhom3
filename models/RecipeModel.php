@@ -80,7 +80,9 @@ class RecipeModel extends Model
 
         $rid = (int) $recipe['id'];
         $recipeEntity = new RecipeEntity($rid, (string) $recipe['title'], max(1, (int) $recipe['default_servings']));
-        $servings = ($targetServings !== null && $targetServings >= 1) ? min(50, $targetServings) : $recipeEntity->getDefaultServings();
+        $servings = ($targetServings !== null && $targetServings >= 1)
+            ? min(50, $targetServings)
+            : $recipeEntity->getDefaultServings();
 
         $stepsStmt = $this->db->prepare('SELECT instruction FROM recipe_steps WHERE recipe_id = ? ORDER BY step_order ASC');
         $stepsStmt->execute([$rid]);
@@ -107,7 +109,7 @@ class RecipeModel extends Model
 
         foreach ($rawIngredients as $ing) {
             $scaledAmount = $recipeEntity->scaleAmount((float) $ing['base_amount'], $servings);
-            $prodId = $ing['product_id'] ? (int) $ing['product_id'] : null;
+            $prodId = !empty($ing['product_id']) ? (int) $ing['product_id'] : null;
             $optIndex = (int) ($ing['variant_option_index'] ?? 0);
             $key = 'ing_' . ($prodId ?: ('free_' . $ing['id']));
             $inPantry = in_array($key, $pantryKeys, true);
@@ -116,6 +118,7 @@ class RecipeModel extends Model
             $packsNeeded = 0;
             $surplus = 0.0;
             $productInfo = null;
+            $availabilityNote = '';
 
             if ($prodId !== null) {
                 $pStmt = $this->db->prepare(
@@ -126,30 +129,55 @@ class RecipeModel extends Model
                 $pStmt->execute([$prodId]);
                 $productInfo = $pStmt->fetch() ?: null;
 
-                $vStmt = $this->db->prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY option_index ASC');
-                $vStmt->execute([$prodId]);
-                $variants = $vStmt->fetchAll();
+                if ($productInfo === null) {
+                    $availabilityNote = 'Sản phẩm liên kết không còn khả dụng.';
+                } elseif ($productInfo['stock_status'] !== 'in_stock') {
+                    $availabilityNote = $productInfo['stock_status'] === 'coming_soon'
+                        ? 'Sản phẩm đang được chuẩn bị mở bán.'
+                        : 'Sản phẩm hiện đã hết hàng.';
+                } else {
+                    $vStmt = $this->db->prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY option_index ASC');
+                    $vStmt->execute([$prodId]);
+                    $variants = $vStmt->fetchAll();
 
-                // Nếu công thức chỉ định gói cụ thể (hoặc tính tối ưu bằng PackagingCalculator)
-                $chosen = null;
-                foreach ($variants as $v) {
-                    if ((int) $v['option_index'] === $optIndex) {
-                        $chosen = $v;
-                        break;
+                    $chosen = null;
+                    foreach ($variants as $candidate) {
+                        if ((int) $candidate['option_index'] === $optIndex) {
+                            $chosen = $candidate;
+                            break;
+                        }
+                    }
+
+                    // Tôn trọng quy cách được cấu hình cho nguyên liệu; chỉ tính khi biến thể đủ tồn kho.
+                    if ($chosen !== null && (float) ($ing['package_amount'] ?? 0) > 0) {
+                        $chosen['unit_amount'] = (float) $ing['package_amount'];
+                        $calc = $ingCalc->calculateRequiredPacks($scaledAmount, [$chosen]);
+                    } else {
+                        $calc = $ingCalc->calculateRequiredPacks($scaledAmount, $variants);
+                    }
+
+                    $packsNeeded = (int) $calc['packs'];
+                    $variant = $calc['variant'];
+                    $surplus = (float) $calc['surplus'];
+
+                    if ($variant === null) {
+                        $availabilityNote = 'Không có quy cách đóng gói còn đủ tồn kho cho định lượng này.';
                     }
                 }
-                if ($chosen !== null && (float) $ing['package_amount'] > 0) {
-                    $chosen['unit_amount'] = (float) $ing['package_amount'];
-                    $calc = $ingCalc->calculateRequiredPacks($scaledAmount, [$chosen]);
-                } else {
-                    $calc = $ingCalc->calculateRequiredPacks($scaledAmount, $variants);
+            } else {
+                $availabilityNote = trim((string) ($ing['note'] ?? ''));
+                if ($availabilityNote === '') {
+                    $availabilityNote = 'Nguyên liệu chưa được liên kết với sản phẩm trong cửa hàng.';
                 }
-                $packsNeeded = $calc['packs'];
-                $variant = $calc['variant'];
-                $surplus = $calc['surplus'];
-                if ($variant && !$inPantry) {
-                    $estimatedIngredientsCost += ((int) $variant['price']) * $packsNeeded;
-                }
+            }
+
+            $purchaseAvailable = $productInfo !== null
+                && $productInfo['stock_status'] === 'in_stock'
+                && $variant !== null
+                && $packsNeeded > 0;
+
+            if ($purchaseAvailable && !$inPantry) {
+                $estimatedIngredientsCost += ((int) $variant['price']) * $packsNeeded;
             }
 
             $ingredients[] = [
@@ -166,15 +194,17 @@ class RecipeModel extends Model
                 'packs_needed' => $packsNeeded,
                 'surplus' => $surplus,
                 'note' => (string) ($ing['note'] ?? ''),
+                'availability_note' => $availabilityNote,
+                'purchase_available' => $purchaseAvailable,
                 'in_pantry' => $inPantry,
             ];
         }
 
         $tools = [];
         $estimatedToolsCost = 0;
-        foreach ($rawTools as $tl) {
-            $prodId = (int) $tl['product_id'];
-            $optIndex = (int) ($tl['variant_option_index'] ?? 0);
+        foreach ($rawTools as $tool) {
+            $prodId = (int) $tool['product_id'];
+            $preferredOptionIndex = (int) ($tool['variant_option_index'] ?? 0);
             $pStmt = $this->db->prepare(
                 "SELECT p.id, p.name, p.stock_status,
                         (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.sort_order ASC LIMIT 1) AS primary_image
@@ -183,24 +213,51 @@ class RecipeModel extends Model
             $pStmt->execute([$prodId]);
             $productInfo = $pStmt->fetch() ?: null;
 
-            $vStmt = $this->db->prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY option_index ASC');
-            $vStmt->execute([$prodId]);
-            $variants = $vStmt->fetchAll();
+            $variant = null;
+            $availabilityNote = '';
+            if ($productInfo === null) {
+                $availabilityNote = 'Dụng cụ liên kết không còn khả dụng.';
+            } elseif ($productInfo['stock_status'] !== 'in_stock') {
+                $availabilityNote = $productInfo['stock_status'] === 'coming_soon'
+                    ? 'Dụng cụ đang được chuẩn bị mở bán.'
+                    : 'Dụng cụ hiện đã hết hàng.';
+            } else {
+                $vStmt = $this->db->prepare('SELECT * FROM product_variants WHERE product_id = ? ORDER BY option_index ASC');
+                $vStmt->execute([$prodId]);
+                $variants = $vStmt->fetchAll();
 
-            $calc = $toolCalc->calculateRequiredPacks(1, $variants);
-            $variant = $calc['variant'];
-            if ($variant) {
+                // Ưu tiên đúng biến thể được cấu hình; nếu biến thể đó hết hàng,
+                // calculator chỉ có thể chọn một biến thể khác còn tồn kho của cùng sản phẩm.
+                usort($variants, static function (array $a, array $b) use ($preferredOptionIndex): int {
+                    $priorityA = (int) $a['option_index'] === $preferredOptionIndex ? 0 : (!empty($a['is_default']) ? 1 : 2);
+                    $priorityB = (int) $b['option_index'] === $preferredOptionIndex ? 0 : (!empty($b['is_default']) ? 1 : 2);
+                    return $priorityA <=> $priorityB;
+                });
+
+                $calc = $toolCalc->calculateRequiredPacks(1, $variants);
+                $variant = $calc['variant'];
+                if ($variant === null) {
+                    $availabilityNote = 'Không có quy cách dụng cụ nào còn hàng.';
+                }
+            }
+
+            $purchaseAvailable = $productInfo !== null
+                && $productInfo['stock_status'] === 'in_stock'
+                && $variant !== null;
+            if ($purchaseAvailable) {
                 $estimatedToolsCost += (int) $variant['price'];
             }
 
             $tools[] = [
-                'id' => (int) $tl['id'],
-                'name' => (string) $tl['name'],
+                'id' => (int) $tool['id'],
+                'name' => (string) $tool['name'],
                 'product_id' => $prodId,
                 'product' => $productInfo,
                 'variant' => $variant,
-                'option_index' => $variant ? (int) $variant['option_index'] : $optIndex,
-                'description' => (string) ($tl['description'] ?? ''),
+                'option_index' => $variant ? (int) $variant['option_index'] : $preferredOptionIndex,
+                'description' => (string) ($tool['description'] ?? ''),
+                'availability_note' => $availabilityNote,
+                'purchase_available' => $purchaseAvailable,
             ];
         }
 

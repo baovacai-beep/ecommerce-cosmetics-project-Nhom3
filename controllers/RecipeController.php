@@ -21,7 +21,6 @@ class RecipeController extends Controller
     public function index(): void
     {
         $recipeModel = $this->model('RecipeModel');
-
         $rawQuery = $_GET['q'] ?? '';
         $rawTag = $_GET['tag'] ?? 'Tất cả';
         $rawDifficulty = $_GET['difficulty'] ?? 'Tất cả';
@@ -30,7 +29,6 @@ class RecipeController extends Controller
         $query = is_string($rawQuery) ? trim($rawQuery) : '';
         $tag = is_string($rawTag) ? trim($rawTag) : 'Tất cả';
         $difficulty = is_string($rawDifficulty) ? trim($rawDifficulty) : 'Tất cả';
-
         if (!in_array($tag, self::RECIPE_TAGS, true)) {
             $tag = 'Tất cả';
         }
@@ -69,7 +67,10 @@ class RecipeController extends Controller
         $uid = $user ? (int) $user['id'] : null;
 
         $idOrSlug = trim((string) ($_GET['id'] ?? $_GET['slug'] ?? ''));
-        $servings = isset($_GET['servings']) && is_numeric($_GET['servings']) ? (int) $_GET['servings'] : null;
+        $rawServings = $_GET['servings'] ?? null;
+        $servings = (is_string($rawServings) && preg_match('/^\d+$/D', trim($rawServings)))
+            ? (int) trim($rawServings)
+            : null;
         $recipe = $idOrSlug !== '' ? $recipeModel->getRecipeDetail($idOrSlug, $servings, $uid) : null;
 
         $this->view('pages/recipe-detail', [
@@ -82,9 +83,11 @@ class RecipeController extends Controller
     public function ajaxScale(): void
     {
         $idOrSlug = trim((string) ($_GET['id'] ?? ''));
-        $servings = (int) ($_GET['servings'] ?? 0);
-        if ($idOrSlug === '' || $servings < 1 || $servings > 50) {
-            $this->jsonResponse('error', 422, [], 'Số phần bánh phải nằm trong khoảng 1–50.');
+        $rawServings = $_GET['servings'] ?? null;
+        $validServings = is_string($rawServings) && preg_match('/^\d+$/D', trim($rawServings));
+        $servings = $validServings ? (int) trim($rawServings) : 0;
+        if ($idOrSlug === '' || !$validServings || $servings < 1 || $servings > 50) {
+            $this->jsonResponse('error', 422, [], 'Số phần bánh phải là số nguyên trong khoảng 1–50.');
         }
 
         $recipeModel = $this->model('RecipeModel');
@@ -134,21 +137,49 @@ class RecipeController extends Controller
         $orderModel = $this->model('OrderModel');
         $user = Rbac::currentUser();
         $uid = $user ? (int) $user['id'] : null;
-
         $addedCount = 0;
         $skipped = [];
-        foreach ($items as $it) {
-            $pid = (int) ($it['product_id'] ?? 0);
-            $opt = (int) ($it['option_index'] ?? 0);
-            $qty = max(1, (int) ($it['quantity'] ?? 1));
-            if ($pid <= 0) {
+
+        $getGroupQuantity = static function (array $cartItems, int $productId, int $optionIndex, string $groupId): int {
+            $quantity = 0;
+            foreach ($cartItems as $cartItem) {
+                if ((int) ($cartItem['product_id'] ?? 0) === $productId
+                    && (int) ($cartItem['option_index'] ?? 0) === $optionIndex
+                    && trim((string) ($cartItem['recipe_group_id'] ?? '')) === $groupId) {
+                    $quantity += (int) ($cartItem['quantity'] ?? 0);
+                }
+            }
+            return $quantity;
+        };
+
+        foreach ($items as $item) {
+            if (!is_array($item)) {
+                $skipped[] = 'Một mặt hàng có dữ liệu không hợp lệ.';
                 continue;
             }
-            $res = $orderModel->addItemToCart($uid, $pid, $opt, $qty, $recipeGroupId);
-            if ($res['ok']) {
-                $addedCount += $qty;
+
+            $productId = filter_var($item['product_id'] ?? null, FILTER_VALIDATE_INT);
+            $optionIndex = filter_var($item['option_index'] ?? 0, FILTER_VALIDATE_INT);
+            $quantity = filter_var($item['quantity'] ?? 1, FILTER_VALIDATE_INT);
+            if ($productId === false || $productId <= 0 || $optionIndex === false || $optionIndex < 0 || $quantity === false || $quantity < 1) {
+                $skipped[] = 'Một mặt hàng có mã sản phẩm, quy cách hoặc số lượng không hợp lệ.';
+                continue;
+            }
+
+            $beforeQuantity = $getGroupQuantity($orderModel->getRawCart($uid), $productId, $optionIndex, $recipeGroupId);
+            $result = $orderModel->addItemToCart($uid, $productId, $optionIndex, $quantity, $recipeGroupId);
+            $afterQuantity = $getGroupQuantity($orderModel->getRawCart($uid), $productId, $optionIndex, $recipeGroupId);
+            $actuallyAdded = max(0, $afterQuantity - $beforeQuantity);
+
+            if (!empty($result['ok']) && $actuallyAdded > 0) {
+                $addedCount += $actuallyAdded;
+                if ($actuallyAdded < $quantity) {
+                    $skipped[] = "Chỉ thêm được {$actuallyAdded}/{$quantity} gói của sản phẩm #{$productId} do tồn kho không đủ.";
+                }
+            } elseif (!empty($result['ok'])) {
+                $skipped[] = "Sản phẩm #{$productId} đã đạt giới hạn tồn kho trong combo này.";
             } else {
-                $skipped[] = $res['message'];
+                $skipped[] = (string) ($result['message'] ?? "Sản phẩm #{$productId} không thể thêm vào giỏ hàng do không còn đủ tồn kho.");
             }
         }
 
@@ -157,10 +188,14 @@ class RecipeController extends Controller
             $this->jsonResponse('error', 409, ['skipped' => $skipped], $skipped[0] ?? 'Không thể thêm các món đã chọn vào giỏ hàng.');
         }
 
+        $message = "Đã thêm {$addedCount} sản phẩm từ combo công thức vào giỏ hàng!";
+        if (!empty($skipped)) {
+            $message .= ' Một số mặt hàng không thể thêm đủ số lượng hoặc không còn khả dụng.';
+        }
         $this->jsonResponse('success', 200, [
             'added_count' => $addedCount,
             'cart_count' => $summary['total_count'],
             'skipped' => $skipped,
-        ], "Đã thêm {$addedCount} sản phẩm từ combo công thức vào giỏ hàng!");
+        ], $message);
     }
 }
