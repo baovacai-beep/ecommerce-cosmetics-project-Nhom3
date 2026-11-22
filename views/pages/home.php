@@ -25,7 +25,12 @@ $flipJson = array_map(static function (array $r): array {
         'diff' => (string) $r['difficulty'],
         'defaultServings' => (int) $r['default_servings'],
         'image' => App::asset((string) $r['image_path']),
-        'ingredients' => array_slice(array_map(static fn(array $ing): string => $ing['base_amount'] . $ing['unit'] . ' ' . $ing['name'], $r['ingredients']), 0, 4),
+        'ingredients' => array_slice(array_map(static function (array $ing): string {
+            $amt = (string) $ing['base_amount'];
+            $unit = trim((string) $ing['unit']);
+            $sep = preg_match('/^(g|kg|ml|l)$/i', $unit) ? '' : ' ';
+            return $amt . $sep . $unit . ' ' . $ing['name'];
+        }, $r['ingredients']), 0, 4),
         'steps' => array_slice($r['steps'] ?? [], 0, 3),
         'comboItems' => $comboItems,
         'comboTotal' => $comboPrice,
@@ -595,6 +600,60 @@ $flipJson = array_map(static function (array $r): array {
 
     // Mặc định kích hoạt chế độ Fallback nếu trình duyệt không hỗ trợ 3D hoặc người dùng bật prefers-reduced-motion
     let isFallbackMode = !browserSupports3D || prefersReducedMotion;
+    let isSoundMuted = false;
+    let flipFinishTimer = null;
+    let audioCtx = null;
+
+    try {
+      isSoundMuted = localStorage.getItem("bakemate_flipbook_muted") === "1";
+    } catch (e) {}
+
+    function playPageTurnSound() {
+      if (isSoundMuted || prefersReducedMotion) return;
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        if (!audioCtx) audioCtx = new AudioCtx();
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume().catch(() => {});
+        }
+        const now = audioCtx.currentTime;
+        const duration = 0.25;
+        const sampleRate = audioCtx.sampleRate;
+        const length = Math.floor(sampleRate * duration);
+        const buffer = audioCtx.createBuffer(1, length, sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0;
+        for (let i = 0; i < length; i += 1) {
+          const white = Math.random() * 2 - 1;
+          lastOut = (lastOut + 0.05 * white) / 1.05;
+          data[i] = (white * 0.45 + lastOut * 2.2) * 0.55;
+        }
+
+        const noise = audioCtx.createBufferSource();
+        noise.buffer = buffer;
+
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.Q.setValueAtTime(1.1, now);
+        filter.frequency.setValueAtTime(2500, now);
+        filter.frequency.exponentialRampToValueAtTime(1100, now + 0.14);
+        filter.frequency.exponentialRampToValueAtTime(750, now + duration);
+
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.linearRampToValueAtTime(0.06, now + 0.035);
+        gain.gain.exponentialRampToValueAtTime(0.028, now + 0.11);
+        gain.gain.linearRampToValueAtTime(0.075, now + 0.145);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        noise.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+        noise.start(now);
+        noise.stop(now + duration);
+      } catch (e) {}
+    }
 
     // Helper an toàn
     const esc = (val) => {
@@ -642,17 +701,103 @@ $flipJson = array_map(static function (array $r): array {
       return isAdded;
     }
 
-    function renderBook(dirClass) {
-      const r = FLIP_RECIPES[fIdx];
+    function buildLeftPageHtml(idx, favs) {
+      const r = FLIP_RECIPES[idx];
+      const isFav = favs.includes(r.slug);
+      return `
+        <div class="flipbook-page flipbook-page--left">
+          <div class="flipbook-photo-wrap">
+            <img src="${esc(r.image)}" alt="${esc(r.title)}" onerror="this.onerror=null;this.src='images/banner.jpg';">
+            <span class="flipbook-bookmark">${esc(r.code || ("TRANG " + (idx + 1)))}</span>
+            <button type="button" class="flipbook-wish-btn js-flip-wish ${isFav ? "is-active" : ""}" data-slug="${esc(r.slug)}" aria-label="${isFav ? "Bỏ lưu công thức" : "Lưu công thức"} ${esc(r.title)}">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            </button>
+          </div>
+          <div class="flipbook-left-caption">
+            <span>Thời gian: <strong>${esc(r.time)}</strong> · Độ khó: <strong>${esc(r.diff)}</strong></span>
+            <span>Trang ${idx + 1} / ${totalPages}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function buildRightPageHtml(idx) {
+      const r = FLIP_RECIPES[idx];
       const detailUrl = window.BakeApp && typeof window.BakeApp.apiUrl === "function"
         ? window.BakeApp.apiUrl("recipe", "detail", { id: r.slug })
         : `?c=recipe&a=detail&id=${encodeURIComponent(r.slug)}`;
+      return `
+        <div class="flipbook-page flipbook-page--right">
+          <div>
+            <p class="flipbook-right__eyebrow">BAKING JOURNAL · KHẨU PHẦN MẶC ĐỊNH ${r.defaultServings} PHẦN</p>
+            <h3 class="flipbook-right__title">${esc(r.title)}</h3>
+            <p class="flipbook-right__desc">${esc(r.subtitle)}</p>
 
+            <div class="flipbook-ingredients-chips" aria-label="Nguyên liệu chính">
+              ${(r.ingredients || []).map((c) => `<span class="flipbook-chip">${esc(c)}</span>`).join("")}
+            </div>
+
+            <ol class="flipbook-steps-preview" aria-label="Các bước thực hiện tóm tắt">
+              ${(r.steps || []).map((s) => `<li><span>${esc(s)}</span></li>`).join("")}
+            </ol>
+          </div>
+
+          <div class="flipbook-right__footer">
+            <a href="${esc(detailUrl)}" class="btn btn--primary" style="background-color:var(--primary-color);border-color:var(--primary-color);">
+              Xem công thức chi tiết &rarr;
+            </a>
+            <button type="button" class="btn btn--outline-dark js-flip-add-combo" data-idx="${idx}" aria-label="Thêm combo nguyên liệu ${esc(r.title)} vào giỏ hàng">
+              + Combo (${esc(fmt(r.comboTotal))})
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderBook(dirClass, fromIdx) {
+      if (flipFinishTimer) {
+        clearTimeout(flipFinishTimer);
+        flipFinishTimer = null;
+      }
+
+      const r = FLIP_RECIPES[fIdx];
       const favs = getFavoriteRecipes();
-      const isFav = favs.includes(r.slug);
+      const useRealSheet = Boolean(
+        dirClass &&
+        typeof fromIdx === "number" &&
+        fromIdx !== fIdx &&
+        !isFallbackMode &&
+        window.innerWidth > 860
+      );
 
       // Cập nhật class Fallback 2D trên container
       flipWrap.classList.toggle("is-fallback-mode", isFallbackMode);
+
+      let leftHtml = buildLeftPageHtml(fIdx, favs);
+      let rightHtml = buildRightPageHtml(fIdx);
+      let turnSheetHtml = "";
+
+      if (useRealSheet) {
+        if (dirClass === "is-turning-next") {
+          leftHtml = buildLeftPageHtml(fromIdx, favs);
+          rightHtml = buildRightPageHtml(fIdx);
+          turnSheetHtml = `
+            <div class="flipbook-turn-sheet is-next" aria-hidden="true">
+              <div class="flipbook-turn-face flipbook-turn-face--front">${buildRightPageHtml(fromIdx)}</div>
+              <div class="flipbook-turn-face flipbook-turn-face--back">${buildLeftPageHtml(fIdx, favs)}</div>
+            </div>
+          `;
+        } else {
+          leftHtml = buildLeftPageHtml(fIdx, favs);
+          rightHtml = buildRightPageHtml(fromIdx);
+          turnSheetHtml = `
+            <div class="flipbook-turn-sheet is-prev" aria-hidden="true">
+              <div class="flipbook-turn-face flipbook-turn-face--front">${buildLeftPageHtml(fromIdx, favs)}</div>
+              <div class="flipbook-turn-face flipbook-turn-face--back">${buildRightPageHtml(fIdx)}</div>
+            </div>
+          `;
+        }
+      }
 
       flipWrap.innerHTML = `
         <div class="recipe-flipbook-toolbar">
@@ -666,58 +811,34 @@ $flipJson = array_map(static function (array $r): array {
             </span>
           </div>
 
-          <button type="button" class="flipbook-mode-btn js-flip-mode-toggle" aria-label="Chuyển đổi giữa chế độ sách 3D và giao diện phẳng 2D">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-            <span class="js-flip-mode-label">${isFallbackMode ? "Bật hiệu ứng lật 3D" : "Chuyển chế độ 2D phẳng"}</span>
-          </button>
+          <div class="recipe-flipbook-toolbar__actions">
+            <button type="button" class="flipbook-mode-btn js-flip-sound-toggle" aria-pressed="${isSoundMuted ? "false" : "true"}" aria-label="${isSoundMuted ? "Bật âm thanh lật giấy" : "Tắt âm thanh lật giấy"}">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                ${
+                  isSoundMuted
+                    ? '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>'
+                    : '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>'
+                }
+              </svg>
+              <span>${isSoundMuted ? "Âm thanh: Tắt" : "Âm thanh: Bật"}</span>
+            </button>
+
+            <button type="button" class="flipbook-mode-btn js-flip-mode-toggle" aria-label="Chuyển đổi giữa chế độ sách 3D và giao diện phẳng 2D">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+              </svg>
+              <span class="js-flip-mode-label">${isFallbackMode ? "Bật hiệu ứng lật 3D" : "Chuyển chế độ 2D phẳng"}</span>
+            </button>
+          </div>
         </div>
 
         <div class="recipe-flipbook-stage" id="flipbook-touch-stage">
-          <article class="recipe-flipbook-book ${dirClass || ""}" aria-label="Công thức ${esc(r.title)} - Trang ${fIdx + 1} trên ${totalPages}">
-            <!-- Trang trái: Hình ảnh, Nhãn mã số & Thời gian -->
-            <div class="flipbook-page flipbook-page--left">
-              <div class="flipbook-photo-wrap">
-                <img src="${esc(r.image)}" alt="${esc(r.title)}" onerror="this.onerror=null;this.src='images/banner.jpg';">
-                <span class="flipbook-bookmark">${esc(r.code || ("TRANG " + (fIdx + 1)))}</span>
-                <button type="button" class="flipbook-wish-btn js-flip-wish ${isFav ? "is-active" : ""}" data-slug="${esc(r.slug)}" aria-label="${isFav ? "Bỏ lưu công thức" : "Lưu công thức"} ${esc(r.title)}">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-                </button>
-              </div>
-              <div class="flipbook-left-caption">
-                <span>Thời gian: <strong>${esc(r.time)}</strong> · Độ khó: <strong>${esc(r.diff)}</strong></span>
-                <span>Trang ${fIdx + 1} / ${totalPages}</span>
-              </div>
-            </div>
-
-            <!-- Trang phải: Thông số, Nguyên liệu chip, Các bước & Nút CTA -->
-            <div class="flipbook-page flipbook-page--right">
-              <div>
-                <p class="flipbook-right__eyebrow">BAKING JOURNAL · KHẨU PHẦN MẶC ĐỊNH ${r.defaultServings} PHẦN</p>
-                <h3 class="flipbook-right__title">${esc(r.title)}</h3>
-                <p class="flipbook-right__desc">${esc(r.subtitle)}</p>
-
-                <div class="flipbook-ingredients-chips" aria-label="Nguyên liệu chính">
-                  ${(r.ingredients || []).map((c) => `<span class="flipbook-chip">${esc(c)}</span>`).join("")}
-                </div>
-
-                <ol class="flipbook-steps-preview" aria-label="Các bước thực hiện tóm tắt">
-                  ${(r.steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}
-                </ol>
-              </div>
-
-              <div class="flipbook-right__footer">
-                <a href="${esc(detailUrl)}" class="btn btn--primary" style="background-color:var(--primary-color);border-color:var(--primary-color);">
-                  Xem công thức chi tiết &rarr;
-                </a>
-                <button type="button" class="btn btn--outline-dark js-flip-add-combo" data-idx="${fIdx}" aria-label="Thêm combo nguyên liệu ${esc(r.title)} vào giỏ hàng">
-                  + Combo (${esc(fmt(r.comboTotal))})
-                </button>
-              </div>
-            </div>
+          <article class="recipe-flipbook-book ${useRealSheet ? "" : (dirClass || "")}" aria-label="Công thức ${esc(r.title)} - Trang ${fIdx + 1} trên ${totalPages}">
+            ${leftHtml}
+            ${rightHtml}
+            ${turnSheetHtml}
           </article>
         </div>
 
@@ -741,26 +862,46 @@ $flipJson = array_map(static function (array $r): array {
         </div>
       `;
 
-      // Hủy bỏ class animation sau khi diễn hoạt hoàn tất
-      if (dirClass) {
+      // Kết thúc hiệu ứng lật trang thực tế hoặc fallback
+      if (useRealSheet) {
+        flipFinishTimer = setTimeout(() => {
+          flipFinishTimer = null;
+          renderBook("");
+        }, 670);
+      } else if (dirClass) {
         const bookEl = flipWrap.querySelector(".recipe-flipbook-book");
         if (bookEl) {
-          setTimeout(() => {
+          flipFinishTimer = setTimeout(() => {
+            flipFinishTimer = null;
             bookEl.classList.remove("is-turning-next", "is-turning-prev");
-          }, 550);
+          }, 360);
         }
       }
     }
 
-    function turnPage(nextIdx) {
-      if (nextIdx === fIdx) return;
-      const dirClass = nextIdx > fIdx ? "is-turning-next" : "is-turning-prev";
-      fIdx = ((nextIdx % totalPages) + totalPages) % totalPages;
-      renderBook(dirClass);
+    function turnPage(nextIdx, forcedDir) {
+      const normalized = ((nextIdx % totalPages) + totalPages) % totalPages;
+      if (normalized === fIdx) return;
+      const fromIdx = fIdx;
+      const dirClass = forcedDir || (normalized > fromIdx ? "is-turning-next" : "is-turning-prev");
+      fIdx = normalized;
+      playPageTurnSound();
+      renderBook(dirClass, fromIdx);
     }
 
     // Lắng nghe sự kiện click trong Flipbook
     flipWrap.addEventListener("click", async (e) => {
+      // 0. Bật / tắt âm thanh lật giấy
+      if (e.target.closest(".js-flip-sound-toggle")) {
+        isSoundMuted = !isSoundMuted;
+        try {
+          localStorage.setItem("bakemate_flipbook_muted", isSoundMuted ? "1" : "0");
+        } catch (err) {}
+        renderBook("");
+        if (!isSoundMuted) playPageTurnSound();
+        return;
+      }
+
       // 1. Chuyển đổi chế độ xem 3D / Fallback 2D
       if (e.target.closest(".js-flip-mode-toggle")) {
         isFallbackMode = !isFallbackMode;
@@ -776,17 +917,13 @@ $flipJson = array_map(static function (array $r): array {
 
       // 2. Trang trước
       if (e.target.closest(".js-flip-prev")) {
-        const next = (fIdx - 1 + totalPages) % totalPages;
-        fIdx = next;
-        renderBook("is-turning-prev");
+        turnPage(fIdx - 1, "is-turning-prev");
         return;
       }
 
       // 3. Trang tiếp theo
       if (e.target.closest(".js-flip-next")) {
-        const next = (fIdx + 1) % totalPages;
-        fIdx = next;
-        renderBook("is-turning-next");
+        turnPage(fIdx + 1, "is-turning-next");
         return;
       }
 
@@ -858,12 +995,10 @@ $flipJson = array_map(static function (array $r): array {
     flipWrap.addEventListener("keydown", (e) => {
       if (e.key === "ArrowLeft") {
         e.preventDefault();
-        fIdx = (fIdx - 1 + totalPages) % totalPages;
-        renderBook("is-turning-prev");
+        turnPage(fIdx - 1, "is-turning-prev");
       } else if (e.key === "ArrowRight") {
         e.preventDefault();
-        fIdx = (fIdx + 1) % totalPages;
-        renderBook("is-turning-next");
+        turnPage(fIdx + 1, "is-turning-next");
       }
     });
 
@@ -886,13 +1021,9 @@ $flipJson = array_map(static function (array $r): array {
         const deltaX = e.changedTouches[0].clientX - touchStartX;
         if (Math.abs(deltaX) > 45) {
           if (deltaX < 0) {
-            // Vuốt sang trái -> xem trang tiếp
-            fIdx = (fIdx + 1) % totalPages;
-            renderBook("is-turning-next");
+            turnPage(fIdx + 1, "is-turning-next");
           } else {
-            // Vuốt sang phải -> xem trang trước
-            fIdx = (fIdx - 1 + totalPages) % totalPages;
-            renderBook("is-turning-prev");
+            turnPage(fIdx - 1, "is-turning-prev");
           }
         }
       },
