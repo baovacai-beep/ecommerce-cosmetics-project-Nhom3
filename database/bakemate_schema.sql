@@ -414,10 +414,10 @@ CREATE TABLE contacts (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO users (id, full_name, email, phone, password_hash, role, is_super_admin, token_version) VALUES
-  (1, 'Gia Bảo (Super Admin)', 'superadmin@bakemate.vn', '0901000001', 'y$HY5CYx8wLmLC9ExkwVagY.05GQOOpBspZkhvng7Bz7dc3eQNCnhh.', 'admin', 1, 1),
-  (2, 'Bảo Ngọc (Admin)', 'admin@bakemate.vn', '0901000002', 'y$O6J.mC8TmmW.Px7jzHFu7eJoCL0g3dk8dfvp.VSnZMHVLhO2EJLv2', 'admin', 0, 1),
-  (3, 'Minh Thư (Nhân viên)', 'staff@bakemate.vn', '0901000003', 'y$ej0haqiUHvz078cUWV8ul.awxNkhiL6LREUl0KlNAdeyONjlPZq3e', 'staff', 0, 1),
-  (4, 'Nguyễn Thương (Khách hàng)', 'khachhang@bakemate.vn', '0909123456', 'y$d/sdanT/RO3iLRSGNiCBX.6dIqNTQe7OhGhx4tfPLXqaYj7DFiYPS', 'customer', 0, 1);
+  (1, 'Gia Bảo (Super Admin)', 'superadmin@bakemate.vn', '0901000001', '$2y$10$HY5CYx8wLmLC9ExkwVagY.05GQOOpBspZkhvng7Bz7dc3eQNCnhh.', 'admin', 1, 1),
+  (2, 'Bảo Ngọc (Admin)', 'admin@bakemate.vn', '0901000002', '$2y$10$O6J.mC8TmmW.Px7jzHFu7eJoCL0g3dk8dfvp.VSnZMHVLhO2EJLv2', 'admin', 0, 1),
+  (3, 'Minh Thư (Nhân viên)', 'staff@bakemate.vn', '0901000003', '$2y$10$ej0haqiUHvz078cUWV8ul.awxNkhiL6LREUl0KlNAdeyONjlPZq3e', 'staff', 0, 1),
+  (4, 'Nguyễn Thương (Khách hàng)', 'khachhang@bakemate.vn', '0909123456', '$2y$10$d/sdanT/RO3iLRSGNiCBX.6dIqNTQe7OhGhx4tfPLXqaYj7DFiYPS', 'customer', 0, 1);
 
 INSERT INTO user_addresses (user_id, recipient_name, phone, province, district, ward, street_address, zone_type, is_default) VALUES
   (4, 'Nguyễn Thương', '0909123456', 'TP. Hồ Chí Minh', 'Quận 3', 'Phường Võ Thị Sáu', '59C Nguyễn Đình Chiểu', 'hcm', 1);
