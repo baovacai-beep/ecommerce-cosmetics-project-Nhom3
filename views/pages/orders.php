@@ -5,7 +5,7 @@ $labelsMap = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn b�
 ?>
 <main class="php-page-container">
   <h1 style="margin:0 0 8px;color:#70452b;">Theo dõi &amp; Lịch sử đơn hàng</h1>
-  <p style="margin:0 0 18px;color:#7c5c46;">Tra cứu bằng mã đơn hàng (#BM-XXXXXX) hoặc xem các đơn hàng gắn với tài khoản của bạn.</p>
+  <p style="margin:0 0 18px;color:#7c5c46;">Tra cứu bằng mã đơn hàng (#BM-XXXXXXXXXXXX) hoặc xem các đơn hàng gắn với tài khoản của bạn.</p>
 
   <form method="get" action="<?= App::e(App::url('index.php')) ?>" class="php-card" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
     <input type="hidden" name="c" value="order">
@@ -23,7 +23,7 @@ $labelsMap = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn b�
   <?php if (empty($orders)): ?>
     <div class="php-card" style="text-align:center;padding:48px 20px;background:#fff8ed;border:1.5px dashed #c88b52;">
       <h2 style="color:#70452b;margin-top:0;">Chưa tìm thấy đơn hàng nào</h2>
-      <p style="color:#7c5c46;">Nếu bạn là khách vãng lai, hãy nhập đúng mã đơn #BM-XXXXXX vào ô tìm kiếm ở trên.</p>
+      <p style="color:#7c5c46;">Nếu bạn là khách vãng lai, hãy nhập đúng mã đơn #BM-XXXXXXXXXXXX vào ô tìm kiếm ở trên.</p>
     </div>
   <?php else: ?>
     <div style="display:grid;gap:18px;">

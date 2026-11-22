@@ -5,22 +5,67 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARAT
 
 class ProductController extends Controller
 {
+    private function sanitizeCatalogFilters(array $source): array
+    {
+        $category = $source['category'] ?? [];
+        if (!is_array($category)) {
+            $category = $category !== '' ? [$category] : [];
+        }
+
+        $sub = $source['sub'] ?? [];
+        if (!is_array($sub)) {
+            $sub = $sub !== '' ? [$sub] : [];
+        }
+
+        $brand = $source['brand'] ?? [];
+        if (!is_array($brand)) {
+            $brand = $brand !== '' ? [$brand] : [];
+        }
+
+        $stock = $source['stock'] ?? [];
+        if (!is_array($stock)) {
+            $stock = $stock !== '' ? [$stock] : [];
+        }
+
+        $minPrice = $source['min_price'] ?? '';
+        if ($minPrice !== '' && is_numeric($minPrice)) {
+            $minPrice = max(0, (int) $minPrice);
+        } else {
+            $minPrice = '';
+        }
+
+        $maxPrice = $source['max_price'] ?? '';
+        if ($maxPrice !== '' && is_numeric($maxPrice)) {
+            $maxPrice = max(0, (int) $maxPrice);
+        } else {
+            $maxPrice = '';
+        }
+
+        $allowedSorts = ['featured', 'price-asc', 'price-desc', 'name-asc', 'name-desc', 'newest'];
+        $sort = trim((string) ($source['sort'] ?? 'featured'));
+        if (!in_array($sort, $allowedSorts, true)) {
+            $sort = 'featured';
+        }
+
+        return [
+            'q' => trim((string) ($source['q'] ?? '')),
+            'category' => array_values(array_filter(array_map('trim', $category))),
+            'sub' => array_values(array_filter(array_map('trim', $sub))),
+            'brand' => array_values(array_filter(array_map('trim', $brand))),
+            'min_price' => $minPrice,
+            'max_price' => $maxPrice,
+            'stock' => array_values(array_filter(array_map('trim', $stock))),
+            'sort' => $sort,
+        ];
+    }
+
     public function catalog(): void
     {
         $productModel = $this->model('ProductModel');
         $contentModel = $this->model('ContentModel');
         $user = Rbac::currentUser();
 
-        $filters = [
-            'q' => trim((string) ($_GET['q'] ?? '')),
-            'category' => $_GET['category'] ?? [],
-            'sub' => $_GET['sub'] ?? [],
-            'brand' => $_GET['brand'] ?? [],
-            'min_price' => $_GET['min_price'] ?? '',
-            'max_price' => $_GET['max_price'] ?? '',
-            'stock' => $_GET['stock'] ?? [],
-            'sort' => trim((string) ($_GET['sort'] ?? 'featured')),
-        ];
+        $filters = $this->sanitizeCatalogFilters($_GET);
 
         $meta = $productModel->getFilterMetadata();
         $products = $productModel->getCatalog($filters, false);
@@ -45,11 +90,19 @@ class ProductController extends Controller
         $user = Rbac::currentUser();
 
         $id = (int) ($_GET['id'] ?? 0);
-        $product = $id > 0 ? $productModel->getProductDetail($id) : null;
+        $slug = trim((string) ($_GET['slug'] ?? ''));
+
+        $product = null;
+        if ($id > 0) {
+            $product = $productModel->getProductDetail($id);
+        } elseif ($slug !== '') {
+            $product = $productModel->getProductDetailBySlug($slug);
+        }
+
         if ($product) {
             $productModel->trackRecentlyViewed((int) $product['id']);
         }
-        $recentProducts = $productModel->getRecentlyViewed($id, 4);
+        $recentProducts = $productModel->getRecentlyViewed($product ? (int) $product['id'] : $id, 4);
         $wishlistIds = $contentModel->getWishlistIds($user ? (int) $user['id'] : null);
 
         $this->view('pages/product-detail', [
@@ -84,16 +137,7 @@ class ProductController extends Controller
         $contentModel = $this->model('ContentModel');
         $user = Rbac::currentUser();
 
-        $filters = [
-            'q' => trim((string) ($_GET['q'] ?? '')),
-            'category' => $_GET['category'] ?? [],
-            'sub' => $_GET['sub'] ?? [],
-            'brand' => $_GET['brand'] ?? [],
-            'min_price' => $_GET['min_price'] ?? '',
-            'max_price' => $_GET['max_price'] ?? '',
-            'stock' => $_GET['stock'] ?? [],
-            'sort' => trim((string) ($_GET['sort'] ?? 'featured')),
-        ];
+        $filters = $this->sanitizeCatalogFilters($_GET);
         $products = $productModel->getCatalog($filters, false);
         $wishlistIds = $contentModel->getWishlistIds($user ? (int) $user['id'] : null);
 
@@ -143,11 +187,11 @@ class ProductController extends Controller
         $productId = (int) ($_POST['product_id'] ?? 0);
         $user = Rbac::currentUser();
         $name = trim((string) ($_POST['reviewer_name'] ?? ($user['full_name'] ?? '')));
-        $rating = (int) ($_POST['rating'] ?? 5);
+        $rating = (float) ($_POST['rating'] ?? 5.0);
         $comment = trim((string) ($_POST['comment'] ?? ''));
 
-        if ($productId <= 0 || mb_strlen($name, 'UTF-8') < 2 || mb_strlen($comment, 'UTF-8') < 6) {
-            $this->jsonResponse('error', 422, [], 'Vui lòng nhập tên (tối thiểu 2 ký tự) và nội dung đánh giá (tối thiểu 6 ký tự).');
+        if ($productId <= 0 || mb_strlen($name, 'UTF-8') < 2 || mb_strlen($comment, 'UTF-8') < 4) {
+            $this->jsonResponse('error', 422, [], 'Vui lòng nhập tên (tối thiểu 2 ký tự) và nội dung đánh giá (tối thiểu 4 ký tự).');
         }
 
         $imagePath = null;
@@ -162,6 +206,42 @@ class ProductController extends Controller
         $productModel = $this->model('ProductModel');
         $review = $productModel->addReview($productId, $user ? (int) $user['id'] : null, $name, $rating, $comment, $imagePath);
         $this->jsonResponse('success', 200, ['review' => $review], 'Cảm ơn bạn đã gửi đánh giá sản phẩm!');
+    }
+
+    public function ajaxUpdateReview(): void
+    {
+        $this->requirePostJson();
+        $in = $this->jsonInput();
+        $reviewId = (int) ($in['review_id'] ?? 0);
+        $rating = (float) ($in['rating'] ?? 5.0);
+        $comment = trim((string) ($in['comment'] ?? ''));
+        if ($reviewId <= 0 || mb_strlen($comment, 'UTF-8') < 4) {
+            $this->jsonResponse('error', 422, [], 'Nội dung đánh giá phải có tối thiểu 4 ký tự.');
+        }
+
+        $user = Rbac::currentUser();
+        $res = $this->model('ProductModel')->updateReview($reviewId, $user ? (int) $user['id'] : null, $rating, $comment);
+        if (empty($res['ok'])) {
+            $this->jsonResponse('error', 403, [], $res['message']);
+        }
+        $this->jsonResponse('success', 200, [], $res['message']);
+    }
+
+    public function ajaxDeleteReview(): void
+    {
+        $this->requirePostJson();
+        $in = $this->jsonInput();
+        $reviewId = (int) ($in['review_id'] ?? 0);
+        if ($reviewId <= 0) {
+            $this->jsonResponse('error', 400, [], 'Mã đánh giá không hợp lệ.');
+        }
+
+        $user = Rbac::currentUser();
+        $res = $this->model('ProductModel')->deleteReview($reviewId, $user ? (int) $user['id'] : null);
+        if (empty($res['ok'])) {
+            $this->jsonResponse('error', 403, [], $res['message']);
+        }
+        $this->jsonResponse('success', 200, [], $res['message']);
     }
 
     public function ajaxClearRecent(): void

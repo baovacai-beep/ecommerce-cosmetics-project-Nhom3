@@ -27,8 +27,13 @@ class UserModel extends Model
         $raw = trim($identifier);
         $cleanEmail = strtolower($raw);
         $cleanPhone = preg_replace('/[\s.-]/', '', $raw) ?? '';
-        $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone = ?) LIMIT 1');
-        $stmt->execute([$cleanEmail, $cleanPhone]);
+        if ($cleanPhone !== '' && preg_match('/^[0-9+]{8,15}$/', $cleanPhone)) {
+            $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone <> "" AND phone = ?) LIMIT 1');
+            $stmt->execute([$cleanEmail, $cleanPhone]);
+        } else {
+            $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
+            $stmt->execute([$cleanEmail]);
+        }
         $row = $stmt->fetch();
         return $row ?: null;
     }
@@ -70,9 +75,17 @@ class UserModel extends Model
     {
         $cleanEmail = strtolower(trim($email));
         $cleanPhone = preg_replace('/[\s.-]/', '', trim($phone)) ?? '';
+        $dbPhone = $cleanPhone !== '' ? $cleanPhone : null;
 
         if ($this->findByEmail($cleanEmail)) {
             return ['ok' => false, 'message' => 'Email này đã được đăng ký. Vui lòng đăng nhập hoặc dùng email khác.'];
+        }
+        if ($dbPhone !== null) {
+            $pCheck = $this->db->prepare('SELECT id FROM users WHERE phone = ? LIMIT 1');
+            $pCheck->execute([$dbPhone]);
+            if ($pCheck->fetch()) {
+                return ['ok' => false, 'message' => 'Số điện thoại này đã được đăng ký. Vui lòng dùng số khác hoặc đăng nhập.'];
+            }
         }
 
         // Luôn validate bằng OOP Entity
@@ -82,7 +95,7 @@ class UserModel extends Model
         $stmt = $this->db->prepare(
             'INSERT INTO users (full_name, email, phone, password_hash, role, is_super_admin, token_version) VALUES (?, ?, ?, ?, ?, 0, 1)'
         );
-        $stmt->execute([trim($fullName), $cleanEmail, $cleanPhone, $hash, 'customer']);
+        $stmt->execute([trim($fullName), $cleanEmail, $dbPhone, $hash, 'customer']);
         $newId = (int) $this->db->lastInsertId();
 
         $user = $this->findById($newId);
@@ -166,6 +179,22 @@ class UserModel extends Model
         $ins->execute([$cleanEmail, $otpHash, 'forgot_password', $expiresAt, $cooldownUntil]);
 
         $mailRes = Mailer::sendOtp($cleanEmail, $otpCode, (string) $user['full_name']);
+        
+        // Không báo cấp OTP thành công nếu gửi mail thất bại trên production.
+        $previewAllowed = in_array(
+            (string) ($mailRes['mode'] ?? ''),
+            ['local_preview', 'local_fallback'],
+            true
+        );
+
+        if (empty($mailRes['sent']) && !$previewAllowed) {
+            return [
+                'ok' => false,
+                'code' => 503,
+                'message' => (string) ($mailRes['message'] ?? 'Dịch vụ gửi OTP tạm thời không khả dụng.'),
+            ];
+        }
+
         $this->logSecurity((int) $user['id'], $cleanEmail, 'otp_requested', 'Yêu cầu cấp mã OTP khôi phục mật khẩu.');
 
         return [

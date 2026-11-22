@@ -270,7 +270,7 @@ class OrderModel extends Model
         $_SESSION['bakemate_coupons'] = $cur;
     }
 
-    public function calculateCouponsDiscount(int $subtotal, int $shippingFee, array $couponCodes): array
+    public function calculateCouponsDiscount(int $subtotal, int $shippingFee, array $couponCodes, bool $lockRows = false): array
     {
         $discountProduct = 0;
         $discountShipping = 0;
@@ -281,9 +281,11 @@ class OrderModel extends Model
             if (!$code) {
                 continue;
             }
-            $stmt = $this->db->prepare(
-                'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= NOW()) LIMIT 1'
-            );
+            $couponSql = 'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= NOW()) LIMIT 1';
+            if ($lockRows) {
+                $couponSql .= ' FOR UPDATE';
+            }
+            $stmt = $this->db->prepare($couponSql);
             $stmt->execute([$code]);
             $c = $stmt->fetch();
             if (!$c || $subtotal < (int) $c['min_subtotal']) {
@@ -468,7 +470,7 @@ class OrderModel extends Model
             return ['ok' => false, 'code' => 422, 'message' => $shipCheck['reason']];
         }
 
-        $orderCode = 'BM-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
+        $orderCode = 'BM-' . strtoupper(bin2hex(random_bytes(6)));
         $shippingFee = (int) $shipCheck['fee'];
 
         $this->db->beginTransaction();
@@ -518,7 +520,7 @@ class OrderModel extends Model
 
             // Tính lại khuyến mãi hoàn toàn phía Server
             $coupons = $this->getAppliedCoupons();
-            $disc = $this->calculateCouponsDiscount($verifiedSubtotal, $shippingFee, $coupons);
+            $disc = $this->calculateCouponsDiscount($verifiedSubtotal, $shippingFee, $coupons, true);
             $finalTotal = max(0, $verifiedSubtotal - $disc['discount_product'] + max(0, $shippingFee - $disc['discount_shipping']));
 
             // Đa hình PaymentMethodInterface
@@ -584,7 +586,11 @@ class OrderModel extends Model
 
             foreach (['product', 'shipping'] as $sc) {
                 if (isset($disc['details'][$sc]['id'])) {
-                    $this->db->prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ?')->execute([(int) $disc['details'][$sc]['id']]);
+                    $couponUpdate = $this->db->prepare('UPDATE coupons SET used_count = used_count + 1 WHERE id = ? AND used_count < usage_limit');
+                    $couponUpdate->execute([(int) $disc['details'][$sc]['id']]);
+                    if ($couponUpdate->rowCount() !== 1) {
+                        throw new RuntimeException('Mã ưu đãi vừa hết lượt sử dụng. Vui lòng thử lại đơn hàng.');
+                    }
                 }
             }
 
@@ -644,6 +650,28 @@ class OrderModel extends Model
         return $order;
     }
 
+    /**
+     * Chỉ cho phép chủ đơn hoặc khách vãng lai có mã đơn trong session xem hóa đơn.
+     * Không dùng riêng mã đơn làm cơ chế phân quyền.
+     */
+    public function getOrderByCodeForViewer(string $orderCode, ?int $userId): ?array
+    {
+        $order = $this->getOrderByCode($orderCode);
+        if (!$order) {
+            return null;
+        }
+
+        if ($userId !== null && $userId > 0) {
+            return (int) ($order['user_id'] ?? 0) === $userId ? $order : null;
+        }
+
+        $guestCodes = $_SESSION['bakemate_guest_orders'] ?? [];
+        $isTrackedGuestOrder = is_array($guestCodes)
+            && in_array((string) $order['order_code'], $guestCodes, true);
+
+        return empty($order['user_id']) && $isTrackedGuestOrder ? $order : null;
+    }
+
     public function getOrdersForViewer(?int $userId, string $searchCode = '', string $statusFilter = 'all'): array
     {
         $params = [];
@@ -652,11 +680,12 @@ class OrderModel extends Model
             $params[] = $userId;
         } else {
             $guestCodes = $_SESSION['bakemate_guest_orders'] ?? [];
-            if ($searchCode !== '') {
-                $clean = strtoupper(ltrim(trim($searchCode), '#'));
-                $guestCodes[] = $clean;
-            }
-            $guestCodes = array_values(array_unique(array_filter($guestCodes)));
+            // Khách vãng lai chỉ được tìm trong các đơn đã phát sinh trên session hiện tại.
+            // Không thêm mã nhập từ URL trực tiếp vào danh sách được phép truy cập.
+            $guestCodes = array_values(array_unique(array_filter(
+                is_array($guestCodes) ? $guestCodes : [],
+                static fn($code): bool => is_string($code) && preg_match('/^BM-[A-F0-9]{6,12}$/', $code) === 1
+            )));
             if (empty($guestCodes)) {
                 return [];
             }
@@ -727,8 +756,14 @@ class OrderModel extends Model
 
     public function updateOrderStatus(int $orderId, string $newStatus): array
     {
-        $allowed = ['pending', 'preparing', 'shipping', 'completed', 'cancelled'];
-        if (!in_array($newStatus, $allowed, true)) {
+        $allowedTransitions = [
+            'pending' => ['preparing', 'cancelled'],
+            'preparing' => ['shipping', 'cancelled'],
+            'shipping' => ['completed'],
+            'completed' => [],
+            'cancelled' => [],
+        ];
+        if (!array_key_exists($newStatus, ['pending' => true, 'preparing' => true, 'shipping' => true, 'completed' => true, 'cancelled' => true])) {
             return ['ok' => false, 'message' => 'Trạng thái đơn hàng không hợp lệ.'];
         }
 
@@ -742,7 +777,17 @@ class OrderModel extends Model
                 return ['ok' => false, 'message' => 'Không tìm thấy đơn hàng.'];
             }
 
-            if ($newStatus === 'cancelled' && $order['status'] !== 'cancelled') {
+            $currentStatus = (string) $order['status'];
+            if ($newStatus === $currentStatus) {
+                $this->db->commit();
+                return ['ok' => true, 'status' => $newStatus, 'message' => 'Đơn hàng đã ở trạng thái này.'];
+            }
+            if (!in_array($newStatus, $allowedTransitions[$currentStatus] ?? [], true)) {
+                $this->db->rollBack();
+                return ['ok' => false, 'message' => 'Không thể chuyển trạng thái đơn hàng ngược bước hoặc bỏ qua quy trình 4 bước.'];
+            }
+
+            if ($newStatus === 'cancelled' && $currentStatus !== 'cancelled') {
                 $itemsStmt = $this->db->prepare('SELECT product_id, option_index, quantity FROM order_items WHERE order_id = ?');
                 $itemsStmt->execute([$orderId]);
                 foreach ($itemsStmt->fetchAll() as $it) {
@@ -770,8 +815,22 @@ class OrderModel extends Model
 
     public function markOrderPaid(int $orderId): array
     {
+        if ($orderId <= 0) {
+            return ['ok' => false, 'message' => 'Mã đơn hàng không hợp lệ.'];
+        }
         $stmt = $this->db->prepare("UPDATE orders SET payment_status = 'paid' WHERE id = ?");
         $stmt->execute([$orderId]);
+        if ($stmt->rowCount() === 0) {
+            $check = $this->db->prepare('SELECT id, payment_status FROM orders WHERE id = ? LIMIT 1');
+            $check->execute([$orderId]);
+            $order = $check->fetch();
+            if (!$order) {
+                return ['ok' => false, 'message' => 'Không tìm thấy đơn hàng.'];
+            }
+            if ($order['payment_status'] === 'paid') {
+                return ['ok' => true, 'message' => 'Đơn hàng đã được xác nhận thanh toán trước đó.'];
+            }
+        }
         return ['ok' => true, 'message' => 'Đã xác nhận thanh toán cho đơn hàng.'];
     }
 
@@ -786,11 +845,22 @@ class OrderModel extends Model
         if ($userId !== null && (int) $order['user_id'] !== $userId) {
             return ['ok' => false, 'message' => 'Bạn không có quyền gửi yêu cầu hủy đơn hàng này.'];
         }
+        if ($userId === null) {
+            $guestCodes = $_SESSION['bakemate_guest_orders'] ?? [];
+            if (!empty($order['user_id']) || !is_array($guestCodes) || !in_array((string) $order['order_code'], $guestCodes, true)) {
+                return ['ok' => false, 'message' => 'Bạn không có quyền gửi yêu cầu hủy đơn hàng này.'];
+            }
+        }
         if (!in_array((string) $order['status'], ['pending', 'preparing'], true)) {
             return ['ok' => false, 'message' => 'Đơn hàng đang giao hoặc đã hoàn tất nên không thể hủy trực tiếp.'];
         }
+        $pendingStmt = $this->db->prepare("SELECT id FROM order_cancel_requests WHERE order_id = ? AND status = 'pending' LIMIT 1");
+        $pendingStmt->execute([$orderId]);
+        if ($pendingStmt->fetch()) {
+            return ['ok' => false, 'message' => 'Đơn hàng đã có yêu cầu hủy đang chờ xử lý.'];
+        }
         $ins = $this->db->prepare('INSERT INTO order_cancel_requests (order_id, user_id, reason, status) VALUES (?, ?, ?, ?)');
-        $ins->execute([$orderId, $userId, trim($reason) ?: 'Khách hàng thay đổi nhu cầu', 'pending']);
+        $ins->execute([$orderId, $userId, trim($reason) ?: 'Khách hàng gửi yêu cầu hủy trực tuyến', 'pending']);
         return ['ok' => true, 'message' => 'Đã gửi yêu cầu hủy đơn tới nhân viên BakeMate.'];
     }
 

@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 $statusLabels = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn bị', 'shipping' => 'Đang giao hàng', 'completed' => 'Hoàn tất', 'cancelled' => 'Đã hủy'];
+$statusTransitions = [
+  'pending' => ['preparing', 'cancelled'],
+  'preparing' => ['shipping', 'cancelled'],
+  'shipping' => ['completed'],
+  'completed' => [],
+  'cancelled' => [],
+];
 ?>
 <main class="php-page-container">
   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
@@ -49,8 +56,9 @@ $statusLabels = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn
             </td>
             <td style="padding:10px;">
               <select class="form-input js-staff-order-status" data-order-id="<?= (int) $o['id'] ?>" style="width:auto;">
-                <?php foreach ($statusLabels as $sk => $sl): ?>
-                  <option value="<?= $sk ?>" <?= $o['status'] === $sk ? 'selected' : '' ?>><?= App::e($sl) ?></option>
+                <option value="<?= App::e($o['status']) ?>" selected><?= App::e($statusLabels[$o['status']] ?? $o['status']) ?></option>
+                <?php foreach (($statusTransitions[$o['status']] ?? []) as $nextStatus): ?>
+                  <option value="<?= App::e($nextStatus) ?>"><?= App::e($statusLabels[$nextStatus] ?? $nextStatus) ?></option>
                 <?php endforeach; ?>
               </select>
             </td>
@@ -101,11 +109,17 @@ $statusLabels = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn
 <script>
 document.addEventListener("DOMContentLoaded", function () {
   document.querySelectorAll(".js-staff-order-status").forEach((sel) => {
+    const initialStatus = sel.options[0]?.value || sel.value;
     sel.addEventListener("change", async () => {
+      const nextStatus = sel.value;
       try {
-        const res = await window.BakeApp.postJson("staff", "ajaxUpdateOrderStatus", { order_id: Number(sel.dataset.orderId), status: sel.value });
+        const res = await window.BakeApp.postJson("staff", "ajaxUpdateOrderStatus", { order_id: Number(sel.dataset.orderId), status: nextStatus });
         window.BakeApp.showToast(res.message, "success");
-      } catch (err) { window.BakeApp.showToast(err.message, "error"); }
+        window.location.reload();
+      } catch (err) {
+        sel.value = initialStatus;
+        window.BakeApp.showToast(err.message, "error");
+      }
     });
   });
   document.querySelectorAll(".js-staff-verify-pay").forEach((b) => {

@@ -2,86 +2,43 @@
 declare(strict_types=1);
 ?>
 <main class="about-page">
+  <section id="about-difference" class="about-section about-difference" aria-labelledby="about-difference-title">
+    <div class="about-difference__visual">
+      <img src="<?= App::e(App::asset('images/banner-about.png')) ?>" alt="BakeMate – Người bạn đồng hành cùng đam mê làm bánh" loading="lazy">
+    </div>
+    <div class="about-difference__content">
+      <span class="about-eyebrow">Về chúng tôi · Thương hiệu BakeMate</span>
+      <h1 id="about-difference-title" class="about-story__title">BakeMate – Người bạn đồng hành làm bánh tại nhà</h1>
+      <p style="font-size:15.5px;line-height:1.75;color:#4a2d1b;margin-top:12px;">
+        Thương hiệu BakeMate là người bạn đồng hành cùng những ai yêu thích làm bánh, mang đến giải pháp tiện lợi từ khám phá công thức, lựa chọn nguyên liệu và dụng cụ đến tự động quy đổi định lượng theo khẩu phần, giúp hành trình làm bánh trở nên đơn giản, tiết kiệm thời gian và trọn vẹn niềm vui sáng tạo.
+      </p>
+    </div>
+  </section>
+
   <section class="about-section about-story" aria-labelledby="about-story-title">
     <div class="about-story__heading">
-      <span class="about-eyebrow">Về chúng tôi · Câu chuyện BakeMate</span>
-      <h1 id="about-story-title" class="about-story__title">Làm bánh không chỉ bắt đầu từ căn bếp</h1>
+      <span class="about-eyebrow">Câu chuyện thương hiệu</span>
+      <h2 id="about-story-title" class="about-story__title">BakeMate – Làm bánh dễ dàng, niềm vui trọn vẹn</h2>
     </div>
     <div class="about-story__body">
       <p>
-        Trước khi bắt tay làm một chiếc bánh, người làm bánh cần tìm công thức, xác định nguyên liệu, chọn quy cách đóng gói và chuẩn bị dụng cụ phù hợp. Nếu phải tìm kiếm từng sản phẩm riêng lẻ, quá trình này có thể mất nhiều thời gian và dễ bỏ sót những thứ cần thiết.
+        BakeMate ra đời từ mong muốn giúp hành trình làm bánh trở nên đơn giản và thuận tiện hơn cho tất cả mọi người. Chúng tôi nhận thấy rằng việc tìm kiếm công thức, lựa chọn nguyên liệu và chuẩn bị dụng cụ đôi khi khiến người yêu làm bánh mất nhiều thời gian, đặc biệt là những người mới bắt đầu.
       </p>
       <p>
-        BakeMate được xây dựng theo hướng bắt đầu từ món bánh khách hàng muốn làm. Thay vì chỉ tìm và mua từng sản phẩm độc lập, bạn có thể tiếp cận trực tiếp công thức chuẩn vị, tự quy đổi định lượng theo số khẩu phần và thêm gọn vào giỏ hàng chỉ trong vài thao tác.
+        Vì vậy, BakeMate được xây dựng như một người bạn đồng hành, kết nối công thức làm bánh với nguyên liệu và dụng cụ cần thiết trên cùng một nền tảng. Với tính năng tự động quy đổi định lượng theo khẩu phần và thêm nguyên liệu vào giỏ hàng nhanh chóng, BakeMate giúp bạn tiết kiệm thời gian chuẩn bị để tập trung vào niềm vui sáng tạo trong căn bếp.
       </p>
     </div>
   </section>
 
-  <section id="about-difference" class="about-section about-difference" aria-labelledby="about-difference-title">
-    <div class="about-difference__visual">
-      <img src="<?= App::e(App::asset('images/about-ingredients.jpg')) ?>" alt="Các nguyên liệu làm bánh được sắp xếp để chuẩn bị theo công thức" loading="lazy">
+  <section class="about-section about-story" aria-labelledby="about-vision-title">
+    <div class="about-story__heading">
+      <span class="about-eyebrow">Tầm nhìn</span>
+      <h2 id="about-vision-title" class="about-story__title">Trở thành người bạn đồng hành đáng tin cậy của cộng đồng yêu làm bánh.</h2>
     </div>
-    <div class="about-difference__content">
-      <span class="about-eyebrow">Điểm khác biệt</span>
-      <h2 id="about-difference-title">Không chỉ mua nguyên liệu, mà còn chuẩn bị theo công thức</h2>
-      <p>Điểm nổi bật của BakeMate là kết nối nhu cầu làm một món bánh với quá trình lựa chọn sản phẩm. Công thức đóng vai trò trung tâm để khách hàng xác định những gì cần chuẩn bị.</p>
-      <div class="about-benefits">
-        <article class="about-benefit">
-          <span class="about-benefit__number" aria-hidden="true">01</span>
-          <div>
-            <h3>Bắt đầu từ món bánh</h3>
-            <p>Lấy công thức làm điểm xuất phát thay vì phải tìm từng nguyên liệu một cách rời rạc.</p>
-          </div>
-        </article>
-        <article class="about-benefit">
-          <span class="about-benefit__number" aria-hidden="true">02</span>
-          <div>
-            <h3>Gắn kết định lượng và quy cách</h3>
-            <p>Đối chiếu lượng nguyên liệu trong công thức với quy cách đóng gói 100g–1kg để lựa chọn vừa đủ, không dư thừa.</p>
-          </div>
-        </article>
-        <article class="about-benefit">
-          <span class="about-benefit__number" aria-hidden="true">03</span>
-          <div>
-            <h3>Kết nối nguyên liệu và dụng cụ</h3>
-            <p>Hỗ trợ rà soát các thành phần và dụng cụ cần thiết cho quá trình thực hiện món bánh.</p>
-          </div>
-        </article>
-        <article class="about-benefit">
-          <span class="about-benefit__number" aria-hidden="true">04</span>
-          <div>
-            <h3>Hình dung giỏ hàng và chi phí</h3>
-            <p>Tổng hợp sản phẩm và chi phí dự kiến theo từng combo để khách hàng cân nhắc dễ dàng.</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="about-section about-audience" aria-labelledby="about-audience-title">
-    <div class="about-section__heading">
-      <span class="about-eyebrow">Dành cho người yêu làm bánh</span>
-      <h2 id="about-audience-title">Mỗi người một hành trình, chung niềm vui làm bánh</h2>
-      <p>BakeMate hướng đến những người muốn chuẩn bị nguyên liệu và dụng cụ làm bánh thuận tiện hơn, từ lần đầu trải nghiệm đến những dịp tự tay làm bánh quen thuộc.</p>
-    </div>
-
-    <div class="about-audience__grid">
-      <article class="about-audience-card">
-        <img src="<?= App::e(App::asset('images/about-beginner.jpg')) ?>" alt="Người mới học làm bánh" loading="lazy">
-        <div class="about-audience-card__body">
-          <span class="about-audience-card__label">Bắt đầu</span>
-          <h3>Người mới học làm bánh</h3>
-          <p>Có thêm cơ sở để xác định nguyên liệu, dụng cụ và các bước chuẩn bị rõ ràng trước khi thực hiện công thức.</p>
-        </div>
-      </article>
-      <article class="about-audience-card">
-        <img src="<?= App::e(App::asset('images/about-sharing-cakes.jpg')) ?>" alt="Làm bánh tặng người thân" loading="lazy">
-        <div class="about-audience-card__body">
-          <span class="about-audience-card__label">Chia sẻ</span>
-          <h3>Người thường xuyên làm bánh tại nhà</h3>
-          <p>Hỗ trợ chuẩn bị nhanh chóng cho những chiếc bánh dành tặng gia đình, bạn bè hoặc các dịp đặc biệt.</p>
-        </div>
-      </article>
+    <div class="about-story__body">
+      <p>
+        BakeMate hướng đến việc xây dựng một nền tảng mua sắm và khám phá công thức làm bánh tiện lợi, thân thiện và dễ sử dụng. Chúng tôi mong muốn mọi người, dù mới bắt đầu hay đã có kinh nghiệm, đều có thể tự tin làm ra những chiếc bánh yêu thích, biến mỗi trải nghiệm trong căn bếp thành một hành trình sáng tạo đầy cảm hứng.
+      </p>
     </div>
   </section>
 
@@ -108,6 +65,18 @@ declare(strict_types=1);
             <span class="contact-value">Thứ Hai - Chủ Nhật: 08:30 – 21:00</span>
           </div>
         </div>
+        <div style="margin-top:20px;">
+          <a href="<?= App::e(App::url('?c=home&a=contact')) ?>" class="btn btn--outline-dark">Gửi lời nhắn hỗ trợ &rarr;</a>
+        </div>
+      </div>
+      <div class="contact-map-frame">
+        <iframe
+          title="Bản đồ BakeMate - 59C Nguyễn Đình Chiểu, Quận 3, TP.HCM"
+          src="https://www.google.com/maps?q=59C%20Nguy%E1%BB%85n%20%C4%90%C3%ACnh%20Chi%E1%BB%83u%2C%20Qu%E1%BA%ADn%203%2C%20TP.HCM&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
       </div>
     </div>
   </section>

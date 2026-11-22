@@ -19,8 +19,8 @@ $isWish = in_array($pid, $wishlistIds ?? [], true);
     </div>
     <?php if (!empty($p['is_perishable'])): ?>
       <span class="product-card__tag product-card__tag--cold">Tươi lạnh</span>
-    <?php elseif ($isComingSoon): ?>
-      <span class="product-card__tag product-card__tag--soon">Sắp mở bán</span>
+    <?php elseif ($isComingSoon || $isOutOfStock): ?>
+      <span class="product-card__tag product-card__tag--soon">Hết hàng</span>
     <?php elseif (!empty($p['is_new'])): ?>
       <span class="product-card__tag product-card__tag--new">Mới</span>
     <?php elseif ($oldPrice > $price): ?>
@@ -55,7 +55,7 @@ $isWish = in_array($pid, $wishlistIds ?? [], true);
 
     <div class="product-card__actions" style="margin-top:auto;display:grid;gap:8px;padding-top:10px;">
       <?php if ($isComingSoon || $isOutOfStock): ?>
-        <button type="button" class="btn btn--outline-dark btn--full" disabled><?= $isComingSoon ? 'Sắp có hàng' : 'Tạm hết hàng' ?></button>
+        <button type="button" class="btn btn--outline-dark btn--full" disabled>Hết hàng</button>
       <?php else: ?>
         <button type="button" class="btn btn--primary btn--full js-quick-add-cart" data-product-id="<?= $pid ?>" data-option-index="0">Thêm vào giỏ</button>
       <?php endif; ?>

@@ -134,6 +134,35 @@
           "Cảm ơn bạn đã liên hệ! Lời nhắn đã được gửi tới đội ngũ BakeMate và sẽ được phản hồi trong 24 giờ.";
         successBox.hidden = false;
       }
+
+      const existingModal = document.getElementById("bakemate-contact-notice-modal");
+      if (existingModal) existingModal.remove();
+      const noticeModal = document.createElement("div");
+      noticeModal.id = "bakemate-contact-notice-modal";
+      noticeModal.className = "bake-modal-backdrop";
+      noticeModal.setAttribute("role", "dialog");
+      noticeModal.setAttribute("aria-modal", "true");
+      noticeModal.innerHTML = `
+        <div class="bake-confirm-card bake-policy-card">
+          <div class="bake-policy-card__head">
+            <h3>Cảm ơn bạn đã liên hệ!</h3>
+            <button type="button" class="bake-modal-close js-close-contact-notice" aria-label="Đóng hộp thoại">&times;</button>
+          </div>
+          <div class="bake-policy-card__body">
+            <p style="margin:0;color:#7c5c46;line-height:1.65;">Lời nhắn của bạn đã được ghi nhận. Đội ngũ BakeMate sẽ phản hồi qua email hoặc điện thoại trong vòng 24 giờ.</p>
+          </div>
+          <div class="bake-confirm-card__actions" style="margin-top:18px;">
+            <button type="button" class="btn btn--primary btn--full js-close-contact-notice">Quay lại</button>
+          </div>
+        </div>
+      `;
+      const closeNotice = () => noticeModal.remove();
+      noticeModal.querySelectorAll(".js-close-contact-notice").forEach((btn) => btn.addEventListener("click", closeNotice));
+      noticeModal.addEventListener("click", (ev) => {
+        if (ev.target === noticeModal) closeNotice();
+      });
+      document.body.appendChild(noticeModal);
+
       if (typeof window.showCartToast === "function") {
         window.showCartToast("Gửi liên hệ thành công! BakeMate sẽ phản hồi bạn sớm nhất.", {
           type: "success"

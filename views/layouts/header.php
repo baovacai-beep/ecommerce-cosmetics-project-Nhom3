@@ -7,6 +7,8 @@ $title = isset($pageTitle) ? (string) $pageTitle : 'BakeMate - Làm bánh chuẩ
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="BakeMate - Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh chuẩn công thức.">
+  <meta name="theme-color" content="#70452b">
   <title><?= App::e($title) ?></title>
   <?= Csrf::metaTag() ?>
 

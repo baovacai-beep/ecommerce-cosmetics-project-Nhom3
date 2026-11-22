@@ -84,6 +84,7 @@
           onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
         >
         <div class="recipe-poster-card__scrim" aria-hidden="true"></div>
+        <span class="recipe-poster-card__badge-corner">${escapeHtml(recipe.diff || "Dễ")}</span>
         <button
           type="button"
           class="recipe-poster-card__wish js-recipe-wish ${wished ? "is-active" : ""}"
@@ -104,9 +105,7 @@
             <span>·</span>
             <span>${escapeHtml(recipe.time)}</span>
             <span>·</span>
-            <span>${escapeHtml(recipe.diff)}</span>
-            <span>·</span>
-            <span>${escapeHtml(recipe.category)}</span>
+            <span>${escapeHtml(recipe.peopleLabel || "4 người")}</span>
           </div>
           <a href="recipe-detail.html?id=${encodeURIComponent(recipe.id)}" class="recipe-poster-card__cta">
             Xem công thức &rarr;
@@ -383,7 +382,21 @@
         ? window.isRecipeWishlisted(recipe.id)
         : false;
 
-    const inspirationRecipes = allRecipes.filter((r) => r.id !== recipe.id).slice(0, 3);
+    let inspirationRecipes = [];
+    if (Array.isArray(recipe.relatedIds) && recipe.relatedIds.length > 0) {
+      const bySlug = new Map(allRecipes.map((r) => [r.id, r]));
+      inspirationRecipes = recipe.relatedIds
+        .map((id) => bySlug.get(id))
+        .filter((r) => r && r.id !== recipe.id);
+    }
+    if (inspirationRecipes.length < 3) {
+      const seen = new Set(inspirationRecipes.map((r) => r.id));
+      inspirationRecipes = [
+        ...inspirationRecipes,
+        ...allRecipes.filter((r) => r.id !== recipe.id && !seen.has(r.id))
+      ];
+    }
+    inspirationRecipes = inspirationRecipes.slice(0, 3);
 
     root.innerHTML = `
       <!-- 1. Hero Công thức -->
@@ -392,9 +405,11 @@
           <p class="recipe-detail-hero__eyebrow">BAKING JOURNAL / ${escapeHtml(recipe.code || "RECIPE")}</p>
           <h1 class="recipe-detail-hero__title">${escapeHtml(recipe.title)}</h1>
           <p class="recipe-detail-hero__desc">${escapeHtml(recipe.subtitle)}</p>
-          <p style="font-size:13.5px;color:#7c5c46;margin-bottom:18px;font-weight:600;">
-            Thời gian: ${escapeHtml(recipe.time)} · Độ khó: ${escapeHtml(recipe.diff)} · Khẩu phần chuẩn: ${defaultServings} ${escapeHtml(recipe.servingsUnit || "phần")} · ${escapeHtml(recipe.author || "BakeMate Kitchen")}
-          </p>
+          <div class="recipe-detail-meta-stack" style="font-size:13.5px;color:#7c5c46;margin-bottom:18px;display:grid;gap:6px;line-height:1.5;">
+            <div>Thời gian: <strong style="color:#4a2e19;">${escapeHtml(recipe.time)}</strong></div>
+            <div>Độ khó: <strong style="color:#4a2e19;">${escapeHtml(recipe.diff)}</strong></div>
+            <div>Thành phẩm: <strong style="color:#4a2e19;">${escapeHtml(recipe.yieldLabel || (defaultServings + " " + (recipe.servingsUnit || "phần")))}</strong></div>
+          </div>
           <div class="recipe-detail-hero__actions">
             <button
               type="button"
@@ -434,13 +449,12 @@
           <div class="recipe-ingredients-card">
             <div class="recipe-servings-bar">
               <div>
-                <strong style="color:#4a2e19;font-size:15px;">Khẩu phần:</strong>
-                <span style="font-size:13px;color:var(--accent-sub);">(${escapeHtml(recipe.servingsUnit || "phần")})</span>
+                <strong style="color:#4a2e19;font-size:15px;">${escapeHtml(recipe.servingsUnit || "Khẩu phần")}:</strong>
               </div>
               <div class="recipe-servings-stepper" role="group" aria-label="Điều chỉnh khẩu phần">
-                <button type="button" id="btn-servings-minus" aria-label="Giảm khẩu phần">-</button>
+                <button type="button" id="btn-servings-minus" aria-label="Giảm">-</button>
                 <span id="recipe-servings-val">${currentServings}</span>
-                <button type="button" id="btn-servings-plus" aria-label="Tăng khẩu phần">+</button>
+                <button type="button" id="btn-servings-plus" aria-label="Tăng">+</button>
               </div>
             </div>
 
@@ -450,24 +464,24 @@
 
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:10px;border-top:1px dashed #eadbc6;">
               <span style="font-size:12px;color:#7c5c46;">Bỏ chọn nguyên liệu đã có sẵn — BakeMate sẽ tự động ghi nhớ cho bếp của bạn.</span>
-              <button type="button" id="btn-reset-ing-selection" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Chọn lại tất cả</button>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" id="btn-reset-ing-selection" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Chọn tất cả</button>
+                <button type="button" id="btn-uncheck-all-ing" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Bỏ chọn tất cả</button>
+              </div>
             </div>
           </div>
 
           <aside class="recipe-cart-summary-card" aria-label="Tổng hợp giỏ hàng công thức">
-            <h3>Từ công thức đến giỏ hàng</h3>
-            <p class="recipe-cart-summary-card__sub">Chọn các nguyên liệu bạn còn thiếu để thêm gọn thành 1 combo công thức trong giỏ.</p>
-
             <div class="recipe-cart-summary-card__stat">
-              <span>Khẩu phần đang chọn:</span>
-              <strong id="recipe-summary-servings">${currentServings} phần</strong>
+              <span>${escapeHtml(recipe.servingsUnit || "Khẩu phần")}:</span>
+              <strong id="recipe-summary-servings">${currentServings}</strong>
             </div>
             <div class="recipe-cart-summary-card__stat">
               <span>Số món đã chọn:</span>
               <strong id="recipe-selected-count">0 món</strong>
             </div>
 
-            <div class="recipe-cart-summary-card__total" id="recipe-summary-total">0 ₫</div>
+            <div class="recipe-cart-summary-card__total" id="recipe-summary-total">Giá: 0 ₫</div>
 
             <div class="recipe-cart-summary-card__btns">
               <button type="button" id="btn-add-selected-ing" class="btn btn--primary">
@@ -479,8 +493,11 @@
             </div>
 
             <p style="font-size:12.5px;color:#7c5c46;margin-top:14px;line-height:1.5;text-align:center;">
-              Sản phẩm sẽ được nhóm theo công thức trong giỏ hàng · <a href="cart.html" style="color:var(--primary-color);font-weight:700;text-decoration:underline;">Xem giỏ hàng</a>
+              Sản phẩm sẽ được nhóm theo công thức trong giỏ hàng
             </p>
+            <a href="cart.html" class="recipe-view-cart-link" style="display:block;text-align:center;margin-top:10px;font-size:16px;font-weight:800;color:var(--primary-color);text-decoration:underline;">
+              Xem giỏ hàng &rarr;
+            </a>
           </aside>
         </div>
       </section>
@@ -500,22 +517,47 @@
                   ? window.getProductOption(prod.id, tool.optionIndex || 0)
                   : null;
               const price = opt ? opt.price : prod ? prod.price : 0;
+              const toolImg = prod && prod.image ? prod.image : recipe.image || FALLBACK_IMG;
+              const canBuyTool = Boolean(prod && prod.stock > 0 && String(prod.stockStatus || "") !== "out_of_stock");
               return `
                 <div class="recipe-tool-card">
-                  <div>
-                    <a href="product-detail.html?id=${tool.productId}" style="font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</a>
-                    <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 4px;">${escapeHtml(tool.desc || "")}</p>
-                    <strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>
+                  <div class="recipe-tool-card__left">
+                    <img
+                      src="${escapeHtml(toolImg)}"
+                      alt="${escapeHtml(tool.name)}"
+                      class="recipe-tool-card__thumb"
+                      loading="lazy"
+                      onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+                    >
+                    <div>
+                      ${
+                        prod
+                          ? `<a href="product-detail.html?id=${tool.productId}" style="font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</a>`
+                          : `<strong style="display:block;font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</strong>`
+                      }
+                      <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 4px;">${escapeHtml(tool.desc || "")}</p>
+                      ${
+                        prod
+                          ? `<strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>`
+                          : `<span style="font-size:12.5px;color:#7c5c46;">Chuẩn bị sẵn tại bếp</span>`
+                      }
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    class="btn btn--outline-dark js-add-tool-btn"
-                    data-product-id="${tool.productId}"
-                    data-option-index="${tool.optionIndex || 0}"
-                    style="padding:7px 12px;font-size:12.5px;white-space:nowrap;"
-                  >
-                    + Thêm vào giỏ
-                  </button>
+                  ${
+                    canBuyTool
+                      ? `<button
+                          type="button"
+                          class="btn btn--outline-dark js-add-tool-btn"
+                          data-product-id="${tool.productId}"
+                          data-option-index="${tool.optionIndex || 0}"
+                          style="padding:7px 12px;font-size:12.5px;white-space:nowrap;"
+                        >
+                          + Thêm vào giỏ
+                        </button>`
+                      : prod
+                        ? `<span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">Hết hàng</span>`
+                        : ""
+                  }
                 </div>
               `;
             })
@@ -527,7 +569,7 @@
       <section style="margin-bottom:28px;" aria-label="Các bước thực hiện">
         <h2 class="section-heading" style="text-align:left;margin-bottom:10px;">Cách làm - Từng bước thật dễ dàng</h2>
 
-        <div class="recipe-progress-card">
+        <div class="recipe-progress-card" id="recipe-progress-card">
           <div class="recipe-progress-head">
             <span>Tiến độ vào bếp của bạn</span>
             <span id="recipe-progress-text">0/${totalStepsCount} bước (0%)</span>
@@ -535,19 +577,36 @@
           <div class="recipe-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="recipe-progress-bar">
             <div class="recipe-progress-bar__fill" id="recipe-progress-fill"></div>
           </div>
+          <div id="recipe-complete-callout" class="recipe-complete-callout" hidden>
+            <div>
+              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh ${escapeHtml(recipe.title)}!</strong>
+              <p>Bạn có muốn chia sẻ trải nghiệm làm bánh của mình không?</p>
+            </div>
+            <button type="button" id="btn-scroll-to-review" class="btn btn--primary" style="white-space:nowrap;">
+              &darr; Chia sẻ cảm nhận ngay
+            </button>
+          </div>
         </div>
 
         <div class="baking-timer-card" aria-label="Đồng hồ đếm ngược làm bánh">
           <div>
             <strong style="display:block;font-size:15px;color:#4a2e19;">Đồng hồ hẹn giờ nướng / ủ bánh</strong>
-            <span style="font-size:12.5px;color:#7c5c46;">Khuyến nghị công thức: ${defaultBakeMins} phút · Có thể chỉnh tăng giảm 5 phút</span>
+            <div class="baking-timer__inputs" style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap;">
+              <label style="font-size:12.5px;color:#5c402d;display:inline-flex;align-items:center;gap:5px;">
+                Phút:
+                <input type="number" id="timer-custom-min" class="form-input" min="0" max="180" value="${defaultBakeMins}" style="width:68px;padding:5px 8px;text-align:center;">
+              </label>
+              <label style="font-size:12.5px;color:#5c402d;display:inline-flex;align-items:center;gap:5px;">
+                Giây:
+                <input type="number" id="timer-custom-sec" class="form-input" min="0" max="59" value="0" style="width:64px;padding:5px 8px;text-align:center;">
+              </label>
+            </div>
           </div>
           <div class="baking-timer__clock" id="baking-timer-clock" aria-live="polite">${formatTimerClock(defaultBakeMins * 60)}</div>
           <div class="baking-timer__actions">
-            <button type="button" id="btn-timer-minus" class="btn btn--outline-dark" style="padding:7px 11px;font-size:12.5px;">-5 phút</button>
-            <button type="button" id="btn-timer-plus" class="btn btn--outline-dark" style="padding:7px 11px;font-size:12.5px;">+5 phút</button>
-            <button type="button" id="btn-timer-toggle" class="btn btn--primary" style="padding:7px 15px;font-size:12.5px;">Bắt đầu</button>
-            <button type="button" id="btn-timer-reset" class="btn btn--outline-dark" style="padding:7px 11px;font-size:12.5px;">Đặt lại</button>
+            <button type="button" id="btn-timer-start" class="btn btn--primary" style="padding:7px 14px;font-size:12.5px;">Bắt đầu</button>
+            <button type="button" id="btn-timer-pause" class="btn btn--outline-dark" style="padding:7px 12px;font-size:12.5px;">Tạm dừng</button>
+            <button type="button" id="btn-timer-reset" class="btn btn--outline-dark" style="padding:7px 12px;font-size:12.5px;">Đặt lại</button>
           </div>
         </div>
 
@@ -611,7 +670,7 @@
       const addSelectedBtn = document.getElementById("btn-add-selected-ing");
 
       if (valEl) valEl.textContent = String(currentServings);
-      if (summaryServingsEl) summaryServingsEl.textContent = `${currentServings} phần`;
+      if (summaryServingsEl) summaryServingsEl.textContent = String(currentServings);
 
       if (listEl) {
         listEl.innerHTML = rows
@@ -663,7 +722,7 @@
         selectedCountEl.textContent = `${selectedRows.length} nguyên liệu`;
       }
       if (totalEl) {
-        totalEl.textContent = `Ước tính: ${formatPrice(totalSelected)}`;
+        totalEl.textContent = `Giá: ${formatPrice(totalSelected)}`;
       }
       if (addSelectedBtn) {
         addSelectedBtn.disabled = selectedRows.length === 0;
@@ -831,16 +890,31 @@
     }
 
     function updateStepProgressUI() {
+      const progressCard = document.getElementById("recipe-progress-card");
       const progressText = document.getElementById("recipe-progress-text");
       const progressBar = document.getElementById("recipe-progress-bar");
       const progressFill = document.getElementById("recipe-progress-fill");
+      const completeCallout = document.getElementById("recipe-complete-callout");
       const total = Math.max(1, totalStepsCount);
       const done = Array.from(completedSteps).filter((idx) => idx >= 0 && idx < totalStepsCount).length;
       const pct = totalStepsCount > 0 ? Math.round((done / total) * 100) : 0;
+      const isComplete = totalStepsCount > 0 && done === totalStepsCount;
 
       if (progressText) progressText.textContent = `${done}/${totalStepsCount} bước (${pct}%)`;
       if (progressBar) progressBar.setAttribute("aria-valuenow", String(pct));
       if (progressFill) progressFill.style.width = `${pct}%`;
+      if (progressCard) progressCard.classList.toggle("is-complete", isComplete);
+      if (completeCallout) completeCallout.hidden = !isComplete;
+    }
+
+    const scrollToReviewBtn = document.getElementById("btn-scroll-to-review");
+    if (scrollToReviewBtn) {
+      scrollToReviewBtn.addEventListener("click", function () {
+        const target = document.getElementById("recipe-reviews-section") || document.getElementById("recipe-reviews-container");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     }
 
     const stepsListEl = document.getElementById("recipe-steps-list");
@@ -863,26 +937,28 @@
       });
     }
 
-    // Đồng hồ đếm ngược nướng / ủ bánh (Baking Countdown Timer)
+    // Đồng hồ đếm ngược nướng / ủ bánh (nhập Phút / Giây tùy ý)
     let timerSecondsLeft = defaultBakeMins * 60;
     let timerIntervalId = null;
     let timerRunning = false;
 
     const timerClockEl = document.getElementById("baking-timer-clock");
-    const timerToggleBtn = document.getElementById("btn-timer-toggle");
+    const timerMinInput = document.getElementById("timer-custom-min");
+    const timerSecInput = document.getElementById("timer-custom-sec");
+    const timerStartBtn = document.getElementById("btn-timer-start");
+    const timerPauseBtn = document.getElementById("btn-timer-pause");
     const timerResetBtn = document.getElementById("btn-timer-reset");
-    const timerMinusBtn = document.getElementById("btn-timer-minus");
-    const timerPlusBtn = document.getElementById("btn-timer-plus");
+
+    function readConfiguredSeconds() {
+      const m = Math.max(0, Math.min(180, Math.floor(Number(timerMinInput ? timerMinInput.value : defaultBakeMins) || 0)));
+      const s = Math.max(0, Math.min(59, Math.floor(Number(timerSecInput ? timerSecInput.value : 0) || 0)));
+      return m * 60 + s;
+    }
 
     function renderTimerUI() {
       if (timerClockEl) timerClockEl.textContent = formatTimerClock(timerSecondsLeft);
-      if (timerToggleBtn) {
-        timerToggleBtn.textContent = timerRunning
-          ? "Tạm dừng"
-          : timerSecondsLeft < defaultBakeMins * 60 && timerSecondsLeft > 0
-          ? "Tiếp tục"
-          : "Bắt đầu";
-      }
+      if (timerStartBtn) timerStartBtn.disabled = timerRunning;
+      if (timerPauseBtn) timerPauseBtn.disabled = !timerRunning;
     }
 
     function stopBakingTimer() {
@@ -894,14 +970,27 @@
       renderTimerUI();
     }
 
-    if (timerToggleBtn) {
-      timerToggleBtn.addEventListener("click", function () {
-        if (timerRunning) {
-          stopBakingTimer();
-          return;
+    [timerMinInput, timerSecInput].forEach((inp) => {
+      if (!inp) return;
+      inp.addEventListener("change", function () {
+        if (!timerRunning) {
+          timerSecondsLeft = readConfiguredSeconds();
+          renderTimerUI();
+        }
+      });
+    });
+
+    if (timerStartBtn) {
+      timerStartBtn.addEventListener("click", function () {
+        if (timerRunning) return;
+        if (timerSecondsLeft <= 0) {
+          timerSecondsLeft = readConfiguredSeconds() || defaultBakeMins * 60;
         }
         if (timerSecondsLeft <= 0) {
-          timerSecondsLeft = defaultBakeMins * 60;
+          if (typeof window.showCartToast === "function") {
+            window.showCartToast("Vui lòng nhập số phút hoặc giây lớn hơn 0.", "warning");
+          }
+          return;
         }
         timerRunning = true;
         renderTimerUI();
@@ -922,24 +1011,14 @@
       });
     }
 
+    if (timerPauseBtn) {
+      timerPauseBtn.addEventListener("click", stopBakingTimer);
+    }
+
     if (timerResetBtn) {
       timerResetBtn.addEventListener("click", function () {
         stopBakingTimer();
-        timerSecondsLeft = defaultBakeMins * 60;
-        renderTimerUI();
-      });
-    }
-
-    if (timerMinusBtn) {
-      timerMinusBtn.addEventListener("click", function () {
-        timerSecondsLeft = Math.max(60, timerSecondsLeft - 300);
-        renderTimerUI();
-      });
-    }
-
-    if (timerPlusBtn) {
-      timerPlusBtn.addEventListener("click", function () {
-        timerSecondsLeft = Math.min(180 * 60, timerSecondsLeft + 300);
+        timerSecondsLeft = readConfiguredSeconds();
         renderTimerUI();
       });
     }
@@ -949,6 +1028,7 @@
     const plusBtn = document.getElementById("btn-servings-plus");
     const ingListEl = document.getElementById("recipe-ingredients-list");
     const resetIngBtn = document.getElementById("btn-reset-ing-selection");
+    const uncheckAllIngBtn = document.getElementById("btn-uncheck-all-ing");
     const addSelectedBtn = document.getElementById("btn-add-selected-ing");
     const addAllBtn = document.getElementById("btn-add-all-ing");
     const wishBtn = document.getElementById("btn-recipe-wish");
@@ -990,6 +1070,14 @@
     if (resetIngBtn) {
       resetIngBtn.addEventListener("click", function () {
         availableIndices.forEach((idx) => checkedIndices.add(idx));
+        persistPantryRemember();
+        renderCalculator();
+      });
+    }
+
+    if (uncheckAllIngBtn) {
+      uncheckAllIngBtn.addEventListener("click", function () {
+        checkedIndices.clear();
         persistPantryRemember();
         renderCalculator();
       });

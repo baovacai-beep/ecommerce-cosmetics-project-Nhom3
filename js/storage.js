@@ -74,222 +74,953 @@
    * Mục đầu tiên (index 0) luôn đồng bộ 100% với đơn giá gốc product.price.
    */
   const PRODUCT_PACKAGING_OPTIONS = {
-    1: [
-      { shortLabel: "Gói 1kg", price: 52000, oldPrice: 64000 },
-      { shortLabel: "Túi 500g", price: 28000, oldPrice: 34000 },
-      { shortLabel: "Túi 300g", price: 19000, oldPrice: 24000 },
-      { shortLabel: "Gói 100g dùng thử", price: 9000, oldPrice: 12000 }
-    ],
-    2: [
-      { shortLabel: "Gói 1kg", price: 45000, oldPrice: 54000 },
-      { shortLabel: "Túi 500g", price: 25000, oldPrice: 30000 },
-      { shortLabel: "Túi 300g", price: 17000, oldPrice: 22000 },
-      { shortLabel: "Gói 100g dùng thử", price: 8000, oldPrice: 11000 }
-    ],
-    3: [
-      { shortLabel: "Gói 1kg", price: 32000, oldPrice: 40000 },
-      { shortLabel: "Túi 500g", price: 18000, oldPrice: 23000 },
-      { shortLabel: "Túi 300g", price: 13000, oldPrice: 17000 },
-      { shortLabel: "Gói 100g dùng thử", price: 6500, oldPrice: 9000 }
-    ],
-    4: [
-      { shortLabel: "Hộp 100g", price: 65000, oldPrice: 78000 },
-      { shortLabel: "Hộp 226g", price: 135000, oldPrice: 160000 }
-    ],
-    5: [
-      { shortLabel: "Gói 100g", price: 75000, oldPrice: 90000 },
-      { shortLabel: "Gói 200g", price: 140000, oldPrice: 165000 }
-    ],
-    6: [
-      { shortLabel: "Hộp 250ml", price: 45000, oldPrice: 54000 },
-      { shortLabel: "Hộp 1 Lít", price: 155000, oldPrice: 180000 }
-    ],
-    7: [
-      { shortLabel: "Mẫu tiêu chuẩn (5kg/1g)", price: 120000, oldPrice: 120000 },
-      { shortLabel: "Kèm khay & pin dự phòng", price: 145000, oldPrice: 145000 }
-    ],
-    8: [
-      { shortLabel: "Ca 500ml", price: 45000, oldPrice: 45000 },
-      { shortLabel: "Ca 1000ml", price: 68000, oldPrice: 68000 }
-    ],
-    9: [
-      { shortLabel: "Bộ 5 thìa tiêu chuẩn", price: 35000, oldPrice: 35000 },
-      { shortLabel: "Bộ 8 thìa inox", price: 58000, oldPrice: 58000 }
-    ],
-    10: [
-      { shortLabel: "Đầu dò tiêu chuẩn", price: 95000, oldPrice: 115000 },
-      { shortLabel: "Đầu dò dài chuyên dụng", price: 118000, oldPrice: 140000 }
-    ],
-    11: [
-      { shortLabel: "Túi 50 cái cỡ vừa", price: 25000, oldPrice: 25000 },
-      { shortLabel: "Túi 100 cái cỡ lớn", price: 42000, oldPrice: 42000 }
-    ],
-    12: [
-      { shortLabel: "Khối 227g", price: 68000, oldPrice: 82000 },
-      { shortLabel: "Combo 2 khối (454g)", price: 130000, oldPrice: 158000 }
-    ],
-    13: [
-      { shortLabel: "Túi 1kg", price: 28000, oldPrice: 28000 },
-      { shortLabel: "Túi 500g", price: 16000, oldPrice: 16000 }
-    ],
-    14: [
-      { shortLabel: "Hộp 100g", price: 48000, oldPrice: 58000 },
-      { shortLabel: "Gói 50g dùng thử", price: 27000, oldPrice: 34000 }
-    ],
-    15: [
-      { shortLabel: "Vỉ 10 quả", price: 34000, oldPrice: 34000 },
-      { shortLabel: "Hộp 6 quả", price: 22000, oldPrice: 22000 }
-    ],
-    16: [
-      { shortLabel: "Cỡ 25cm tiêu chuẩn", price: 42000, oldPrice: 52000 },
-      { shortLabel: "Cỡ 30cm cán dài", price: 54000, oldPrice: 66000 }
-    ],
-    17: [
-      { shortLabel: "Đường kính 20cm (Đế rời)", price: 115000, oldPrice: 140000 },
-      { shortLabel: "Đường kính 22cm (Đế rời)", price: 135000, oldPrice: 165000 }
-    ],
-    18: [
-      { shortLabel: "Cuộn 5m × 30cm", price: 29000, oldPrice: 29000 },
-      { shortLabel: "Cuộn 10m × 30cm", price: 52000, oldPrice: 52000 }
-    ],
-    19: [
-      { shortLabel: "Lốc 50 cup tiêu chuẩn", price: 24000, oldPrice: 24000 },
-      { shortLabel: "Lốc 100 cup", price: 44000, oldPrice: 44000 }
-    ],
-    20: [
-      { shortLabel: "Bộ 12 đui + khớp nối", price: 65000, oldPrice: 79000 },
-      { shortLabel: "Bộ 24 đui chuyên nghiệp", price: 115000, oldPrice: 140000 }
-    ],
-    21: [
-      { shortLabel: "Set 2 hộp (25×25×18cm)", price: 38000, oldPrice: 38000 },
-      { shortLabel: "Set 5 hộp tiết kiệm", price: 88000, oldPrice: 88000 }
-    ],
-    22: [
-      { shortLabel: "Bộ 6 khuôn Tart mini", price: 135000, oldPrice: 135000 }
-    ],
-    23: [
-      { shortLabel: "Gói 500g", price: 58000, oldPrice: 58000 }
-    ]
+      "1": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 52000,
+              "oldPrice": 64000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 28000,
+              "oldPrice": 34000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 19000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 9000,
+              "oldPrice": 12000
+          }
+      ],
+      "2": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 45000,
+              "oldPrice": 54000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 25000,
+              "oldPrice": 30000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 17000,
+              "oldPrice": 22000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 8000,
+              "oldPrice": 11000
+          }
+      ],
+      "3": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 32000,
+              "oldPrice": 40000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 18000,
+              "oldPrice": 23000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 13000,
+              "oldPrice": 17000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 6500,
+              "oldPrice": 9000
+          }
+      ],
+      "4": [
+          {
+              "shortLabel": "Hộp 100g",
+              "price": 65000,
+              "oldPrice": 78000
+          },
+          {
+              "shortLabel": "Hộp 226g",
+              "price": 135000,
+              "oldPrice": 160000
+          }
+      ],
+      "5": [
+          {
+              "shortLabel": "Gói 100g",
+              "price": 75000,
+              "oldPrice": 90000
+          },
+          {
+              "shortLabel": "Gói 200g",
+              "price": 140000,
+              "oldPrice": 165000
+          }
+      ],
+      "6": [
+          {
+              "shortLabel": "Hộp 250ml",
+              "price": 45000,
+              "oldPrice": 54000
+          },
+          {
+              "shortLabel": "Hộp 1 Lít",
+              "price": 155000,
+              "oldPrice": 180000
+          }
+      ],
+      "7": [
+          {
+              "shortLabel": "Mẫu 5kg / 1g",
+              "price": 120000,
+              "oldPrice": 120000
+          }
+      ],
+      "8": [
+          {
+              "shortLabel": "Ca 500ml",
+              "price": 45000,
+              "oldPrice": 45000
+          },
+          {
+              "shortLabel": "Ca 1000ml",
+              "price": 68000,
+              "oldPrice": 68000
+          }
+      ],
+      "9": [
+          {
+              "shortLabel": "Bộ 5 thìa tiêu chuẩn",
+              "price": 35000,
+              "oldPrice": 35000
+          },
+          {
+              "shortLabel": "Bộ 8 thìa inox",
+              "price": 58000,
+              "oldPrice": 58000
+          }
+      ],
+      "10": [
+          {
+              "shortLabel": "Đầu dò tiêu chuẩn",
+              "price": 95000,
+              "oldPrice": 115000
+          },
+          {
+              "shortLabel": "Đầu dò dài chuyên dụng",
+              "price": 118000,
+              "oldPrice": 140000
+          }
+      ],
+      "11": [
+          {
+              "shortLabel": "Túi 50 cái cỡ vừa",
+              "price": 25000,
+              "oldPrice": 25000
+          },
+          {
+              "shortLabel": "Túi 100 cái cỡ lớn",
+              "price": 42000,
+              "oldPrice": 42000
+          }
+      ],
+      "12": [
+          {
+              "shortLabel": "Khối 227g",
+              "price": 68000,
+              "oldPrice": 82000
+          },
+          {
+              "shortLabel": "Combo 2 khối (454g)",
+              "price": 130000,
+              "oldPrice": 158000
+          }
+      ],
+      "13": [
+          {
+              "shortLabel": "Túi 1kg",
+              "price": 28000,
+              "oldPrice": 28000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 16000,
+              "oldPrice": 16000
+          }
+      ],
+      "14": [
+          {
+              "shortLabel": "Hộp 100g",
+              "price": 48000,
+              "oldPrice": 58000
+          },
+          {
+              "shortLabel": "Gói 50g dùng thử",
+              "price": 27000,
+              "oldPrice": 34000
+          }
+      ],
+      "15": [
+          {
+              "shortLabel": "Vỉ 10 quả",
+              "price": 34000,
+              "oldPrice": 34000
+          },
+          {
+              "shortLabel": "Hộp 6 quả",
+              "price": 22000,
+              "oldPrice": 22000
+          }
+      ],
+      "16": [
+          {
+              "shortLabel": "Cỡ 25cm tiêu chuẩn",
+              "price": 42000,
+              "oldPrice": 52000
+          },
+          {
+              "shortLabel": "Cỡ 30cm cán dài",
+              "price": 54000,
+              "oldPrice": 66000
+          }
+      ],
+      "17": [
+          {
+              "shortLabel": "Đường kính 20cm (Đế rời)",
+              "price": 115000,
+              "oldPrice": 140000
+          },
+          {
+              "shortLabel": "Đường kính 22cm (Đế rời)",
+              "price": 135000,
+              "oldPrice": 165000
+          }
+      ],
+      "18": [
+          {
+              "shortLabel": "Cuộn 5m × 30cm",
+              "price": 29000,
+              "oldPrice": 29000
+          },
+          {
+              "shortLabel": "Cuộn 10m × 30cm",
+              "price": 52000,
+              "oldPrice": 52000
+          }
+      ],
+      "19": [
+          {
+              "shortLabel": "Lốc 50 cup tiêu chuẩn",
+              "price": 24000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Lốc 100 cup",
+              "price": 44000,
+              "oldPrice": 44000
+          }
+      ],
+      "20": [
+          {
+              "shortLabel": "Bộ 12 đui + khớp nối",
+              "price": 65000,
+              "oldPrice": 79000
+          },
+          {
+              "shortLabel": "Bộ 24 đui chuyên nghiệp",
+              "price": 115000,
+              "oldPrice": 140000
+          }
+      ],
+      "21": [
+          {
+              "shortLabel": "Set 2 hộp (25×25×18cm)",
+              "price": 38000,
+              "oldPrice": 38000
+          },
+          {
+              "shortLabel": "Set 5 hộp tiết kiệm",
+              "price": 88000,
+              "oldPrice": 88000
+          }
+      ],
+      "24": [
+          {
+              "shortLabel": "Hộp 1 Lít",
+              "price": 34000,
+              "oldPrice": 39000
+          },
+          {
+              "shortLabel": "Lốc 4 hộp x 180ml",
+              "price": 32000,
+              "oldPrice": 36000
+          }
+      ],
+      "25": [
+          {
+              "shortLabel": "Gói chiết lẻ 100g",
+              "price": 45000,
+              "oldPrice": 55000
+          },
+          {
+              "shortLabel": "Hộp 1kg (Đóng gói lớn chuyên dụng)",
+              "price": 350000,
+              "oldPrice": 420000
+          }
+      ],
+      "26": [
+          {
+              "shortLabel": "Hộp 226g (8 oz)",
+              "price": 32000,
+              "oldPrice": 38000
+          },
+          {
+              "shortLabel": "Gói lớn 454g",
+              "price": 58000,
+              "oldPrice": 68000
+          }
+      ],
+      "27": [
+          {
+              "shortLabel": "Gói lẻ 10g",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Hộp 5 gói x 10g",
+              "price": 24000,
+              "oldPrice": 30000
+          }
+      ],
+      "28": [
+          {
+              "shortLabel": "Nguyên bộ (Thân máy, 2 que đánh trứng, 2 que nhào bột)",
+              "price": 690000,
+              "oldPrice": 850000
+          }
+      ],
+      "29": [
+          {
+              "shortLabel": "Tô đơn lẻ size 22cm",
+              "price": 35000,
+              "oldPrice": 45000
+          },
+          {
+              "shortLabel": "Set 5 cái (Đường kính 18cm–26cm)",
+              "price": 110000,
+              "oldPrice": 145000
+          }
+      ],
+      "30": [
+          {
+              "shortLabel": "Size 16cm",
+              "price": 28000,
+              "oldPrice": 35000
+          },
+          {
+              "shortLabel": "Size 20cm",
+              "price": 38000,
+              "oldPrice": 46000
+          }
+      ],
+      "31": [
+          {
+              "shortLabel": "Khay 6 lỗ chuẩn (Size vừa)",
+              "price": 85000,
+              "oldPrice": 110000
+          },
+          {
+              "shortLabel": "Khay 12 lỗ lớn (Lò chuyên dụng)",
+              "price": 150000,
+              "oldPrice": 185000
+          }
+      ],
+      "32": [
+          {
+              "shortLabel": "5 ô",
+              "price": 45000,
+              "oldPrice": 58000
+          },
+          {
+              "shortLabel": "12 ô",
+              "price": 70000,
+              "oldPrice": 88000
+          },
+          {
+              "shortLabel": "30 ô",
+              "price": 100000,
+              "oldPrice": 125000
+          }
+      ],
+      "33": [
+          {
+              "shortLabel": "Đường kính 27.5cm",
+              "price": 75000,
+              "oldPrice": 95000
+          },
+          {
+              "shortLabel": "Đường kính 35cm",
+              "price": 120000,
+              "oldPrice": 150000
+          }
+      ],
+      "34": [
+          {
+              "shortLabel": "Hộp 1 bánh",
+              "price": 8000,
+              "oldPrice": 13000
+          },
+          {
+              "shortLabel": "Hộp 4 bánh",
+              "price": 10000,
+              "oldPrice": 15000
+          },
+          {
+              "shortLabel": "Hộp 6 bánh",
+              "price": 12000,
+              "oldPrice": 17000
+          }
+      ],
+      "35": [
+          {
+              "shortLabel": "Size S",
+              "price": 6000,
+              "oldPrice": 8000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 8000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 12000,
+              "oldPrice": 15000
+          },
+          {
+              "shortLabel": "Size XL",
+              "price": 15000,
+              "oldPrice": 19000
+          }
+      ],
+      "36": [
+          {
+              "shortLabel": "Size trung bình đa năng",
+              "price": 3000,
+              "oldPrice": 4000
+          }
+      ],
+      "37": [
+          {
+              "shortLabel": "Đế tròn (Đường kính 20cm)",
+              "price": 4000,
+              "oldPrice": 6000
+          },
+          {
+              "shortLabel": "Đế vuông (Kích thước 20x20cm)",
+              "price": 4000,
+              "oldPrice": 6000
+          }
+      ],
+      "38": [
+          {
+              "shortLabel": "Size S (Nhỏ)",
+              "price": 8000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size M (Trung)",
+              "price": 10000,
+              "oldPrice": 13000
+          },
+          {
+              "shortLabel": "Size L (Lớn)",
+              "price": 12000,
+              "oldPrice": 15000
+          }
+      ],
+      "39": [
+          {
+              "shortLabel": "Khay thành thấp",
+              "price": 65000,
+              "oldPrice": 80000
+          },
+          {
+              "shortLabel": "Khay thành cao",
+              "price": 75000,
+              "oldPrice": 92000
+          }
+      ],
+      "40": [
+          {
+              "shortLabel": "Đế mousse mini tròn 5cm",
+              "price": 2000,
+              "oldPrice": 3000
+          },
+          {
+              "shortLabel": "Đế mousse tròn 8cm",
+              "price": 2500,
+              "oldPrice": 3500
+          },
+          {
+              "shortLabel": "Đế mousse vuông 10cm",
+              "price": 3000,
+              "oldPrice": 4000
+          },
+          {
+              "shortLabel": "Đế mousse bạc 12cm",
+              "price": 3500,
+              "oldPrice": 4500
+          }
+      ],
+      "41": [
+          {
+              "shortLabel": "Nến số 0-9",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Nến xoắn",
+              "price": 7000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Nến dài",
+              "price": 6000,
+              "oldPrice": 9000
+          },
+          {
+              "shortLabel": "Nến ngôi sao",
+              "price": 8000,
+              "oldPrice": 11000
+          },
+          {
+              "shortLabel": "Nến kim tuyến",
+              "price": 9000,
+              "oldPrice": 12000
+          }
+      ],
+      "42": [
+          {
+              "shortLabel": "Topper Happy Birthday",
+              "price": 10000,
+              "oldPrice": 14000
+          },
+          {
+              "shortLabel": "Topper Acrylic",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Topper Trái tim",
+              "price": 10000,
+              "oldPrice": 14000
+          },
+          {
+              "shortLabel": "Topper Công chúa",
+              "price": 15000,
+              "oldPrice": 19000
+          },
+          {
+              "shortLabel": "Topper Hoạt hình",
+              "price": 14000,
+              "oldPrice": 18000
+          }
+      ],
+      "43": [
+          {
+              "shortLabel": "Cuộn tiêu chuẩn",
+              "price": 2000,
+              "oldPrice": 3000
+          }
+      ],
+      "44": [
+          {
+              "shortLabel": "Cuộn 1m",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Cuộn 5m",
+              "price": 18000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Ruy băng trang trí hộp bánh",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Ruy băng họa tiết bánh ngọt",
+              "price": 15000,
+              "oldPrice": 20000
+          }
+      ],
+      "45": [
+          {
+              "shortLabel": "Size S",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 7000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 10000,
+              "oldPrice": 13000
+          }
+      ],
+      "46": [
+          {
+              "shortLabel": "Size S",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 16000,
+              "oldPrice": 21000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 22000,
+              "oldPrice": 28000
+          }
+      ],
+      "47": [
+          {
+              "shortLabel": "Cái tiêu chuẩn 11cm",
+              "price": 3000,
+              "oldPrice": 5000
+          }
+      ]
   };
 
-  /**
-   * Kho Combo Recipe-to-Cart dùng chung.
-   */
   const RECIPE_COMBO_CATALOG = {
-    "recipe-bong-lan": {
-      id: "recipe-bong-lan",
-      title: "Combo Bánh Bông Lan Cơ Bản (Chiffon)",
-      time: "55 phút",
-      diff: "Dễ",
-      servings: "4 khẩu phần (1 ổ 20cm)",
-      image: "images/about-baking.jpg",
-      items: [
-        { productId: 1, optionIndex: 2, quantity: 1, usage: "120g Bột mì số 8 (chọn túi 300g tiết kiệm)" },
-        { productId: 15, optionIndex: 1, quantity: 1, usage: "4 quả Trứng gà tươi (hộp 6 quả)" },
-        { productId: 13, optionIndex: 1, quantity: 1, usage: "100g Đường tinh luyện (túi 500g)" },
-        { productId: 14, optionIndex: 1, quantity: 1, usage: "4g Cream of Tartar ổn định lòng trắng" }
-      ]
-    },
-    "recipe-matcha-cupcake": {
-      id: "recipe-matcha-cupcake",
-      title: "Combo Cupcake Vanilla & Matcha",
-      time: "45 phút",
-      diff: "Dễ",
-      servings: "6 chiếc Cupcake",
-      image: "images/about-sharing-cakes.jpg",
-      items: [
-        { productId: 1, optionIndex: 2, quantity: 1, usage: "140g Bột mì số 8 mềm mịn (túi 300g)" },
-        { productId: 5, optionIndex: 0, quantity: 1, usage: "12g Bột Matcha Nhật Bản" },
-        { productId: 6, optionIndex: 0, quantity: 1, usage: "200ml Whipping Cream Anchor đánh bông" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "85g Bơ lạt Anchor mềm" },
-        { productId: 19, optionIndex: 0, quantity: 1, usage: "12 Cup giấy xếp ly nướng cupcake" }
-      ]
-    },
-    "recipe-banh-quy-bo": {
-      id: "recipe-banh-quy-bo",
-      title: "Combo Cookies Bơ Đan Mạch Giòn Tan",
-      time: "35 phút",
-      diff: "Trung bình",
-      servings: "6 phần (~30 chiếc)",
-      image: "images/about-beginner.jpg",
-      items: [
-        { productId: 1, optionIndex: 2, quantity: 1, usage: "180g Bột mì số 8 (túi 300g)" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "150g Bơ lạt Anchor đánh bông" },
-        { productId: 13, optionIndex: 1, quantity: 1, usage: "75g Đường tinh luyện (túi 500g)" },
-        { productId: 11, optionIndex: 0, quantity: 1, usage: "Túi bắt kem PE dày bóp bột quy" },
-        { productId: 20, optionIndex: 0, quantity: 1, usage: "Bộ đui bắt kem tạo vân hoa cúc sắc nét" }
-      ]
-    },
-    "recipe-hoa-cuc": {
-      id: "recipe-hoa-cuc",
-      title: "Combo Bánh Mì Hoa Cúc Ngàn Lớp",
-      time: "90 phút",
-      diff: "Trung bình",
-      servings: "4 phần (2 ổ 450g)",
-      image: "images/about-young-bakers.jpg",
-      items: [
-        { productId: 2, optionIndex: 2, quantity: 1, usage: "260g Bột mì số 11 dai khỏe (túi 300g)" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "110g Bơ lạt Anchor thơm ngậy" },
-        { productId: 15, optionIndex: 1, quantity: 1, usage: "3 quả Trứng gà tươi (hộp 6 quả)" },
-        { productId: 13, optionIndex: 1, quantity: 1, usage: "70g Đường tinh luyện (túi 500g)" }
-      ]
-    },
-    "recipe-muffin-socola": {
-      id: "recipe-muffin-socola",
-      title: "Combo Bánh Muffin Chocolate Hạnh Nhân",
-      time: "40 phút",
-      diff: "Dễ",
-      servings: "6 chiếc Muffin",
-      image: "images/banner.jpg",
-      items: [
-        { productId: 3, optionIndex: 2, quantity: 1, usage: "150g Bột mì đa dụng Meizan (túi 300g)" },
-        { productId: 4, optionIndex: 0, quantity: 1, usage: "35g Bột cacao Hershey's nguyên chất" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "80g Bơ lạt Anchor đun chảy" },
-        { productId: 19, optionIndex: 0, quantity: 1, usage: "12 Cup giấy nướng bánh chống thấm" }
-      ]
-    },
-    "recipe-brownie": {
-      id: "recipe-brownie",
-      title: "Combo Bánh Brownie Chocolate Đậm Vị",
-      time: "45 phút",
-      diff: "Dễ",
-      servings: "6 miếng vuông",
-      image: "images/contact-baking.jpg",
-      items: [
-        { productId: 3, optionIndex: 3, quantity: 1, usage: "85g Bột mì đa dụng Meizan (gói 100g)" },
-        { productId: 4, optionIndex: 0, quantity: 1, usage: "50g Bột cacao Hershey's" },
-        { productId: 12, optionIndex: 0, quantity: 1, usage: "120g Bơ lạt Anchor" },
-        { productId: 18, optionIndex: 0, quantity: 1, usage: "1 cuộn Giấy nến lót khuôn chống dính" }
-      ]
-    },
-    "recipe-mousse-socola": {
-      id: "recipe-mousse-socola",
-      title: "Combo Bánh Mousse Socola Lạnh Mịn Mượt",
-      time: "75 phút",
-      diff: "Trung bình",
-      servings: "4 phần (1 bánh 20cm)",
-      image: "images/about-ingredients.jpg",
-      items: [
-        { productId: 6, optionIndex: 0, quantity: 1, usage: "250ml Whipping Cream Anchor lạnh" },
-        { productId: 4, optionIndex: 0, quantity: 1, usage: "35g Bột cacao Hershey's" },
-        { productId: 16, optionIndex: 0, quantity: 1, usage: "1 Phới lồng đánh bông kem mịn" },
-        { productId: 17, optionIndex: 0, quantity: 1, usage: "1 Khuôn đế rời 20cm dễ tách bánh lạnh" }
-      ]
-    },
-    "recipe-pancake": {
-      id: "recipe-pancake",
-      title: "Combo Bánh Pancake Mật Ong Bữa Sáng",
-      time: "25 phút",
-      diff: "Dễ",
-      servings: "4 phần (8 chiếc)",
-      image: "images/products/bot-mi-meizan-1.jpg",
-      items: [
-        { productId: 3, optionIndex: 2, quantity: 1, usage: "150g Bột mì đa dụng Meizan (túi 300g)" },
-        { productId: 15, optionIndex: 1, quantity: 1, usage: "2 quả Trứng gà tươi (hộp 6 quả)" },
-        { productId: 13, optionIndex: 1, quantity: 1, usage: "40g Đường tinh luyện (túi 500g)" },
-        { productId: 8, optionIndex: 0, quantity: 1, usage: "1 Ca đong chia ml đong sữa & rót bột" }
-      ]
-    }
+      "recipe-bong-lan": {
+          "id": "recipe-bong-lan",
+          "title": "Combo Bánh bông lan cơ bản",
+          "time": "60 phút",
+          "diff": "Trung bình",
+          "servings": "1 ổ 20cm (4 người ăn)",
+          "image": "images/recipes/banh-bong-lan-co-ban.jpg",
+          "items": [
+              {
+                  "productId": 1,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "120g Bột mì Baker's Choice số 8"
+              },
+              {
+                  "productId": 13,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "100g Đường tinh luyện Biên Hòa"
+              },
+              {
+                  "productId": 15,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "4quả Trứng gà"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "80ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              },
+              {
+                  "productId": 14,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "4g Bột làm bánh Tartar"
+              }
+          ]
+      },
+      "recipe-matcha-cupcake": {
+          "id": "recipe-matcha-cupcake",
+          "title": "Combo Bánh cupcake Matcha",
+          "time": "50 phút",
+          "diff": "Dễ",
+          "servings": "6 chiếc (6 người ăn)",
+          "image": "images/recipes/banh-cupcake-matcha.jpg",
+          "items": [
+              {
+                  "productId": 1,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "140g Bột mì Baker's Choice số 8"
+              },
+              {
+                  "productId": 5,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "12g Bột Matcha"
+              },
+              {
+                  "productId": 6,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "200ml Whipping Cream Anchor"
+              },
+              {
+                  "productId": 12,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "85g Bơ lạt Anchor"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "60ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              }
+          ]
+      },
+      "recipe-banh-quy-bo": {
+          "id": "recipe-banh-quy-bo",
+          "title": "Combo Cookies bơ",
+          "time": "40 phút",
+          "diff": "Dễ",
+          "servings": "~30 chiếc (6 người ăn)",
+          "image": "images/recipes/cookies-bo.jpg",
+          "items": [
+              {
+                  "productId": 1,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "180g Bột mì Baker's Choice số 8"
+              },
+              {
+                  "productId": 12,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "150g Bơ lạt Anchor"
+              },
+              {
+                  "productId": 13,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "75g Đường tinh luyện Biên Hòa"
+              },
+              {
+                  "productId": 15,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "1quả Trứng gà"
+              }
+          ]
+      },
+      "recipe-hoa-cuc": {
+          "id": "recipe-hoa-cuc",
+          "title": "Combo Bánh mì hoa cúc",
+          "time": "120 phút",
+          "diff": "Khó",
+          "servings": "2 ổ 450g (4 người ăn)",
+          "image": "images/recipes/banh-mi-hoa-cuc.jpg",
+          "items": [
+              {
+                  "productId": 2,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "260g Bột mì Baker's Choice số 11"
+              },
+              {
+                  "productId": 12,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "110g Bơ lạt Anchor"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "100ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              },
+              {
+                  "productId": 27,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "8g Men nở"
+              },
+              {
+                  "productId": 15,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "3quả Trứng gà"
+              }
+          ]
+      },
+      "recipe-muffin-socola": {
+          "id": "recipe-muffin-socola",
+          "title": "Combo Bánh Chocolate Muffin",
+          "time": "45 phút",
+          "diff": "Dễ",
+          "servings": "6 chiếc (6 người ăn)",
+          "image": "images/recipes/banh-chocolate-muffin.jpg",
+          "items": [
+              {
+                  "productId": 3,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "150g Bột mì đa dụng Meizan"
+              },
+              {
+                  "productId": 4,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "35g Bột cacao nguyên chất Hershey's"
+              },
+              {
+                  "productId": 26,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "5g Baking Soda"
+              },
+              {
+                  "productId": 12,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "80g Bơ lạt Anchor"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "120ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              }
+          ]
+      },
+      "recipe-brownie": {
+          "id": "recipe-brownie",
+          "title": "Combo Bánh Brownie",
+          "time": "50 phút",
+          "diff": "Dễ",
+          "servings": "1 khuôn 20cm (4 người ăn)",
+          "image": "images/recipes/banh-brownie.jpg",
+          "items": [
+              {
+                  "productId": 3,
+                  "optionIndex": 3,
+                  "quantity": 1,
+                  "usage": "85g Bột mì đa dụng Meizan"
+              },
+              {
+                  "productId": 4,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "50g Bột cacao nguyên chất Hershey's"
+              },
+              {
+                  "productId": 12,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "120g Bơ lạt Anchor"
+              },
+              {
+                  "productId": 13,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "110g Đường tinh luyện Biên Hòa"
+              },
+              {
+                  "productId": 15,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "2quả Trứng gà"
+              }
+          ]
+      },
+      "recipe-mousse-socola": {
+          "id": "recipe-mousse-socola",
+          "title": "Combo Bánh Mousse Chocolate",
+          "time": "75 phút",
+          "diff": "Trung bình",
+          "servings": "1 ổ 20cm (4 người ăn)",
+          "image": "images/recipes/banh-mousse-chocolate.jpg",
+          "items": [
+              {
+                  "productId": 6,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "250ml Whipping Cream Anchor"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "120ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              },
+              {
+                  "productId": 4,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "35g Bột cacao nguyên chất Hershey's"
+              },
+              {
+                  "productId": 25,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "10g Lá Gelatine Ewald Bronze"
+              },
+              {
+                  "productId": 13,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "45g Đường tinh luyện Biên Hòa"
+              }
+          ]
+      },
+      "recipe-pancake": {
+          "id": "recipe-pancake",
+          "title": "Combo Bánh Pancake mật ong",
+          "time": "25 phút",
+          "diff": "Dễ",
+          "servings": "8 chiếc (4 người ăn)",
+          "image": "images/recipes/banh-pancake-mat-ong.jpg",
+          "items": [
+              {
+                  "productId": 3,
+                  "optionIndex": 2,
+                  "quantity": 1,
+                  "usage": "150g Bột mì đa dụng Meizan"
+              },
+              {
+                  "productId": 24,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "180ml Sữa Tươi Tiệt Trùng Không Đường Vinamilk 100%"
+              },
+              {
+                  "productId": 26,
+                  "optionIndex": 0,
+                  "quantity": 1,
+                  "usage": "4g Baking Soda"
+              },
+              {
+                  "productId": 15,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "2quả Trứng gà"
+              },
+              {
+                  "productId": 13,
+                  "optionIndex": 1,
+                  "quantity": 1,
+                  "usage": "40g Đường tinh luyện Biên Hòa"
+              }
+          ]
+      }
   };
 
   function formatCurrency(amount) {
@@ -341,7 +1072,7 @@
       time: "Chuẩn vị BakeMate",
       diff: "Dễ",
       servings: "1 công thức",
-      image: "images/about-baking.jpg",
+      image: "images/recipes/banh-pancake-mat-ong.jpg",
       items: []
     };
   }
@@ -1379,13 +2110,17 @@
         entry.imageDataUrl.length <= 450000
           ? entry.imageDataUrl
           : "";
+      const rawRating = Number(entry.rating);
+      const safeRating = Number.isFinite(rawRating)
+        ? Math.round(Math.max(0.5, Math.min(5, rawRating)) * 2) / 2
+        : 5;
       const record = {
         id: `rev-${Date.now()}`,
         targetType: entry.targetType || "product",
         targetId: String(entry.targetId),
         userId: entry.userId || "guest",
         userName: entry.userName || "Khách hàng BakeMate",
-        rating: Math.max(1, Math.min(5, Number(entry.rating) || 5)),
+        rating: safeRating,
         comment: String(entry.comment || "").trim(),
         imageDataUrl: safeImage,
         createdAt: new Date().toISOString()
@@ -1393,6 +2128,44 @@
       list.unshift(record);
       window.localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(list));
       return record;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function updateReview(reviewId, userId, rating, comment) {
+    try {
+      const raw = window.localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const all = raw ? JSON.parse(raw) : [];
+      const list = Array.isArray(all) ? all : [];
+      const idx = list.findIndex((item) => String(item.id) === String(reviewId) && String(item.userId) === String(userId));
+      if (idx === -1) return null;
+      const rawRating = Number(rating);
+      const safeRating = Number.isFinite(rawRating)
+        ? Math.round(Math.max(0.5, Math.min(5, rawRating)) * 2) / 2
+        : Number(list[idx].rating) || 5;
+      list[idx] = {
+        ...list[idx],
+        rating: safeRating,
+        comment: String(comment || "").trim(),
+        updatedAt: new Date().toISOString()
+      };
+      window.localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(list));
+      return list[idx];
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function deleteReview(reviewId, userId) {
+    try {
+      const raw = window.localStorage.getItem(REVIEWS_STORAGE_KEY);
+      const all = raw ? JSON.parse(raw) : [];
+      const list = Array.isArray(all) ? all : [];
+      const next = list.filter((item) => !(String(item.id) === String(reviewId) && String(item.userId) === String(userId)));
+      if (next.length === list.length) return false;
+      window.localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(next));
+      return true;
     } catch (e) {
       return null;
     }
@@ -1659,6 +2432,8 @@
   }
 
   function initPromoCopyButtons() {
+    const COPY_ICON_SVG = `<svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+    const TICK_ICON_SVG = `<svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
     const copyButtons = document.querySelectorAll(".js-copy-promo");
     if (!copyButtons || copyButtons.length === 0) return;
 
@@ -1672,8 +2447,7 @@
         const couponMeta = VALID_COUPONS[couponCode];
         copyTextToClipboard(couponCode).then(() => {
           btn.classList.add("is-copied");
-          const labelEl = btn.querySelector(".js-copy-promo-label");
-          if (labelEl) labelEl.textContent = "Đã sao chép!";
+          btn.innerHTML = TICK_ICON_SVG;
 
           showCartToast(
             `Đã sao chép mã ${couponCode}${couponMeta ? ` (${couponMeta.description})` : ""}.`,
@@ -1683,8 +2457,8 @@
           if (resetTimer) window.clearTimeout(resetTimer);
           resetTimer = window.setTimeout(() => {
             btn.classList.remove("is-copied");
-            if (labelEl) labelEl.textContent = "Sao chép";
-          }, 2200);
+            btn.innerHTML = COPY_ICON_SVG;
+          }, 2000);
         });
       });
     });
@@ -1779,6 +2553,8 @@
     window.setDefaultAddress = setDefaultAddress;
     window.getReviews = getReviews;
     window.addReview = addReview;
+    window.updateReview = updateReview;
+    window.deleteReview = deleteReview;
     window.updateCartBadge = updateCartBadge;
     window.showCartToast = showCartToast;
     window.showBakeConfirm = showBakeConfirm;

@@ -1,6 +1,6 @@
 <?php
 declare(strict_types=1);
-$cats = ['all' => 'Tất cả', 'Kiến thức làm bánh' => 'Kiến thức làm bánh', 'Nguyên liệu làm bánh' => 'Nguyên liệu làm bánh', 'Dụng cụ làm bánh' => 'Dụng cụ làm bánh', 'Công thức làm bánh' => 'Công thức làm bánh', 'Mẹo & kinh nghiệm' => 'Mẹo & kinh nghiệm'];
+$cats = ['all' => 'Tất cả', 'Bí quyết làm bánh' => 'Bí quyết làm bánh', 'Hiểu về nguyên liệu' => 'Hiểu về nguyên liệu', 'Kỹ thuật & dụng cụ' => 'Kỹ thuật & dụng cụ', 'Cảm hứng vào bếp' => 'Cảm hứng vào bếp'];
 $selCat = (string) ($selectedCategory ?? 'all');
 ?>
 <main class="php-page-container">
@@ -36,7 +36,12 @@ $selCat = (string) ($selectedCategory ?? 'all');
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">
       <?php foreach ($posts as $post): ?>
         <article class="php-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-          <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" style="width:100%;height:190px;object-fit:cover;">
+          <div style="position:relative;">
+            <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" style="width:100%;height:190px;object-fit:cover;display:block;">
+            <?php if (!empty($post['display_mode'])): ?>
+              <span class="blog-format-badge"><?= App::e($post['display_mode']) ?></span>
+            <?php endif; ?>
+          </div>
           <div style="padding:16px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
             <div>
               <span class="product-card__category"><?= App::e($post['category']) ?> · <?= App::e($post['read_time']) ?></span>

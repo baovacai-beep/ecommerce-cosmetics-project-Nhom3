@@ -444,8 +444,8 @@
               <button type="button" class="bake-modal-close js-close-policy" aria-label="Đóng hộp thoại">&times;</button>
             </div>
             <div class="bake-policy-card__body">${policy.body}</div>
-            <div class="bake-confirm-card__actions" style="justify-content: flex-end; margin-top: 18px;">
-              <button type="button" class="btn btn--primary js-close-policy">Đã hiểu</button>
+            <div class="bake-confirm-card__actions" style="margin-top: 18px;">
+              <button type="button" class="btn btn--primary btn--full js-close-policy">Quay lại</button>
             </div>
           </div>
         `;

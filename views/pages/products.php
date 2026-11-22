@@ -116,27 +116,6 @@ foreach ($filterMeta['subcategories'] as $sc) {
           <?php endforeach; ?>
         </div>
       </div>
-
-      <!-- Tình trạng sản phẩm -->
-      <div class="filter-group">
-        <button type="button" class="filter-group__head js-filter-acc-toggle" aria-expanded="true">
-          <span>Tình trạng sản phẩm</span>
-          <span class="js-acc-sign">−</span>
-        </button>
-        <div class="filter-group__body">
-          <?php foreach ([
-              'in_stock' => 'Còn hàng',
-              'new' => 'Sản phẩm mới',
-              'sale' => 'Đang giảm giá',
-              'coming_soon' => 'Sắp có hàng',
-          ] as $sk => $sl): ?>
-            <label class="filter-check">
-              <input type="checkbox" class="js-filter-stock" value="<?= $sk ?>" <?= in_array($sk, $selectedStocks, true) ? 'checked' : '' ?>>
-              <span><?= App::e($sl) ?></span>
-            </label>
-          <?php endforeach; ?>
-        </div>
-      </div>
     </aside>
 
     <!-- CỘT PHẢI: HEADER SẮP XẾP + LƯỚI SẢN PHẨM -->
@@ -156,8 +135,9 @@ foreach ($filterMeta['subcategories'] as $sc) {
             <option value="featured" <?= ($filters['sort'] ?? '') === 'featured' ? 'selected' : '' ?>>Sắp xếp: Mặc định</option>
             <option value="price-asc" <?= ($filters['sort'] ?? '') === 'price-asc' ? 'selected' : '' ?>>Giá: Thấp đến cao</option>
             <option value="price-desc" <?= ($filters['sort'] ?? '') === 'price-desc' ? 'selected' : '' ?>>Giá: Cao đến thấp</option>
-            <option value="newest" <?= ($filters['sort'] ?? '') === 'newest' ? 'selected' : '' ?>>Sản phẩm mới trước</option>
             <option value="name-asc" <?= ($filters['sort'] ?? '') === 'name-asc' ? 'selected' : '' ?>>Tên: A - Z</option>
+            <option value="name-desc" <?= ($filters['sort'] ?? '') === 'name-desc' ? 'selected' : '' ?>>Tên: Z - A</option>
+            <option value="newest" <?= ($filters['sort'] ?? '') === 'newest' ? 'selected' : '' ?>>Mới nhất</option>
           </select>
         </div>
       </div>
@@ -256,6 +236,10 @@ document.addEventListener("DOMContentLoaded", function () {
     };
 
     try {
+      if (grid) {
+        grid.style.opacity = "0.55";
+        grid.style.pointerEvents = "none";
+      }
       const res = await fetch(window.BakeApp.apiUrl("product", "ajaxFilter", params));
       const json = await res.json();
       const items = (json.data && json.data.products) || [];
@@ -264,7 +248,16 @@ document.addEventListener("DOMContentLoaded", function () {
       if (!grid) return;
 
       if (!items.length) {
-        grid.innerHTML = '<div class="no-products-message" style="grid-column:1 / -1;"><strong>Không tìm thấy sản phẩm nào phù hợp</strong><p>Hãy thử từ khóa khác hoặc nới rộng khoảng giá.</p></div>';
+        grid.innerHTML = `
+          <div class="no-products-message" style="grid-column:1 / -1;text-align:center;padding:48px 20px;">
+            <strong style="display:block;font-size:18px;margin-bottom:8px;color:#70452b;">Không tìm thấy sản phẩm nào phù hợp</strong>
+            <p style="margin:0 0 16px;color:#7c5c46;">Hãy thử từ khóa khác, nới rộng khoảng giá hoặc nhấn đặt lại bộ lọc.</p>
+            <button type="button" class="btn btn--primary" id="btn-reset-filters-empty">Xóa bộ lọc và xem tất cả</button>
+          </div>
+        `;
+        document.getElementById("btn-reset-filters-empty")?.addEventListener("click", () => {
+          window.location.href = window.BakeApp.apiUrl("product", "catalog");
+        });
         return;
       }
 
@@ -276,17 +269,17 @@ document.addEventListener("DOMContentLoaded", function () {
         const pid = Number(p.id);
         const price = Number(p.default_price || 0);
         const oldPrice = Number(p.default_old_price || price);
-        const imgUrl = esc(cfg.baseUrl + "public/" + (p.primary_image || "images/logo.jpg"));
+        const imgUrl = esc(window.BakeApp.assetUrl(p.primary_image || "images/logo.jpg"));
         const detailUrl = esc(window.BakeApp.apiUrl("product", "detail", { id: pid }));
         const isWish = wishIds.includes(pid);
         let tagHtml = "";
         if (Number(p.is_perishable) === 1) tagHtml = '<span class="product-card__tag product-card__tag--cold">Tươi lạnh</span>';
-        else if (p.stock_status === "coming_soon") tagHtml = '<span class="product-card__tag product-card__tag--soon">Sắp mở bán</span>';
+        else if (p.stock_status === "coming_soon" || p.stock_status === "out_of_stock") tagHtml = '<span class="product-card__tag product-card__tag--soon">Hết hàng</span>';
         else if (Number(p.is_new) === 1) tagHtml = '<span class="product-card__tag product-card__tag--new">Mới</span>';
         else if (oldPrice > price) tagHtml = `<span class="product-card__tag product-card__tag--sale">-${Math.round(((oldPrice - price) / Math.max(1, oldPrice)) * 100)}%</span>`;
 
         const actionBtn = (p.stock_status === "coming_soon" || p.stock_status === "out_of_stock")
-          ? `<button type="button" class="btn btn--outline-dark btn--full" disabled>${p.stock_status === "coming_soon" ? "Sắp có hàng" : "Tạm hết hàng"}</button>`
+          ? `<button type="button" class="btn btn--outline-dark btn--full" disabled>Hết hàng</button>`
           : `<button type="button" class="btn btn--primary btn--full js-quick-add-cart" data-product-id="${pid}" data-option-index="0">Thêm vào giỏ</button>`;
 
         return `
@@ -320,6 +313,11 @@ document.addEventListener("DOMContentLoaded", function () {
       }).join("");
     } catch (e) {
       window.BakeApp.showToast("Không thể tải bộ lọc sản phẩm.", "error");
+    } finally {
+      if (grid) {
+        grid.style.opacity = "1";
+        grid.style.pointerEvents = "auto";
+      }
     }
   }
 

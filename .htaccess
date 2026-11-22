@@ -4,7 +4,10 @@ DirectoryIndex index.php index.html
     RewriteEngine On
 
     # Chan truy cap truc tiep vao cac thu muc & file noi bo nhay cam
-    RewriteRule ^(\.env|\.env\.example|\.git|config/|core/|database/|models/|controllers/|views/) - [F,L,NC]
+    
+    RewriteRule ^\.env(?:\..*)?$ - [F,L,NC]
+    RewriteRule ^(?:\.git|config|core|database|models|controllers|views)(?:/|$) - [F,L,NC]
+
     RewriteRule \.(sql|md|log|sh)$ - [F,L,NC]
 
     # Chuyen cac duong dan .html cu sang phien ban PHP MVC (giu nguyen tham so query)
