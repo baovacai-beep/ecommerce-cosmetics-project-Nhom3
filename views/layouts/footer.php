@@ -126,12 +126,15 @@ declare(strict_types=1);
 </footer>
 
 <div class="bm-modal-backdrop" id="bm-policy-modal" hidden>
-  <div class="bm-modal" role="dialog" aria-modal="true" aria-labelledby="bm-policy-title">
+  <div class="bm-modal bm-modal--cream" role="dialog" aria-modal="true" aria-labelledby="bm-policy-title">
     <div class="bm-modal__head">
       <h3 id="bm-policy-title">Chính sách BakeMate</h3>
       <button type="button" class="bm-modal__close js-policy-close" aria-label="Đóng">&times;</button>
     </div>
     <div class="bm-modal__body" id="bm-policy-body"></div>
+    <div class="bm-modal__actions bm-modal__actions--single">
+      <button type="button" class="btn btn--primary btn--full js-policy-close">Quay lại</button>
+    </div>
   </div>
 </div>
 

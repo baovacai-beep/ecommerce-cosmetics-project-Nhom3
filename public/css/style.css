@@ -9416,3 +9416,141 @@ textarea:focus-visible,
     animation: bookFade2D 0.32s ease forwards !important;
   }
 }
+
+/* ================= ĐỒNG BỘ UI KIT FIGMA: MODAL KEM BO GÓC, NÚT PILL NÂU, THẺ & BỘ LỌC ================= */
+.btn,
+.auth-btn-primary {
+  border-radius: 999px;
+}
+
+.btn--full {
+  width: 100%;
+  flex: 1 1 100%;
+}
+
+.btn--primary,
+.auth-btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn--primary:hover,
+.auth-btn-primary:hover {
+  background-color: #5b361f;
+  border-color: #5b361f;
+  box-shadow: 0 6px 14px rgba(112, 69, 43, 0.24);
+  filter: none;
+}
+
+/* Giữ màu vàng mật ong nổi bật riêng cho CTA chính trên Hero Banner */
+.hero-banner__actions .btn--primary {
+  background-color: var(--accent-cta);
+  border-color: var(--accent-cta);
+  color: #ffffff;
+}
+
+.hero-banner__actions .btn--primary:hover {
+  background-color: #d97706;
+  border-color: #d97706;
+  box-shadow: 0 6px 16px rgba(217, 119, 6, 0.34);
+}
+
+.site-header__search-btn:hover {
+  background-color: #5b361f;
+  border-color: #5b361f;
+}
+
+.product-card,
+.recipe-poster-card,
+.blog-editorial-card,
+.php-card,
+.contact-form-card {
+  border-radius: 16px;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 6px 20px rgba(74, 46, 25, 0.06);
+}
+
+.product-card__media,
+.product-card__image-wrap {
+  border-radius: 12px;
+}
+
+.blog-filter-btn,
+.price-preset-btn {
+  border-radius: 999px;
+  border: 1px solid #e4d1ba;
+  background-color: #fff8ed;
+  color: #70452b;
+}
+
+.blog-filter-btn.active,
+.price-preset-btn.is-active {
+  background-color: #70452b;
+  border-color: #70452b;
+  color: #ffffff;
+}
+
+/* Modal / Popup nền kem sáng #fff8ed + nút pill nâu #643d25 */
+.bm-modal,
+.bake-confirm-card {
+  background-color: #fff8ed;
+  border: 1px solid #e4d1ba;
+  border-radius: 18px;
+  padding: 24px 26px;
+  box-shadow: 0 22px 48px rgba(74, 46, 25, 0.22);
+}
+
+.bm-modal__head,
+.bake-policy-card__head {
+  border-bottom: none;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.bm-modal__head h3,
+.bake-policy-card__head h3,
+.bake-confirm-card__title {
+  color: #643d25;
+  font-weight: 800;
+}
+
+.bm-modal__close,
+.bake-modal-close {
+  color: #643d25;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.bm-modal__close:hover,
+.bake-modal-close:hover {
+  background-color: rgba(112, 69, 43, 0.1);
+  color: #643d25;
+}
+
+.bm-modal__body,
+.bake-confirm-card__message,
+.policy-modal-list {
+  color: #7c5c46;
+}
+
+.bm-modal__actions--single {
+  justify-content: stretch;
+  border-top: none;
+  padding-top: 0;
+  margin-top: 18px;
+}
+
+.bm-modal .btn--primary,
+.bake-confirm-card .btn--primary {
+  background-color: #643d25;
+  border-color: #643d25;
+  border-radius: 999px;
+}
+
+.bm-modal .btn--primary:hover,
+.bake-confirm-card .btn--primary:hover {
+  background-color: #4f2f1c;
+  border-color: #4f2f1c;
+}
