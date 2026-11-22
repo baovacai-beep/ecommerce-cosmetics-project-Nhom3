@@ -130,6 +130,7 @@
             onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
           >
           <span class="blog-card__category">${escapeHtml(post.category)}</span>
+          ${post.displayMode ? `<span class="blog-format-badge">${escapeHtml(post.displayMode)}</span>` : ""}
         </div>
         <div class="blog-card__body">
           <div class="blog-card__meta">
@@ -431,12 +432,86 @@
         </div>
 
         <div class="blog-modal__header">
-          <span class="blog-modal__badge">${escapeHtml(post.category)}</span>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+            <span class="blog-modal__badge">${escapeHtml(post.category)}</span>
+            ${post.displayMode ? `<span class="blog-format-badge" style="position:static;">${escapeHtml(post.displayMode)}</span>` : ""}
+          </div>
           <h1 class="blog-modal__title">${escapeHtml(post.title)}</h1>
           <p class="blog-modal__meta">${escapeHtml(post.author)} · ${escapeHtml(post.publishedAt)} · ${escapeHtml(post.readTime)} · Độ khó: ${escapeHtml(post.diff)}</p>
         </div>
 
         <p class="blog-modal__lead">${escapeHtml(post.excerpt)}</p>
+
+        ${
+          post.videoUrl
+            ? `
+              <section class="blog-video-box" aria-label="Video hướng dẫn thực hành">
+                <strong style="display:block;color:#70452b;margin-bottom:10px;font-size:15px;">
+                  🎬 ${escapeHtml(post.videoTitle || "Video hướng dẫn thực hành")}
+                </strong>
+                <div class="blog-video-embed">
+                  <iframe
+                    src="${escapeHtml(post.videoUrl)}"
+                    title="${escapeHtml(post.videoTitle || post.title)}"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    loading="lazy"
+                  ></iframe>
+                </div>
+                <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center;">
+                  <a href="${escapeHtml(String(post.videoUrl).replace("/embed/", "/watch?v="))}" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark">
+                    Mở video trên YouTube (King Arthur Baking) &nearr;
+                  </a>
+                  ${
+                    post.id === "post-banh-quy-bo"
+                      ? `<a href="product-detail.html?id=7" class="btn btn--primary">Xem Cân điện tử nhà bếp tại Shop &rarr;</a>`
+                      : ""
+                  }
+                </div>
+              </section>
+            `
+            : ""
+        }
+
+        ${
+          post.id === "post-phan-biet-bot-mi"
+            ? `
+              <section style="margin:18px 0;">
+                <h2 style="color:#70452b;font-size:19px;margin-bottom:8px;">Bảng so sánh nhanh 3 loại bột mì tại BakeMate</h2>
+                <table class="blog-compare-table">
+                  <thead>
+                    <tr>
+                      <th>Loại bột</th>
+                      <th>Hàm lượng Protein</th>
+                      <th>Món bánh phù hợp</th>
+                      <th>Sản phẩm Shop</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>Bột mì số 8 (Cake Flour)</strong></td>
+                      <td>8% – 9%</td>
+                      <td>Bông lan, Chiffon, Cupcake, Cookies</td>
+                      <td><a href="product-detail.html?id=1" style="font-weight:700;color:#8b1e24;">Bột mì Baker's Choice số 8 &rarr;</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Bột mì số 11 (Bread Flour)</strong></td>
+                      <td>11.5% – 13%</td>
+                      <td>Bánh mì hoa cúc, Baguette, Pizza</td>
+                      <td><a href="product-detail.html?id=2" style="font-weight:700;color:#8b1e24;">Bột mì Baker's Choice số 11 &rarr;</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Bột mì đa dụng (All-Purpose)</strong></td>
+                      <td>9.5% – 11.5%</td>
+                      <td>Muffin, Brownie, Pancake</td>
+                      <td><a href="product-detail.html?id=3" style="font-weight:700;color:#8b1e24;">Bột mì đa dụng Meizan &rarr;</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </section>
+            `
+            : ""
+        }
 
         <section class="blog-modal__section">
           <h2>Các bước thực hiện chuẩn BakeMate</h2>
@@ -444,6 +519,24 @@
             ${(post.steps || []).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
           </ol>
         </section>
+
+        ${
+          Array.isArray(post.gallery) && post.gallery.length > 1
+            ? `
+              <section class="blog-modal__section">
+                <h2>Hình ảnh minh họa thực tế</h2>
+                <div class="blog-gallery-grid">
+                  ${post.gallery
+                    .map(
+                      (imgPath) =>
+                        `<img src="${escapeHtml(imgPath)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">`
+                    )
+                    .join("")}
+                </div>
+              </section>
+            `
+            : ""
+        }
 
         <section class="blog-modal__combo-box" aria-label="Combo nguyên liệu Recipe-to-Cart">
           <div class="blog-modal__combo-head">

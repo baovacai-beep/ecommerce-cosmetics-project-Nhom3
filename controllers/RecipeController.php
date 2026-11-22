@@ -15,7 +15,7 @@ class RecipeController extends Controller
         'Bánh không cần lò nướng',
     ];
 
-    private const RECIPE_DIFFICULTIES = ['Tất cả', 'Dễ', 'Trung bình'];
+    private const RECIPE_DIFFICULTIES = ['Tất cả', 'Dễ', 'Trung bình', 'Khó'];
     private const RECIPE_TIME_FILTERS = [0, 30, 60, 61];
 
     public function index(): void

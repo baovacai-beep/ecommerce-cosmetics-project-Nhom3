@@ -107,10 +107,10 @@
     article.className = "product-card";
 
     // Nhãn trạng thái nổi bật
-    if (product.stockStatus === "coming_soon") {
+    if (product.stockStatus === "coming_soon" || product.stockStatus === "out_of_stock") {
       const tag = document.createElement("span");
       tag.className = "product-card__status-tag product-card__status-tag--soon";
-      tag.textContent = "Sắp có hàng";
+      tag.textContent = "Hết hàng";
       article.appendChild(tag);
     } else if (product.onSale && Number(product.oldPrice) > Number(product.price)) {
       const pct = Math.round(((Number(product.oldPrice) - Number(product.price)) / Number(product.oldPrice)) * 100);
@@ -205,8 +205,8 @@
     const addCartBtn = document.createElement("button");
     addCartBtn.type = "button";
     addCartBtn.className = "btn btn--primary product-card__add-btn product-card__add-btn--brown";
-    if (product.stockStatus === "coming_soon") {
-      addCartBtn.textContent = "Sắp có hàng";
+    if (product.stockStatus === "coming_soon" || product.stockStatus === "out_of_stock") {
+      addCartBtn.textContent = "Hết hàng";
       addCartBtn.disabled = true;
       addCartBtn.style.opacity = "0.65";
       addCartBtn.style.cursor = "not-allowed";

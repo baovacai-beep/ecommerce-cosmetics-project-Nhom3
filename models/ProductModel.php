@@ -256,17 +256,77 @@ class ProductModel extends Model
         return $product;
     }
 
-    public function addReview(int $productId, ?int $userId, string $reviewerName, int $rating, string $comment, ?string $imagePath = null): array
+    private function normalizeHalfStarRating(float $rating): float
     {
-        $cleanRating = max(1, min(5, $rating));
+        $clamped = max(0.5, min(5.0, $rating));
+        return round($clamped * 2) / 2;
+    }
+
+    private function recalculateProductRating(int $productId): void
+    {
+        $stmt = $this->db->prepare("SELECT AVG(rating) AS avg_r FROM product_reviews WHERE product_id = ? AND status = 'approved'");
+        $stmt->execute([$productId]);
+        $avg = $stmt->fetchColumn();
+        if ($avg !== false && $avg !== null) {
+            $this->db->prepare('UPDATE products SET rating_avg = ? WHERE id = ?')->execute([round((float) $avg, 2), $productId]);
+        }
+    }
+
+    public function addReview(int $productId, ?int $userId, string $reviewerName, float $rating, string $comment, ?string $imagePath = null): array
+    {
+        $cleanRating = $this->normalizeHalfStarRating($rating);
         $stmt = $this->db->prepare(
             'INSERT INTO product_reviews (product_id, user_id, reviewer_name, rating, comment, image_path, status) VALUES (?, ?, ?, ?, ?, ?, ?)'
         );
         $stmt->execute([$productId, $userId, trim($reviewerName), $cleanRating, trim($comment), $imagePath, 'approved']);
         $id = (int) $this->db->lastInsertId();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION['bakemate_my_reviews'][] = $id;
+        }
+        $this->recalculateProductRating($productId);
         $row = $this->db->prepare('SELECT * FROM product_reviews WHERE id = ?');
         $row->execute([$id]);
         return $row->fetch() ?: [];
+    }
+
+    public function updateReview(int $reviewId, ?int $userId, float $rating, string $comment): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM product_reviews WHERE id = ? LIMIT 1');
+        $stmt->execute([$reviewId]);
+        $existing = $stmt->fetch();
+        if (!$existing) {
+            return ['ok' => false, 'message' => 'Không tìm thấy đánh giá.'];
+        }
+        $sessionOwned = session_status() === PHP_SESSION_ACTIVE && in_array($reviewId, array_map('intval', (array) ($_SESSION['bakemate_my_reviews'] ?? [])), true);
+        $userOwned = $userId !== null && (int) ($existing['user_id'] ?? 0) === $userId;
+        if (!$userOwned && !$sessionOwned) {
+            return ['ok' => false, 'message' => 'Bạn chỉ có thể chỉnh sửa đánh giá do chính mình gửi.'];
+        }
+
+        $cleanRating = $this->normalizeHalfStarRating($rating);
+        $this->db->prepare('UPDATE product_reviews SET rating = ?, comment = ? WHERE id = ?')
+            ->execute([$cleanRating, trim($comment), $reviewId]);
+        $this->recalculateProductRating((int) $existing['product_id']);
+        return ['ok' => true, 'message' => 'Đã cập nhật đánh giá của bạn.'];
+    }
+
+    public function deleteReview(int $reviewId, ?int $userId): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM product_reviews WHERE id = ? LIMIT 1');
+        $stmt->execute([$reviewId]);
+        $existing = $stmt->fetch();
+        if (!$existing) {
+            return ['ok' => false, 'message' => 'Không tìm thấy đánh giá.'];
+        }
+        $sessionOwned = session_status() === PHP_SESSION_ACTIVE && in_array($reviewId, array_map('intval', (array) ($_SESSION['bakemate_my_reviews'] ?? [])), true);
+        $userOwned = $userId !== null && (int) ($existing['user_id'] ?? 0) === $userId;
+        if (!$userOwned && !$sessionOwned) {
+            return ['ok' => false, 'message' => 'Bạn chỉ có thể xóa đánh giá do chính mình gửi.'];
+        }
+
+        $this->db->prepare('DELETE FROM product_reviews WHERE id = ?')->execute([$reviewId]);
+        $this->recalculateProductRating((int) $existing['product_id']);
+        return ['ok' => true, 'message' => 'Đã xóa đánh giá thành công.'];
     }
 
     public function trackRecentlyViewed(int $productId): void

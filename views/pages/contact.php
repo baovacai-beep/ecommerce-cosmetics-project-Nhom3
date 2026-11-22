@@ -31,7 +31,15 @@ $faqs = [
       </div>
     </div>
     <div class="contact-hero-split__media">
-      <img src="<?= App::e(App::asset('images/contact-baking.jpg')) ?>" alt="Không gian bếp bánh và đội ngũ tư vấn BakeMate">
+      <div class="contact-map-frame">
+        <iframe
+          title="Bản đồ BakeMate - 59C Nguyễn Đình Chiểu, Quận 3, TP.HCM"
+          src="https://www.google.com/maps?q=59C%20Nguy%E1%BB%85n%20%C4%90%C3%ACnh%20Chi%E1%BB%83u%2C%20Qu%E1%BA%ADn%203%2C%20TP.HCM&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
     </div>
   </section>
 

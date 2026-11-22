@@ -24,8 +24,10 @@ declare(strict_types=1);
     $defPrice = (int) $defVar['price'];
     $defOld = (int) $defVar['old_price'];
     $defDiscPct = $defOld > $defPrice ? (int) round((($defOld - $defPrice) / max(1, $defOld)) * 100) : 0;
-    $isComingSoon = $product['stock_status'] === 'coming_soon';
+    $isComingSoon = $product['stock_status'] === 'coming_soon' || $product['stock_status'] === 'out_of_stock';
     $isWish = in_array((int) $product['id'], $wishlistIds ?? [], true);
+    $unitLabel = (string) ($product['unit_label'] ?? 'gói');
+    $myReviewIds = (session_status() === PHP_SESSION_ACTIVE) ? array_map('intval', (array) ($_SESSION['bakemate_my_reviews'] ?? [])) : [];
   ?>
     <article class="product-detail">
       <div class="product-detail__gallery">
@@ -48,19 +50,26 @@ declare(strict_types=1);
 
       <div class="product-detail__info">
         <span class="product-detail__brand">Thương hiệu: <strong><?= App::e($product['brand_name']) ?></strong> | Xuất xứ: <?= App::e($product['origin']) ?></span>
-        <h1 class="product-detail__title"><?= App::e($product['name']) ?></h1>
+        <div class="pd-title-row">
+          <h1 class="product-detail__title"><?= App::e($product['name']) ?></h1>
+          <button type="button" class="wishlist-heart-btn pd-title-wish-btn js-wishlist-toggle <?= $isWish ? 'is-active' : '' ?>" data-product-id="<?= (int) $product['id'] ?>" aria-label="<?= $isWish ? 'Bỏ yêu thích' : 'Thêm vào yêu thích' ?>" title="Yêu thích sản phẩm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="<?= $isWish ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </button>
+        </div>
 
         <div class="product-detail__meta">
           <span class="meta__rating">&#9733;&#9733;&#9733;&#9733;&#9733; <strong><?= App::e($product['rating_avg']) ?></strong> (<?= (int) $product['review_count'] + count($product['reviews']) ?> đánh giá)</span>
           <span class="meta__divider">|</span>
-          <span class="meta__sold"><?= $isComingSoon ? 'Trạng thái: <strong>Sắp mở bán</strong>' : 'Đã bán <strong>' . App::e($product['sold_count_label']) . '</strong> ' . App::e($product['unit_label']) ?></span>
+          <span class="meta__sold"><?= $isComingSoon ? 'Trạng thái: <strong>Hết hàng</strong>' : 'Đã bán <strong>' . App::e($product['sold_count_label']) . '</strong>' ?></span>
           <span class="meta__divider">|</span>
           <span class="meta__code">Mã: <strong>#BM-<?= str_pad((string) $product['id'], 3, '0', STR_PAD_LEFT) ?></strong></span>
           <span class="meta__divider">|</span>
           <span class="meta__category">Danh mục: <strong><?= App::e($product['category_name']) ?></strong></span>
           <span class="meta__divider">|</span>
           <span class="meta__stock <?= $isComingSoon ? '' : 'in-stock' ?>" id="pd-stock-pill">
-            <?= $isComingSoon ? 'Sắp mở bán' : ('Còn ' . (int) $defVar['stock_qty'] . ' ' . App::e($product['unit_label'])) ?>
+            <?= $isComingSoon ? 'Hết hàng' : ('Còn ' . (int) $defVar['stock_qty'] . ' ' . App::e($unitLabel)) ?>
           </span>
         </div>
 
@@ -89,7 +98,7 @@ declare(strict_types=1);
                        data-old-price="<?= (int) $v['old_price'] ?>"
                        data-stock="<?= (int) $v['stock_qty'] ?>"
                        <?= (int) $v['option_index'] === 0 ? 'checked' : '' ?>>
-                <span class="pill-radio__btn"><?= App::e($v['short_label']) ?> — <?= App::e(App::formatCurrency((int) $v['price'])) ?></span>
+                <span class="pill-radio__btn"><?= App::e($v['short_label']) ?></span>
               </label>
             <?php endforeach; ?>
           </div>
@@ -103,20 +112,16 @@ declare(strict_types=1);
               <input type="number" id="pd-qty-input" class="qty-input" value="1" min="1" max="99">
               <button type="button" class="qty-btn" id="pd-qty-plus" aria-label="Tăng số lượng">+</button>
             </div>
-            <span class="quantity-group__hint" id="pd-stock-hint">Kho còn <?= (int) $defVar['stock_qty'] ?> <?= App::e($product['unit_label']) ?> sẵn sàng giao</span>
+            <span class="quantity-group__hint" id="pd-stock-hint">Kho còn <?= (int) $defVar['stock_qty'] ?> <?= App::e($unitLabel) ?></span>
           </div>
 
           <div class="product-detail__actions">
             <button type="button" class="btn btn--cart" id="pd-btn-add" data-product-id="<?= (int) $product['id'] ?>">Thêm vào giỏ hàng</button>
             <button type="button" class="btn btn--buy" id="pd-btn-buy" data-product-id="<?= (int) $product['id'] ?>">Mua ngay</button>
-            <button type="button" class="btn--wishlist-detail js-wishlist-toggle <?= $isWish ? 'is-active' : '' ?>" data-product-id="<?= (int) $product['id'] ?>">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="<?= $isWish ? 'currentColor' : 'none' ?>" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
-              <span><?= $isWish ? 'Đã thích' : 'Yêu thích' ?></span>
-            </button>
           </div>
         <?php else: ?>
           <div class="product-detail__actions">
-            <button type="button" class="btn btn--outline-dark btn--full" disabled><?= $isComingSoon ? 'Sản phẩm sắp mở bán' : 'Tạm hết hàng' ?></button>
+            <button type="button" class="btn btn--outline-dark btn--full" disabled>Hết hàng</button>
           </div>
         <?php endif; ?>
 
@@ -161,25 +166,26 @@ declare(strict_types=1);
       <h2 class="section-heading" style="text-align:left;margin-bottom:14px;">Đánh giá sản phẩm</h2>
       <form id="pd-review-form" enctype="multipart/form-data" class="php-card" style="display:grid;gap:12px;background:#fff8ed;margin-bottom:18px;">
         <input type="hidden" name="product_id" value="<?= (int) $product['id'] ?>">
-        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;align-items:end;">
           <div>
             <label for="rev-name" class="form-label">Tên của bạn *</label>
             <input id="rev-name" name="reviewer_name" type="text" class="form-input" value="<?= App::e($currentUser['full_name'] ?? '') ?>" required>
           </div>
           <div>
-            <label for="rev-rating" class="form-label">Số sao *</label>
-            <select id="rev-rating" name="rating" class="form-input">
-              <option value="5">5 sao · Rất hài lòng</option>
-              <option value="4">4 sao · Tốt</option>
-              <option value="3">3 sao · Bình thường</option>
-              <option value="2">2 sao · Chưa ưng ý</option>
-              <option value="1">1 sao · Cần cải thiện</option>
-            </select>
+            <label class="form-label" for="rev-rating-slider">Đánh giá sao (<strong id="rev-rating-readout">5.0</strong> / 5.0 sao) *</label>
+            <input type="hidden" id="rev-rating" name="rating" value="5.0">
+            <div class="bm-star-picker-wrap">
+              <div class="bm-star-picker" id="bm-star-picker" role="slider" aria-label="Chọn số sao từ 0.5 đến 5.0" aria-valuemin="0.5" aria-valuemax="5" aria-valuenow="5" tabindex="0">
+                <div class="bm-star-picker__bg" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+                <div class="bm-star-picker__fill" id="bm-star-fill" style="width:100%;" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+              </div>
+              <input type="range" id="rev-rating-slider" min="0.5" max="5" step="0.5" value="5" class="bm-star-range" aria-label="Thanh kéo chọn 0.5 đến 5 sao">
+            </div>
           </div>
         </div>
         <div>
           <label for="rev-comment" class="form-label">Nhận xét thực tế *</label>
-          <textarea id="rev-comment" name="comment" class="form-input" rows="3" placeholder="Chia sẻ cảm nhận thực tế khi làm bánh..." required></textarea>
+          <textarea id="rev-comment" name="comment" class="form-input" rows="3" placeholder="Chia sẻ cảm nhận..." required></textarea>
         </div>
         <div>
           <label for="rev-img" class="form-label">Ảnh thành phẩm (JPG/PNG/WEBP tối đa 3MB, không bắt buộc)</label>
@@ -194,13 +200,23 @@ declare(strict_types=1);
         <?php if (empty($product['reviews'])): ?>
           <p style="color:#7c5c46;font-size:14px;">Chưa có bình luận mới — hãy là người đầu tiên chia sẻ thành phẩm!</p>
         <?php else: ?>
-          <?php foreach ($product['reviews'] as $rv): ?>
-            <div class="php-card" style="padding:14px;">
-              <div style="display:flex;justify-content:space-between;font-size:13px;color:#7c5c46;">
-                <strong style="color:#70452b;"><?= App::e($rv['reviewer_name']) ?> · <?= (int) $rv['rating'] ?>/5 sao</strong>
-                <span><?= App::e($rv['created_at']) ?></span>
+          <?php foreach ($product['reviews'] as $rv):
+            $rvId = (int) $rv['id'];
+            $rvRating = number_format((float) $rv['rating'], 1);
+            $canEdit = ($currentUser && (int) ($rv['user_id'] ?? 0) === (int) $currentUser['id']) || in_array($rvId, $myReviewIds, true);
+          ?>
+            <div class="php-card pd-review-item" data-review-id="<?= $rvId ?>" style="padding:14px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:#7c5c46;">
+                <strong style="color:#70452b;"><?= App::e($rv['reviewer_name']) ?> · <span class="js-rv-rating"><?= App::e($rvRating) ?></span>/5.0 sao</strong>
+                <div style="display:flex;align-items:center;gap:10px;">
+                  <span><?= App::e($rv['created_at']) ?></span>
+                  <?php if ($canEdit): ?>
+                    <button type="button" class="btn btn--outline btn--sm js-rv-edit" data-id="<?= $rvId ?>" data-rating="<?= App::e($rvRating) ?>" data-comment="<?= App::e($rv['comment']) ?>">Sửa</button>
+                    <button type="button" class="btn btn--outline btn--sm js-rv-delete" data-id="<?= $rvId ?>" style="color:#b91c1c;border-color:#fca5a5;">Xóa</button>
+                  <?php endif; ?>
+                </div>
               </div>
-              <p style="margin:6px 0 0;color:#4a2d1b;font-size:14px;"><?= App::e($rv['comment']) ?></p>
+              <p class="js-rv-comment" style="margin:6px 0 0;color:#4a2d1b;font-size:14px;"><?= App::e($rv['comment']) ?></p>
               <?php if (!empty($rv['image_path'])): ?>
                 <img src="<?= App::e(App::asset((string) $rv['image_path'])) ?>" alt="Ảnh đánh giá" style="margin-top:8px;max-width:140px;border-radius:8px;">
               <?php endif; ?>
@@ -214,7 +230,6 @@ declare(strict_types=1);
       <section class="recipe-crosslink-section">
         <div class="section-header-flex">
           <div>
-            <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
             <h2 class="section-heading">Sản phẩm này dùng cho công thức nào?</h2>
             <p class="section-desc">Khám phá các công thức làm bánh chuẩn vị và tự động gom trọn bộ nguyên liệu cần mua chỉ với 1 click:</p>
           </div>
@@ -296,8 +311,98 @@ document.addEventListener("DOMContentLoaded", function () {
         saveEl.textContent = "Tiết kiệm " + window.BakeApp.formatPrice(Math.max(0, oldPr - pr));
         saveEl.style.display = oldPr > pr ? "inline-block" : "none";
       }
-      if (stockEl) stockEl.textContent = "Còn " + maxStock;
-      if (hintEl) hintEl.textContent = "Kho còn " + maxStock + " sẵn sàng giao";
+      if (stockEl) stockEl.textContent = "Còn " + maxStock + " " + <?= json_encode($unitLabel ?? 'gói') ?>;
+      if (hintEl) hintEl.textContent = "Kho còn " + maxStock + " " + <?= json_encode($unitLabel ?? 'gói') ?>;
+    });
+  });
+
+  // Thanh chọn sao mượt từng nấc 0.5 sao (Shopee style)
+  const starPicker = document.getElementById("bm-star-picker");
+  const starFill = document.getElementById("bm-star-fill");
+  const starHidden = document.getElementById("rev-rating");
+  const starReadout = document.getElementById("rev-rating-readout");
+  const starSlider = document.getElementById("rev-rating-slider");
+  let committedRating = 5.0;
+  let isDraggingStars = false;
+
+  function applyStarVisual(val) {
+    const snapped = Math.max(0.5, Math.min(5.0, Math.round(Number(val) * 2) / 2));
+    if (starFill) starFill.style.width = ((snapped / 5) * 100) + "%";
+    if (starReadout) starReadout.textContent = snapped.toFixed(1);
+    if (starSlider) starSlider.value = String(snapped);
+    if (starPicker) starPicker.setAttribute("aria-valuenow", String(snapped));
+    return snapped;
+  }
+
+  function calcRatingFromPointer(clientX) {
+    if (!starPicker) return committedRating;
+    const rect = starPicker.getBoundingClientRect();
+    const ratio = Math.max(0.05, Math.min(1, (clientX - rect.left) / Math.max(1, rect.width)));
+    return Math.max(0.5, Math.min(5.0, Math.ceil(ratio * 10) / 2));
+  }
+
+  if (starPicker) {
+    starPicker.addEventListener("pointerdown", (e) => {
+      isDraggingStars = true;
+      committedRating = applyStarVisual(calcRatingFromPointer(e.clientX));
+      if (starHidden) starHidden.value = String(committedRating);
+    });
+    starPicker.addEventListener("pointermove", (e) => {
+      const hoverVal = calcRatingFromPointer(e.clientX);
+      applyStarVisual(hoverVal);
+      if (isDraggingStars) {
+        committedRating = hoverVal;
+        if (starHidden) starHidden.value = String(committedRating);
+      }
+    });
+    starPicker.addEventListener("pointerleave", () => {
+      isDraggingStars = false;
+      applyStarVisual(committedRating);
+    });
+    window.addEventListener("pointerup", () => { isDraggingStars = false; });
+  }
+  if (starSlider) {
+    starSlider.addEventListener("input", () => {
+      committedRating = applyStarVisual(Number(starSlider.value));
+      if (starHidden) starHidden.value = String(committedRating);
+    });
+  }
+
+  document.querySelectorAll(".js-rv-edit").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const reviewId = Number(btn.dataset.id);
+      const oldComment = btn.dataset.comment || "";
+      const oldRating = btn.dataset.rating || "5.0";
+      const nextComment = window.prompt("Cập nhật nhận xét của bạn:", oldComment);
+      if (nextComment === null) return;
+      const nextRatingRaw = window.prompt("Số sao (0.5 đến 5.0, bội số 0.5):", oldRating);
+      if (nextRatingRaw === null) return;
+      try {
+        const res = await window.BakeApp.postJson("product", "ajaxUpdateReview", {
+          review_id: reviewId,
+          rating: Number(nextRatingRaw) || 5.0,
+          comment: nextComment.trim()
+        });
+        window.BakeApp.showToast(res.message, "success");
+        window.location.reload();
+      } catch (err) {
+        window.BakeApp.showToast(err.message, "error");
+      }
+    });
+  });
+
+  document.querySelectorAll(".js-rv-delete").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const reviewId = Number(btn.dataset.id);
+      const ok = await window.BakeApp.showConfirm("Bạn chắc chắn muốn xóa đánh giá này?", "Xóa đánh giá");
+      if (!ok) return;
+      try {
+        const res = await window.BakeApp.postJson("product", "ajaxDeleteReview", { review_id: reviewId });
+        window.BakeApp.showToast(res.message, "success");
+        window.location.reload();
+      } catch (err) {
+        window.BakeApp.showToast(err.message, "error");
+      }
     });
   });
 
