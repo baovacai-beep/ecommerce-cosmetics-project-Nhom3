@@ -223,9 +223,9 @@ declare(strict_types=1);
         <h2 style="margin:0 0 14px;color:#70452b;font-size:21px;">Thêm cảm hứng cho lần vào bếp tiếp theo</h2>
         <div class="blog-related-grid">
           <?php foreach ($relatedRecipes as $relRec): ?>
-            <article class="php-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
-              <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relRec['slug']))) ?>">
-                <img src="<?= App::e(App::asset($relRec['image_path'])) ?>" alt="<?= App::e($relRec['title']) ?>" loading="lazy" style="width:100%;height:155px;object-fit:cover;border-radius:10px;">
+            <article class="php-card related-hover-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
+              <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relRec['slug']))) ?>" class="related-hover-card__media">
+                <img src="<?= App::e(App::asset($relRec['image_path'])) ?>" alt="<?= App::e($relRec['title']) ?>" loading="lazy" class="related-hover-card__img">
               </a>
               <span class="product-card__category" style="font-size:11.5px;"><?= App::e($relRec['category']) ?> · <?= App::e($relRec['difficulty']) ?></span>
               <h3 style="margin:0;font-size:16px;line-height:1.4;color:#4a2d1b;">

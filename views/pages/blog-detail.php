@@ -228,9 +228,9 @@ declare(strict_types=1);
         <h2 style="color:#70452b;font-size:21px;margin:0 0 14px;">Bài viết liên quan</h2>
         <div class="blog-related-grid">
           <?php foreach ($otherPosts as $op): ?>
-            <article class="php-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
-              <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($op['slug']))) ?>">
-                <img src="<?= App::e(App::asset($op['image_path'])) ?>" alt="<?= App::e($op['title']) ?>" loading="lazy" style="width:100%;height:150px;object-fit:cover;border-radius:10px;">
+            <article class="php-card related-hover-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
+              <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($op['slug']))) ?>" class="related-hover-card__media">
+                <img src="<?= App::e(App::asset($op['image_path'])) ?>" alt="<?= App::e($op['title']) ?>" loading="lazy" class="related-hover-card__img">
               </a>
               <span class="product-card__category" style="font-size:11.5px;"><?= App::e($op['category']) ?></span>
               <h3 style="margin:0;font-size:15.5px;line-height:1.4;color:#4a2d1b;">

@@ -67,25 +67,29 @@ $activeQuery = (string) ($filters['q'] ?? '');
     </div>
   <?php else: ?>
     <div class="recipes-editorial-grid">
-      <?php foreach ($recipes as $r): ?>
+      <?php foreach ($recipes as $r):
+        $recUrl = App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']));
+      ?>
         <article class="recipe-editorial-card php-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-          <div style="position:relative;">
-            <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" style="width:100%;height:200px;object-fit:cover;display:block;">
+          <a href="<?= App::e($recUrl) ?>" class="recipe-editorial-card__media" aria-label="<?= App::e($r['title']) ?>">
+            <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" class="recipe-editorial-card__img" loading="lazy">
             <span class="recipe-poster-card__badge-corner" style="top:12px;left:12px;"><?= App::e($r['difficulty']) ?></span>
-          </div>
+          </a>
           <div style="padding:18px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:12px;color:#c88b52;font-weight:700;">
                 <span><?= App::e($r['code']) ?> · <?= App::e($r['category']) ?></span>
                 <span>&#9733; <?= App::e($r['rating_avg']) ?></span>
               </div>
-              <h2 style="margin:8px 0;font-size:18px;color:#70452b;"><?= App::e($r['title']) ?></h2>
+              <h2 class="recipe-editorial-card__title" style="margin:8px 0;font-size:18px;color:#70452b;">
+                <a href="<?= App::e($recUrl) ?>" style="color:inherit;text-decoration:none;"><?= App::e($r['title']) ?></a>
+              </h2>
               <p style="font-size:13.5px;color:#6e4b34;margin:0 0 12px;line-height:1.55;"><?= App::e($r['subtitle']) ?></p>
               <div style="font-size:12.5px;color:#7c5c46;margin-bottom:14px;">
                 Thời gian: <strong><?= App::e($r['time_label']) ?></strong> · <strong><?= App::e($r['people_label'] ?? '4 người') ?></strong>
               </div>
             </div>
-            <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']))) ?>" class="btn btn--primary btn--full">Mở công thức &amp; Chọn combo</a>
+            <a href="<?= App::e($recUrl) ?>" class="btn btn--primary btn--full">Mở công thức &amp; Chọn combo</a>
           </div>
         </article>
       <?php endforeach; ?>

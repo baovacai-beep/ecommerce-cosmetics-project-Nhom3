@@ -34,25 +34,27 @@ $selCat = (string) ($selectedCategory ?? 'all');
     </div>
   <?php else: ?>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;">
-      <?php foreach ($posts as $post): ?>
-        <article class="php-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-          <div style="position:relative;">
-            <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" style="width:100%;height:190px;object-fit:cover;display:block;">
+      <?php foreach ($posts as $post):
+        $postUrl = App::url('?c=home&a=blogDetail&id=' . urlencode($post['slug']));
+      ?>
+        <article class="blog-card">
+          <a href="<?= App::e($postUrl) ?>" class="blog-card__media" aria-label="<?= App::e($post['title']) ?>">
+            <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" class="blog-card__img" loading="lazy">
             <?php if (!empty($post['display_mode'])): ?>
               <span class="blog-format-badge"><?= App::e($post['display_mode']) ?></span>
             <?php endif; ?>
-          </div>
-          <div style="padding:16px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
+          </a>
+          <div class="blog-card__body">
             <div>
               <span class="product-card__category"><?= App::e($post['category']) ?> · <?= App::e($post['read_time']) ?></span>
-              <h2 style="margin:6px 0 8px;font-size:17.5px;color:#70452b;">
-                <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($post['slug']))) ?>" style="color:inherit;text-decoration:none;"><?= App::e($post['title']) ?></a>
+              <h2 class="blog-card__title">
+                <a href="<?= App::e($postUrl) ?>"><?= App::e($post['title']) ?></a>
               </h2>
-              <p style="font-size:13.5px;color:#6e4b34;line-height:1.6;margin:0 0 12px;"><?= App::e($post['excerpt']) ?></p>
+              <p class="blog-card__excerpt"><?= App::e($post['excerpt']) ?></p>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:10px;font-size:12.5px;color:#7c5c46;">
+            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:10px;margin-top:auto;font-size:12.5px;color:#7c5c46;">
               <span><?= App::e($post['published_at_label']) ?></span>
-              <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($post['slug']))) ?>" style="font-weight:700;color:#70452b;text-decoration:none;">Đọc tiếp &rarr;</a>
+              <a href="<?= App::e($postUrl) ?>" class="blog-card__readmore">Đọc tiếp <span class="blog-card__arrow" aria-hidden="true">&rarr;</span></a>
             </div>
           </div>
         </article>

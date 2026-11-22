@@ -8523,3 +8523,224 @@ textarea:focus-visible,
   background-color: #4f2f1c;
   border-color: #4f2f1c;
 }
+
+/* ================= HIỆU ỨNG HOVER & VI TƯƠNG TÁC ĐỒNG BỘ TOÀN BÀI ================= */
+.blog-card {
+  border-radius: 16px;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 6px 20px rgba(74, 46, 25, 0.06);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.28s ease,
+              border-color 0.25s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  border-color: #c88b52;
+  box-shadow: 0 16px 34px rgba(112, 69, 43, 0.14);
+}
+
+.blog-card__media {
+  display: block;
+}
+
+.blog-card__img {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blog-card:hover .blog-card__img {
+  transform: scale(1.06);
+}
+
+.blog-card__title a {
+  transition: color 0.2s ease;
+}
+
+.blog-card:hover .blog-card__title,
+.blog-card:hover .blog-card__title a {
+  color: #b45309;
+}
+
+.blog-card__readmore {
+  font-weight: 700;
+  color: #70452b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.blog-card__arrow {
+  display: inline-block;
+  transition: transform 0.22s ease;
+}
+
+.blog-card:hover .blog-card__readmore {
+  color: #b45309;
+}
+
+.blog-card:hover .blog-card__arrow {
+  transform: translateX(4px);
+}
+
+/* Thẻ công thức & Thẻ bài viết / công thức liên quan */
+.recipe-editorial-card,
+.related-hover-card {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.28s ease,
+              border-color 0.25s ease;
+}
+
+.recipe-editorial-card:hover,
+.related-hover-card:hover {
+  transform: translateY(-6px);
+  border-color: #c88b52;
+  box-shadow: 0 16px 32px rgba(112, 69, 43, 0.14);
+}
+
+.recipe-editorial-card__media {
+  position: relative;
+  display: block;
+  height: 200px;
+  overflow: hidden;
+  background-color: #f9ebd4;
+}
+
+.recipe-editorial-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.recipe-editorial-card:hover .recipe-editorial-card__img {
+  transform: scale(1.06);
+}
+
+.recipe-editorial-card:hover .recipe-editorial-card__title {
+  color: #b45309 !important;
+}
+
+.related-hover-card__media {
+  display: block;
+  height: 155px;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #f9ebd4;
+}
+
+.related-hover-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.related-hover-card:hover .related-hover-card__img {
+  transform: scale(1.06);
+}
+
+.related-hover-card:hover h3 {
+  color: #b45309 !important;
+}
+
+/* Vi tương tác Header, Pills, Icon & FAQ */
+.site-header__menu-link {
+  position: relative;
+}
+
+.site-header__menu-link::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background-color: var(--accent-cta);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-header__menu-link:hover::after,
+.site-header__menu-link.active::after {
+  transform: scaleX(1);
+}
+
+.site-header__icon-btn,
+.site-header__cart,
+.flipbook-wish-btn,
+.wishlist-heart-btn {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease;
+}
+
+.site-header__icon-btn:hover,
+.site-header__cart:hover,
+.flipbook-wish-btn:hover,
+.wishlist-heart-btn:hover {
+  transform: translateY(-1px) scale(1.06);
+}
+
+.blog-filter-btn,
+.price-preset-btn,
+.flipbook-page-pill,
+.faq-item {
+  transition: transform 0.2s ease,
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease;
+}
+
+.blog-filter-btn:hover:not(.active),
+.price-preset-btn:hover:not(.is-active),
+.flipbook-page-pill:hover:not(.is-active) {
+  transform: translateY(-1.5px);
+  background-color: #f6e7cf;
+  border-color: #c88b52;
+}
+
+.faq-item:hover {
+  border-color: #c88b52;
+  box-shadow: 0 6px 16px rgba(112, 69, 43, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-card,
+  .blog-card__img,
+  .blog-card__arrow,
+  .recipe-editorial-card,
+  .recipe-editorial-card__img,
+  .related-hover-card,
+  .related-hover-card__img,
+  .site-header__menu-link::after,
+  .site-header__icon-btn,
+  .site-header__cart,
+  .flipbook-wish-btn,
+  .wishlist-heart-btn,
+  .blog-filter-btn,
+  .price-preset-btn,
+  .flipbook-page-pill,
+  .faq-item {
+    transition: none !important;
+  }
+
+  .blog-card:hover,
+  .blog-card:hover .blog-card__img,
+  .recipe-editorial-card:hover,
+  .recipe-editorial-card:hover .recipe-editorial-card__img,
+  .related-hover-card:hover,
+  .related-hover-card:hover .related-hover-card__img,
+  .site-header__icon-btn:hover,
+  .site-header__cart:hover,
+  .flipbook-wish-btn:hover,
+  .wishlist-heart-btn:hover {
+    transform: none !important;
+  }
+}

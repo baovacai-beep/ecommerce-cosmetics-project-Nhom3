@@ -119,9 +119,10 @@
 
   function buildBlogCardHtml(post) {
     const combo = getComboBreakdown(post.recipeGroupId);
+    const detailHref = `blog-detail.html?id=${encodeURIComponent(post.id)}`;
     return `
       <article class="blog-card" id="${escapeHtml(post.recipeGroupId)}">
-        <div class="blog-card__media">
+        <a href="${detailHref}" class="blog-card__media" aria-label="${escapeHtml(post.title)}">
           <img
             src="${escapeHtml(post.image)}"
             alt="${escapeHtml(post.title)}"
@@ -131,7 +132,7 @@
           >
           <span class="blog-card__category">${escapeHtml(post.category)}</span>
           ${post.displayMode ? `<span class="blog-format-badge">${escapeHtml(post.displayMode)}</span>` : ""}
-        </div>
+        </a>
         <div class="blog-card__body">
           <div class="blog-card__meta">
             <span class="meta-inline">
@@ -143,7 +144,7 @@
             <span>·</span>
             <span>Độ khó: ${escapeHtml(post.diff)}</span>
           </div>
-          <h2 class="blog-card__title">${escapeHtml(post.title)}</h2>
+          <h2 class="blog-card__title"><a href="${detailHref}">${escapeHtml(post.title)}</a></h2>
           <p class="blog-card__excerpt">${escapeHtml(post.excerpt)}</p>
           <div class="blog-card__combo-preview">
             <span>Bộ nguyên liệu (${combo.items.length} món):</span>
