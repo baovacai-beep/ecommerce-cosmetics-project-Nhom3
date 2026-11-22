@@ -169,7 +169,15 @@ document.addEventListener("DOMContentLoaded", function () {
           fb.textContent = res.message;
         }
         form.reset();
-        window.BakeApp.showToast(res.message, "success");
+        if (typeof window.BakeApp.showNoticeModal === "function") {
+          window.BakeApp.showNoticeModal(
+            "Cảm ơn bạn đã liên hệ!",
+            res.message || "Lời nhắn của bạn đã được gửi tới đội ngũ BakeMate và sẽ được phản hồi trong thời gian sớm nhất.",
+            "Quay lại"
+          );
+        } else {
+          window.BakeApp.showToast(res.message, "success");
+        }
       } catch (err) {
         if (fb) {
           fb.hidden = false;

@@ -327,6 +327,26 @@
   }
 
   /**
+   * Notice Modal (Cream UI Kit card + full-width brown pill "Quay lại")
+   */
+  function showNoticeModal(title, message, buttonLabel) {
+    const backdrop = document.getElementById("bm-policy-modal");
+    const titleEl = document.getElementById("bm-policy-title");
+    const bodyEl = document.getElementById("bm-policy-body");
+    const actionBtn = backdrop ? backdrop.querySelector(".bm-modal__actions .js-policy-close") : null;
+    if (!backdrop || !titleEl || !bodyEl) {
+      showToast(message || title || "", "success");
+      return;
+    }
+    titleEl.textContent = title || "Cảm ơn bạn!";
+    bodyEl.innerHTML = `<p style="margin:0;font-size:14.5px;line-height:1.65;">${escapeHtml(message || "")}</p>`;
+    if (actionBtn) actionBtn.textContent = buttonLabel || "Quay lại";
+    backdrop.hidden = false;
+    document.body.style.overflow = "hidden";
+    if (actionBtn) actionBtn.focus();
+  }
+
+  /**
    * Synchronize Cart & Wishlist counters
    */
   function updateBadges(cartCount, wishCount) {
@@ -710,9 +730,11 @@
 
     function openPolicyModal(key) {
       const doc = POLICY_CONTENT[key];
+      const actionBtn = pModal ? pModal.querySelector(".bm-modal__actions .js-policy-close") : null;
       if (doc && pModal && pTitle && pBody) {
         pTitle.textContent = doc.title;
         pBody.innerHTML = doc.html;
+        if (actionBtn) actionBtn.textContent = "Quay lại";
         pModal.hidden = false;
         document.body.style.overflow = "hidden";
       }
@@ -769,11 +791,13 @@
     formatPrice,
     showToast,
     showConfirm,
+    showNoticeModal,
     updateBadges
   };
 
   // Aliases for developer convenience across views
   window.showToast = showToast;
   window.showConfirm = showConfirm;
+  window.showNoticeModal = showNoticeModal;
   window.BakeToast = { show: showToast };
 })();
