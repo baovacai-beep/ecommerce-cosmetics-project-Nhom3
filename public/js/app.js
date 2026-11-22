@@ -353,8 +353,11 @@
     // -------------------------------------------------------------
     // 1. Promo Topbar Coupon Copy
     // -------------------------------------------------------------
+    const COPY_ICON_SVG = `<svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>`;
+    const TICK_ICON_SVG = `<svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
     const promoButtons = document.querySelectorAll(".js-copy-promo");
     promoButtons.forEach((btn) => {
+      let resetTimer = null;
       btn.addEventListener("click", async function (e) {
         e.preventDefault();
         const code = btn.getAttribute("data-coupon") || "";
@@ -363,13 +366,11 @@
         const success = await copyToClipboard(code);
         if (success) {
           btn.classList.add("is-copied");
-          const label = btn.querySelector(".js-copy-promo-label");
-          const originalText = label ? label.textContent : "";
-          if (label) label.textContent = "Đã chép";
-
-          setTimeout(() => {
+          btn.innerHTML = TICK_ICON_SVG;
+          if (resetTimer) clearTimeout(resetTimer);
+          resetTimer = setTimeout(() => {
             btn.classList.remove("is-copied");
-            if (label) label.textContent = originalText || "Sao chép";
+            btn.innerHTML = COPY_ICON_SVG;
           }, 2000);
 
           showToast("Đã sao chép mã ưu đãi " + code + "!", "success");

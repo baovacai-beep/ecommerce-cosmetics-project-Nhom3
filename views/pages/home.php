@@ -35,51 +35,48 @@ $flipJson = array_map(static function (array $r): array {
 <!-- 1. Hero Carousel (3 slide, nút chuyển, chỉ báo slide, tự động chuyển & responsive) -->
 <section class="hero-carousel" id="hero-carousel" aria-roledescription="carousel" aria-label="Banner nổi bật BakeMate" tabindex="0">
   <div class="hero-carousel__slides">
-    <article class="hero-slide is-active" aria-hidden="false" aria-label="Slide 1 trên 3: Làm bánh chuẩn vị, nguyên liệu chuẩn tay">
-      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/banner.jpg')) ?>');"></div>
+    <article class="hero-slide is-active" aria-hidden="false" aria-label="Slide 1 trên 3: Bắt đầu hành trình làm bánh – Ngọt ngào cùng BakeMate">
+      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/banners/banner-01.webp')) ?>');"></div>
       <div class="hero-slide__overlay"></div>
       <div class="hero-banner__content">
-        <span class="hero-banner__badge">Lấy công thức làm trung tâm</span>
-        <h1 class="hero-banner__title">Làm bánh chuẩn vị<br>Nguyên liệu chuẩn tay</h1>
+        <span class="hero-banner__badge">NGƯỜI BẠN ĐỒNG HÀNH CÙNG ĐAM MÊ LÀM BÁNH</span>
+        <h1 class="hero-banner__title">Bắt đầu hành trình làm bánh – Ngọt ngào cùng BakeMate</h1>
         <p class="hero-banner__desc">
-          Chọn công thức yêu thích, tự động quy đổi định lượng chuẩn xác và nhận trọn gói nguyên liệu, dụng cụ vừa đủ dùng tận cửa nhà.
+          Từ nguyên liệu chất lượng đến dụng cụ cần thiết, BakeMate giúp bạn chuẩn bị mọi thứ để tự tay tạo nên những chiếc bánh thơm ngon ngay tại nhà.
         </p>
         <div class="hero-banner__actions">
-          <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--primary">Khám phá công thức</a>
-          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline">Mua nguyên liệu</a>
-          <a href="<?= App::e(App::url('?c=home&a=blog')) ?>" class="btn btn--outline">Xem Blog</a>
+          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Khám phá sản phẩm</a>
+          <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--outline">Khám phá công thức</a>
         </div>
       </div>
     </article>
 
-    <article class="hero-slide" aria-hidden="true" aria-label="Slide 2 trên 3: Linh hoạt định lượng từ 100g">
-      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/contact-baking.jpg')) ?>');"></div>
+    <article class="hero-slide" aria-hidden="true" aria-label="Slide 2 trên 3: Cần bao nhiêu, chọn bấy nhiêu">
+      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/banners/banner-02.jpg')) ?>');"></div>
       <div class="hero-slide__overlay"></div>
       <div class="hero-banner__content">
-        <span class="hero-banner__badge">Linh hoạt định lượng từ 100g</span>
-        <h2 class="hero-banner__title">Chuẩn bị vừa vặn<br>Không lo dư thừa bột</h2>
+        <span class="hero-banner__badge">MUA ĐÚNG LƯỢNG – TIẾT KIỆM HƠN</span>
+        <h2 class="hero-banner__title">Cần bao nhiêu, chọn bấy nhiêu</h2>
         <p class="hero-banner__desc">
-          Dễ dàng chọn túi 100g, 300g, 500g hoặc 1kg đúng nhu cầu từng mẻ bánh, đảm bảo độ tươi mới và tiết kiệm tối đa chi phí.
+          Linh hoạt lựa chọn định lượng nguyên liệu phù hợp với nhu cầu và quy mô từng mẻ bánh. Hạn chế dư thừa, tối ưu chi phí.
         </p>
         <div class="hero-banner__actions">
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>" class="btn btn--primary">Chọn nguyên liệu ngay</a>
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>" class="btn btn--outline">Xem dụng cụ căn bếp</a>
+          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Chọn nguyên liệu ngay</a>
         </div>
       </div>
     </article>
 
-    <article class="hero-slide" aria-hidden="true" aria-label="Slide 3 trên 3: Ưu đãi thành viên mới · Giảm 10%">
-      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/about-baking.jpg')) ?>');"></div>
+    <article class="hero-slide" aria-hidden="true" aria-label="Slide 3 trên 3: Đơn hàng đầu tiên giảm ngay 10%">
+      <div class="hero-slide__bg" style="background-image: url('<?= App::e(App::asset('images/banners/banner-03.jfif')) ?>');"></div>
       <div class="hero-slide__overlay"></div>
       <div class="hero-banner__content">
-        <span class="hero-banner__badge">Ưu đãi thành viên mới · Giảm 10%</span>
-        <h2 class="hero-banner__title">Combo công thức 1 chạm<br>Giao hỏa tốc trong 2 giờ</h2>
+        <span class="hero-banner__badge">ƯU ĐÃI DÀNH RIÊNG CHO BẠN MỚI</span>
+        <h2 class="hero-banner__title">Đơn hàng đầu tiên giảm ngay 10%</h2>
         <p class="hero-banner__desc">
-          Gom nhanh toàn bộ nguyên liệu và dụng cụ theo từng công thức bánh thơm ngon. Nhập mã CHAOBANMOI để nhận ưu đãi đơn đầu tiên.
+          Bắt đầu hành trình làm bánh cùng BakeMate và nhận ưu đãi 10% cho đơn hàng đầu tiên với mã CHAOBANMOI.
         </p>
         <div class="hero-banner__actions">
-          <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--primary">Chọn combo công thức</a>
-          <a href="<?= App::e(App::url('?c=order&a=cart')) ?>" class="btn btn--outline">Đi tới giỏ hàng</a>
+          <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Mua sắm ngay</a>
         </div>
       </div>
     </article>
@@ -104,155 +101,70 @@ $flipJson = array_map(static function (array $r): array {
 </section>
 
 <main class="site-main">
-  <!-- 2. Category Carousel (6 thẻ danh mục, có thể điều hướng & liên kết tới danh sách sản phẩm phù hợp) -->
+  <!-- 2. Khám phá thế giới BakeMate (3 thẻ danh mục chính + 1 thẻ nổi bật Combo bên dưới) -->
   <section class="products-section category-discovery home-intro-section" aria-labelledby="discovery-heading">
     <div class="category-discovery__header">
-      <span class="category-discovery__eyebrow">Danh mục &amp; Gợi ý theo bếp</span>
-      <h2 class="products-section__title" id="discovery-heading">Khám phá thế giới làm bánh cùng BakeMate</h2>
-      <p class="products-section__desc">Từ những nguyên liệu cơ bản đến dụng cụ chuyên dụng và phụ kiện đóng gói, BakeMate giúp bạn chuẩn bị đầy đủ chỉ trong vài bước gọn nhẹ.</p>
+      <span class="category-discovery__eyebrow">KHÁM PHÁ THẾ GIỚI BAKEMATE</span>
+      <h2 class="products-section__title" id="discovery-heading">Mọi thứ bạn cần để làm bánh tại nhà</h2>
+      <p class="products-section__desc">Từ nguyên liệu, dụng cụ đến phụ kiện và các combo được chuẩn bị theo công thức, BakeMate mang đến những lựa chọn cần thiết để bạn thỏa sức sáng tạo trong căn bếp của mình.</p>
     </div>
 
-    <div class="category-carousel" id="category-carousel" aria-roledescription="carousel" aria-label="Danh mục làm bánh nổi bật" tabindex="0">
-      <div class="category-carousel__toolbar">
-        <button type="button" class="category-carousel__status js-carousel-toggle" id="category-autoplay-btn" aria-pressed="false" aria-label="Tạm dừng tự động trượt danh mục">
-          <span class="js-carousel-toggle-icon" aria-hidden="true">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-          </span>
-          <span class="js-carousel-toggle-label">Tạm dừng</span>
-        </button>
-        <div class="category-carousel__nav-group">
-          <button type="button" class="carousel-nav-btn" id="category-prev-btn" aria-label="Xem thẻ danh mục trước (Phím mũi tên trái)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-          </button>
-          <button type="button" class="carousel-nav-btn" id="category-next-btn" aria-label="Xem thẻ danh mục tiếp theo (Phím mũi tên phải)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
-          </button>
+    <div class="category-grid-3">
+      <!-- Thẻ 1: Nguyên liệu làm bánh -->
+      <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>" class="category-card" aria-label="Nguyên liệu làm bánh">
+        <div class="category-card__image-wrap">
+          <img src="<?= App::e(App::asset('images/categories/baking-ingredients.webp')) ?>" alt="Nguyên liệu làm bánh" class="category-card__img" loading="lazy">
+          <span class="category-card__scrim" aria-hidden="true"></span>
         </div>
-      </div>
-
-      <div class="category-carousel__viewport" id="category-carousel-viewport">
-        <div class="category-carousel__track" id="home-category-track">
-          <!-- Thẻ 1: Nguyên liệu làm bánh -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu'))) ?>" class="category-card" aria-label="Danh mục Nguyên liệu làm bánh - 11 sản phẩm">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/categories/cat-ingredients.jpg')) ?>" alt="Nguyên liệu làm bánh tươi và khô" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">11 sản phẩm</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Nguyên liệu làm bánh</h3>
-              <p class="category-card__desc">Bột mì số 8, số 11, bơ lạt Anchor, đường tinh luyện, cacao, matcha và kem tươi.</p>
-              <span class="category-card__link">Khám phá nguyên liệu &rarr;</span>
-            </div>
-          </a>
-
-          <!-- Thẻ 2: Dụng cụ căn bếp -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>" class="category-card" aria-label="Danh mục Dụng cụ căn bếp - 7 sản phẩm">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/categories/cat-tools.jpg')) ?>" alt="Dụng cụ làm bánh chuyên dụng" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">7 sản phẩm</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Dụng cụ căn bếp</h3>
-              <p class="category-card__desc">Cân điện tử 1g, ca đong, thìa đong, nhiệt kế, phới lồng và khuôn bánh chống dính.</p>
-              <span class="category-card__link">Khám phá dụng cụ &rarr;</span>
-            </div>
-          </a>
-
-          <!-- Thẻ 3: Phụ kiện & Đóng gói -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Phụ kiện & Đóng gói'))) ?>" class="category-card" aria-label="Danh mục Phụ kiện & Đóng gói - 5 sản phẩm">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/categories/cat-packaging.jpg')) ?>" alt="Phụ kiện và hộp túi đựng bánh" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">5 sản phẩm</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Phụ kiện &amp; Đóng gói</h3>
-              <p class="category-card__desc">Túi bắt kem, bộ đui inox 12 đầu, giấy nến, cup giấy cupcake và hộp đựng bánh có quai.</p>
-              <span class="category-card__link">Khám phá phụ kiện &rarr;</span>
-            </div>
-          </a>
-
-          <!-- Thẻ 4: Bơ lạt & Kem sữa -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu') . '&sub=' . urlencode('Bơ, sữa và kem'))) ?>" class="category-card" aria-label="Dòng sản phẩm Bơ lạt & Kem sữa chuẩn nhập khẩu">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/products/bo-lat-anchor-2.jpg')) ?>" alt="Bơ lạt Anchor New Zealand cắt lát" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">Chuẩn nhập khẩu</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Bơ lạt &amp; Kem sữa</h3>
-              <p class="category-card__desc">Bơ lạt Anchor 82.9% béo sữa và Whipping Cream cho bánh mì hoa cúc, mousse tan chảy.</p>
-              <span class="category-card__link">Xem dòng bơ kem &rarr;</span>
-            </div>
-          </a>
-
-          <!-- Thẻ 5: Bột & Men nở làm bánh -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Nguyên liệu') . '&sub=' . urlencode('Bột và nguyên liệu khô'))) ?>" class="category-card" aria-label="Danh mục Bột & Nguyên liệu khô chuẩn làm bánh">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/about-ingredients.jpg')) ?>" alt="Bột và các nguyên liệu khô chọn lọc" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">Độ mịn tiêu chuẩn</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Bột &amp; Men nở làm bánh</h3>
-              <p class="category-card__desc">Bột mì số 8, số 11 Meizan, đường tinh luyện, bột cacao Hershey's và bột matcha hảo hạng.</p>
-              <span class="category-card__link">Xem các loại bột &rarr;</span>
-            </div>
-          </a>
-
-          <!-- Thẻ 6: Khuôn & Khay nướng bánh -->
-          <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ') . '&sub=' . urlencode('Khuôn bánh'))) ?>" class="category-card" aria-label="Danh mục Khuôn và khay nướng bánh chống dính">
-            <div class="category-card__image-wrap">
-              <img src="<?= App::e(App::asset('images/products/khuon-banh-tron-1.jpg')) ?>" alt="Khuôn bánh tròn chống dính đế rời" class="category-card__img" loading="lazy">
-              <span class="category-card__scrim" aria-hidden="true"></span>
-              <span class="category-card__badge">Chống dính cao cấp</span>
-            </div>
-            <div class="category-card__body">
-              <h3 class="category-card__title">Khuôn &amp; Khay nướng bánh</h3>
-              <p class="category-card__desc">Khuôn bánh tròn đế rời 20cm, khuôn tart vỏ sò và giấy nến nướng bánh chống dính chịu nhiệt.</p>
-              <span class="category-card__link">Xem khuôn nướng &rarr;</span>
-            </div>
-          </a>
+        <div class="category-card__body">
+          <h3 class="category-card__title">Nguyên liệu làm bánh</h3>
+          <p class="category-card__desc">Bột mì, đường tinh luyện, bơ lạt, kem tươi, cacao, matcha và nguyên liệu tạo cấu trúc chuẩn vị.</p>
+          <span class="category-card__link">Khám phá nguyên liệu &rarr;</span>
         </div>
-      </div>
+      </a>
 
-      <div class="category-carousel__dots" id="category-carousel-dots" aria-label="Chỉ báo trang danh mục"></div>
+      <!-- Thẻ 2: Dụng cụ làm bánh -->
+      <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Dụng cụ'))) ?>" class="category-card" aria-label="Dụng cụ làm bánh">
+        <div class="category-card__image-wrap">
+          <img src="<?= App::e(App::asset('images/categories/baking-tools.webp')) ?>" alt="Dụng cụ làm bánh" class="category-card__img" loading="lazy">
+          <span class="category-card__scrim" aria-hidden="true"></span>
+        </div>
+        <div class="category-card__body">
+          <h3 class="category-card__title">Dụng cụ làm bánh</h3>
+          <p class="category-card__desc">Khuôn bánh chống dính, cân điện tử, dụng cụ trộn, rây bột, máy đánh trứng và bàn xoay trang trí.</p>
+          <span class="category-card__link">Khám phá dụng cụ &rarr;</span>
+        </div>
+      </a>
+
+      <!-- Thẻ 3: Phụ kiện & đóng gói -->
+      <a href="<?= App::e(App::url('?c=product&a=catalog&category=' . urlencode('Phụ kiện & Đóng gói'))) ?>" class="category-card" aria-label="Phụ kiện & đóng gói">
+        <div class="category-card__image-wrap">
+          <img src="<?= App::e(App::asset('images/categories/baking-accessories.jfif')) ?>" alt="Phụ kiện và đóng gói bánh" class="category-card__img" loading="lazy">
+          <span class="category-card__scrim" aria-hidden="true"></span>
+        </div>
+        <div class="category-card__body">
+          <h3 class="category-card__title">Phụ kiện &amp; đóng gói</h3>
+          <p class="category-card__desc">Hộp cupcake, túi giấy kraft, đế bánh kem, khay đựng bánh, nến, topper, sticker và ruy băng trang trí.</p>
+          <span class="category-card__link">Khám phá phụ kiện &rarr;</span>
+        </div>
+      </a>
     </div>
+
+    <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="category-combo-featured" aria-label="Combo nguyên liệu theo công thức">
+      <div class="category-combo-featured__media">
+        <img src="<?= App::e(App::asset('images/categories/baking-recipe-combo.jpg')) ?>" alt="Combo nguyên liệu theo công thức" class="category-combo-featured__img" loading="lazy">
+      </div>
+      <div class="category-combo-featured__body">
+        <span class="category-discovery__eyebrow" style="margin-bottom:0;">GIẢI PHÁP TIỆN LỢI</span>
+        <h3 class="category-combo-featured__title">Combo nguyên liệu theo công thức</h3>
+        <p class="category-combo-featured__desc">Các combo nguyên liệu được lựa chọn và định lượng sẵn theo từng công thức, giúp bạn tiết kiệm thời gian chuẩn bị và dễ dàng bắt tay vào làm những món bánh yêu thích.</p>
+        <span class="btn btn--primary">Khám phá combo &rarr;</span>
+      </div>
+    </a>
 
     <div class="home-intro-cta">
       <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Xem tất cả sản phẩm</a>
       <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--outline-dark">Khám phá Công thức &amp; Chọn combo</a>
-    </div>
-  </section>
-
-  <!-- 3. Quick-Bake (4 thẻ giới thiệu các lựa chọn làm bánh nhanh, liên kết công thức có sẵn) -->
-  <section class="home-quick-bake" aria-labelledby="quick-bake-heading">
-    <div class="home-section-head">
-      <div>
-        <h2 class="home-section-head__title" id="quick-bake-heading">Bạn muốn làm bánh gì hôm nay?</h2>
-        <p class="home-section-head__sub">Chọn nhanh món bánh yêu thích để mở bảng quy đổi khẩu phần và gom đủ nguyên liệu chỉ trong 1 chạm.</p>
-      </div>
-      <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="home-section-head__link">Xem tất cả công thức &rarr;</a>
-    </div>
-
-    <div class="quick-bake-grid">
-      <?php foreach ([
-          ['slug' => 'recipe-bong-lan', 'tag' => 'Dễ · 55 phút', 'title' => 'Bánh Bông Lan Cơ Bản', 'desc' => 'Cốt bánh mềm ẩm, bông xốp chuẩn bột mì số 8, đường tinh luyện và Cream of Tartar.'],
-          ['slug' => 'recipe-banh-quy-bo', 'tag' => '35 phút · 30 chiếc', 'title' => 'Cookies Bơ Đan Mạch', 'desc' => 'Hương bơ lạt Anchor 82.9% béo sữa giòn tan, dễ tạo vân hoa hồng bằng đui Inox 304.'],
-          ['slug' => 'recipe-hoa-cuc', 'tag' => 'Trung bình · 90 phút', 'title' => 'Bánh Mì Hoa Cúc', 'desc' => 'Từng thớ bánh dai mềm kéo sợi với bột mì số 11 giàu gluten và bơ sữa nhập khẩu.'],
-          ['slug' => 'recipe-mousse-socola', 'tag' => 'Không cần lò nướng', 'title' => 'Mousse Socola Lạnh', 'desc' => 'Mát lạnh tan chảy với Whipping Cream Anchor đánh bông mịn và bột cacao Hershey\'s.'],
-      ] as $qb): ?>
-        <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($qb['slug']))) ?>" class="quick-bake-card" aria-label="<?= App::e($qb['title']) ?> - <?= App::e($qb['tag']) ?>">
-          <div>
-            <span class="quick-bake-card__tag"><?= App::e($qb['tag']) ?></span>
-            <h3 class="quick-bake-card__title"><?= App::e($qb['title']) ?></h3>
-            <p class="quick-bake-card__desc"><?= App::e($qb['desc']) ?></p>
-          </div>
-          <span class="quick-bake-card__cta">Chọn combo nguyên liệu &rarr;</span>
-        </a>
-      <?php endforeach; ?>
     </div>
   </section>
 
@@ -818,7 +730,7 @@ $flipJson = array_map(static function (array $r): array {
           <div class="flipbook-page-pills" role="tablist" aria-label="Chọn trực tiếp trang công thức">
             ${FLIP_RECIPES.map((rec, i) => `
               <button type="button" class="flipbook-page-pill js-flip-goto ${i === fIdx ? "is-active" : ""}" data-index="${i}" role="tab" aria-selected="${i === fIdx ? "true" : "false"}" aria-label="Lật đến trang ${i + 1}: ${esc(rec.title)}">
-                ${i + 1}. ${esc(rec.title.split(" ").slice(0, 3).join(" "))}
+                ${i + 1}. ${esc(rec.title)}
               </button>
             `).join("")}
           </div>

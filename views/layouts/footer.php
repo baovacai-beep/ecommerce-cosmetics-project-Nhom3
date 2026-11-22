@@ -44,7 +44,6 @@ declare(strict_types=1);
         <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng &amp; Bảo quản</a></li>
         <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả &amp; Hoàn tiền</a></li>
         <li><a href="<?= App::e(App::url('?c=home&a=contact#faq-section')) ?>">Câu hỏi thường gặp (FAQ)</a></li>
-        <li><a href="<?= App::e(App::url('?c=product&a=wishlist')) ?>">Danh sách yêu thích</a></li>
       </ul>
     </div>
 

@@ -583,7 +583,7 @@
                     aria-selected="${idx === currentIndex ? "true" : "false"}"
                     aria-label="Trang ${idx + 1}: ${escapeHtml(r.title)}"
                   >
-                    ${idx + 1}. ${escapeHtml(r.title.split(" ").slice(0, 3).join(" "))}
+                    ${idx + 1}. ${escapeHtml(r.title)}
                   </button>
                 `
               )

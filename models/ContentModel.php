@@ -32,6 +32,8 @@ class ContentModel extends Model
         foreach ($rows as $row) {
             $steps = json_decode((string) ($row['steps_json'] ?? '[]'), true);
             $row['steps'] = is_array($steps) ? $steps : [];
+            $gallery = json_decode((string) ($row['gallery_json'] ?? '[]'), true);
+            $row['gallery'] = is_array($gallery) && !empty($gallery) ? $gallery : [$row['image_path']];
             if ($qNorm !== '') {
                 $hay = ProductModel::normalizeSearch($row['title'] . ' ' . $row['category'] . ' ' . $row['keywords_text'] . ' ' . $row['excerpt']);
                 if (!str_contains($hay, $qNorm)) {
@@ -56,6 +58,8 @@ class ContentModel extends Model
         }
         $steps = json_decode((string) ($row['steps_json'] ?? '[]'), true);
         $row['steps'] = is_array($steps) ? $steps : [];
+        $gallery = json_decode((string) ($row['gallery_json'] ?? '[]'), true);
+        $row['gallery'] = is_array($gallery) && !empty($gallery) ? $gallery : [$row['image_path']];
         return $row;
     }
 
@@ -63,7 +67,7 @@ class ContentModel extends Model
     {
         $id = (int) ($data['id'] ?? 0);
         $title = trim((string) ($data['title'] ?? ''));
-        $category = trim((string) ($data['category'] ?? 'Kiến thức làm bánh'));
+        $category = trim((string) ($data['category'] ?? 'Bí quyết làm bánh'));
         $excerpt = trim((string) ($data['excerpt'] ?? ''));
         $author = trim((string) ($data['author'] ?? 'BakeMate Studio'));
         $readTime = trim((string) ($data['read_time'] ?? '5 phút đọc'));

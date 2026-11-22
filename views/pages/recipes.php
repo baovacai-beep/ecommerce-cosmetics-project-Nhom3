@@ -37,23 +37,20 @@ $activeQuery = (string) ($filters['q'] ?? '');
     <?php endforeach; ?>
   </div>
 
-  <form method="get" action="<?= App::e(App::url('index.php')) ?>" class="recipes-controls-panel" aria-label="Tìm kiếm và lọc nâng cao công thức">
+  <form method="get" action="<?= App::e(App::url('index.php')) ?>" class="recipes-controls-panel" aria-label="Lọc công thức theo độ khó và thời gian">
     <input type="hidden" name="c" value="recipe">
     <input type="hidden" name="a" value="index">
     <input type="hidden" name="tag" value="<?= App::e($activeTag) ?>">
 
-    <div class="recipes-controls-panel__left">
-      <label class="visually-hidden" for="recipe-search-input">Tìm tên bánh hoặc nguyên liệu</label>
-      <input type="search" id="recipe-search-input" name="q" class="form-input" value="<?= App::e($filters['q'] ?? '') ?>" placeholder="Tìm theo tên bánh, nguyên liệu (bột số 8, cacao, bơ lạt)..." style="flex:1 1 240px;min-width:0;">
-    </div>
-    <div class="recipes-controls-panel__right">
-      <select id="recipe-filter-diff" name="difficulty" class="form-input" style="width:auto;min-width:150px;">
-        <option value="Tất cả">Tất cả độ khó</option>
-        <option value="Dễ" <?= $activeDiff === 'Dễ' ? 'selected' : '' ?>>Độ khó: Dễ</option>
-        <option value="Trung bình" <?= $activeDiff === 'Trung bình' ? 'selected' : '' ?>>Độ khó: Trung bình</option>
+    <div class="recipes-controls-panel__right" style="width:100%;justify-content:flex-start;">
+      <select id="recipe-filter-diff" name="difficulty" class="form-input" style="width:auto;min-width:150px;" aria-label="Độ khó">
+        <option value="Tất cả">Độ khó</option>
+        <option value="Dễ" <?= $activeDiff === 'Dễ' ? 'selected' : '' ?>>Dễ</option>
+        <option value="Trung bình" <?= $activeDiff === 'Trung bình' ? 'selected' : '' ?>>Trung bình</option>
+        <option value="Khó" <?= $activeDiff === 'Khó' ? 'selected' : '' ?>>Khó</option>
       </select>
-      <select id="recipe-filter-time" name="max_minutes" class="form-input" style="width:auto;min-width:165px;">
-        <option value="0">Mọi thời gian</option>
+      <select id="recipe-filter-time" name="max_minutes" class="form-input" style="width:auto;min-width:165px;" aria-label="Thời gian">
+        <option value="0">Thời gian</option>
         <option value="30" <?= $activeTime === 30 ? 'selected' : '' ?>>Nhanh (&le; 35 phút)</option>
         <option value="60" <?= $activeTime === 60 ? 'selected' : '' ?>>Vừa (36 – 65 phút)</option>
         <option value="61" <?= $activeTime === 61 ? 'selected' : '' ?>>Công phu (&gt; 65 phút)</option>
@@ -72,7 +69,10 @@ $activeQuery = (string) ($filters['q'] ?? '');
     <div class="recipes-editorial-grid">
       <?php foreach ($recipes as $r): ?>
         <article class="recipe-editorial-card php-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
-          <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" style="width:100%;height:200px;object-fit:cover;">
+          <div style="position:relative;">
+            <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" style="width:100%;height:200px;object-fit:cover;display:block;">
+            <span class="recipe-poster-card__badge-corner" style="top:12px;left:12px;"><?= App::e($r['difficulty']) ?></span>
+          </div>
           <div style="padding:18px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
             <div>
               <div style="display:flex;justify-content:space-between;font-size:12px;color:#c88b52;font-weight:700;">
@@ -82,7 +82,7 @@ $activeQuery = (string) ($filters['q'] ?? '');
               <h2 style="margin:8px 0;font-size:18px;color:#70452b;"><?= App::e($r['title']) ?></h2>
               <p style="font-size:13.5px;color:#6e4b34;margin:0 0 12px;line-height:1.55;"><?= App::e($r['subtitle']) ?></p>
               <div style="font-size:12.5px;color:#7c5c46;margin-bottom:14px;">
-                Thời gian: <strong><?= App::e($r['time_label']) ?></strong> · Độ khó: <strong><?= App::e($r['difficulty']) ?></strong>
+                Thời gian: <strong><?= App::e($r['time_label']) ?></strong> · <strong><?= App::e($r['people_label'] ?? '4 người') ?></strong>
               </div>
             </div>
             <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']))) ?>" class="btn btn--primary btn--full">Mở công thức &amp; Chọn combo</a>

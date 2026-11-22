@@ -187,11 +187,11 @@ class ProductController extends Controller
         $productId = (int) ($_POST['product_id'] ?? 0);
         $user = Rbac::currentUser();
         $name = trim((string) ($_POST['reviewer_name'] ?? ($user['full_name'] ?? '')));
-        $rating = (int) ($_POST['rating'] ?? 5);
+        $rating = (float) ($_POST['rating'] ?? 5.0);
         $comment = trim((string) ($_POST['comment'] ?? ''));
 
-        if ($productId <= 0 || mb_strlen($name, 'UTF-8') < 2 || mb_strlen($comment, 'UTF-8') < 6) {
-            $this->jsonResponse('error', 422, [], 'Vui lòng nhập tên (tối thiểu 2 ký tự) và nội dung đánh giá (tối thiểu 6 ký tự).');
+        if ($productId <= 0 || mb_strlen($name, 'UTF-8') < 2 || mb_strlen($comment, 'UTF-8') < 4) {
+            $this->jsonResponse('error', 422, [], 'Vui lòng nhập tên (tối thiểu 2 ký tự) và nội dung đánh giá (tối thiểu 4 ký tự).');
         }
 
         $imagePath = null;
@@ -206,6 +206,42 @@ class ProductController extends Controller
         $productModel = $this->model('ProductModel');
         $review = $productModel->addReview($productId, $user ? (int) $user['id'] : null, $name, $rating, $comment, $imagePath);
         $this->jsonResponse('success', 200, ['review' => $review], 'Cảm ơn bạn đã gửi đánh giá sản phẩm!');
+    }
+
+    public function ajaxUpdateReview(): void
+    {
+        $this->requirePostJson();
+        $in = $this->jsonInput();
+        $reviewId = (int) ($in['review_id'] ?? 0);
+        $rating = (float) ($in['rating'] ?? 5.0);
+        $comment = trim((string) ($in['comment'] ?? ''));
+        if ($reviewId <= 0 || mb_strlen($comment, 'UTF-8') < 4) {
+            $this->jsonResponse('error', 422, [], 'Nội dung đánh giá phải có tối thiểu 4 ký tự.');
+        }
+
+        $user = Rbac::currentUser();
+        $res = $this->model('ProductModel')->updateReview($reviewId, $user ? (int) $user['id'] : null, $rating, $comment);
+        if (empty($res['ok'])) {
+            $this->jsonResponse('error', 403, [], $res['message']);
+        }
+        $this->jsonResponse('success', 200, [], $res['message']);
+    }
+
+    public function ajaxDeleteReview(): void
+    {
+        $this->requirePostJson();
+        $in = $this->jsonInput();
+        $reviewId = (int) ($in['review_id'] ?? 0);
+        if ($reviewId <= 0) {
+            $this->jsonResponse('error', 400, [], 'Mã đánh giá không hợp lệ.');
+        }
+
+        $user = Rbac::currentUser();
+        $res = $this->model('ProductModel')->deleteReview($reviewId, $user ? (int) $user['id'] : null);
+        if (empty($res['ok'])) {
+            $this->jsonResponse('error', 403, [], $res['message']);
+        }
+        $this->jsonResponse('success', 200, [], $res['message']);
     }
 
     public function ajaxClearRecent(): void

@@ -36,15 +36,19 @@ $isAdminArea = in_array($active, ['admin', 'staff'], true);
       <div class="promo-topbar__item">
         <span>Giảm 10% đơn đầu:</span>
         <span class="promo-topbar__code-badge">CHAOBANMOI</span>
-        <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
-          <span class="js-copy-promo-label">Sao chép</span>
+        <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" title="Sao chép mã" aria-label="Sao chép mã CHAOBANMOI">
+          <svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
         </button>
       </div>
       <div class="promo-topbar__item">
         <span>Freeship 20K (đơn từ 200K):</span>
         <span class="promo-topbar__code-badge">FREESHIP20</span>
-        <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
-          <span class="js-copy-promo-label">Sao chép</span>
+        <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" title="Sao chép mã" aria-label="Sao chép mã FREESHIP20">
+          <svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -93,7 +97,6 @@ $isAdminArea = in_array($active, ['admin', 'staff'], true);
                   <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Hộp và túi đựng bánh'))) ?>" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
                   <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Đế và khay bánh'))) ?>" class="mega-menu__link">Đế và khay bánh</a></li>
                   <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Trang trí bánh'))) ?>" class="mega-menu__link">Trang trí bánh</a></li>
-                  <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bảo quản nguyên liệu'))) ?>" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
                 </ul>
               </div>
             </div>
@@ -256,7 +259,6 @@ $isAdminArea = in_array($active, ['admin', 'staff'], true);
                 <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Hộp và túi đựng bánh'))) ?>">Hộp và túi đựng bánh</a></li>
                 <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Đế và khay bánh'))) ?>">Đế và khay bánh</a></li>
                 <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Trang trí bánh'))) ?>">Trang trí bánh</a></li>
-                <li><a href="<?= App::e(App::url('?c=product&a=catalog&sub=' . urlencode('Bảo quản nguyên liệu'))) ?>">Bảo quản nguyên liệu</a></li>
               </ul>
             </div>
 

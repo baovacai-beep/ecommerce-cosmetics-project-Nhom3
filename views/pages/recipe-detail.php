@@ -20,11 +20,11 @@ declare(strict_types=1);
         <span style="font-size:12.5px;font-weight:700;color:#c88b52;"><?= App::e($recipe['code']) ?> · <?= App::e($recipe['category']) ?></span>
         <h1 style="margin:6px 0 10px;color:#70452b;font-size:28px;"><?= App::e($recipe['title']) ?></h1>
         <p style="color:#4a2d1b;line-height:1.65;margin-bottom:16px;"><?= App::e($recipe['subtitle']) ?></p>
-        <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:13.5px;color:#70452b;background:#fff8ed;padding:12px 14px;border-radius:10px;">
-          <span>Thời gian: <strong><?= App::e($recipe['time_label']) ?></strong></span>
-          <span>Độ khó: <strong><?= App::e($recipe['difficulty']) ?></strong></span>
-          <span>Chuẩn gốc: <strong><?= (int) $recipe['default_servings'] ?> <?= App::e($recipe['servings_unit']) ?></strong></span>
-          <span>Đánh giá: <strong>&#9733; <?= App::e($recipe['rating_avg']) ?></strong></span>
+        <div style="display:grid;gap:6px;font-size:13.5px;color:#70452b;background:#fff8ed;padding:12px 14px;border-radius:10px;">
+          <div>Thời gian: <strong><?= App::e($recipe['time_label']) ?></strong></div>
+          <div>Độ khó: <strong><?= App::e($recipe['difficulty']) ?></strong></div>
+          <div>Thành phẩm: <strong><?= App::e($recipe['yield_label'] ?? ((int) $recipe['default_servings'] . ' ' . $recipe['servings_unit'])) ?></strong></div>
+          <div>Đánh giá: <strong>&#9733; <?= App::e($recipe['rating_avg']) ?></strong></div>
         </div>
       </div>
     </section>
@@ -35,7 +35,7 @@ declare(strict_types=1);
         <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;">
           <h2 style="margin:0;color:#70452b;font-size:20px;">Nguyên liệu &amp; Quy đổi</h2>
           <div style="display:flex;align-items:center;gap:8px;">
-            <label for="recipe-servings-input" style="font-size:13px;font-weight:700;color:#70452b;">Số phần:</label>
+            <label for="recipe-servings-input" style="font-size:13px;font-weight:700;color:#70452b;"><?= App::e($recipe['servings_unit']) ?>:</label>
             <button type="button" class="btn btn--outline btn--sm" id="btn-servings-minus">−</button>
             <input id="recipe-servings-input" type="number" min="1" max="50" step="1" inputmode="numeric" value="<?= (int) $recipe['current_servings'] ?>" style="width:54px;text-align:center;" class="form-input">
             <button type="button" class="btn btn--outline btn--sm" id="btn-servings-plus">+</button>
@@ -117,24 +117,37 @@ declare(strict_types=1);
         </div>
 
         <div style="padding:14px;background:#fff8ed;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <span style="font-weight:700;color:#70452b;">Tạm tính combo đã chọn:</span>
+          <span style="font-weight:700;color:#70452b;">Giá:</span>
           <strong id="recipe-combo-total" style="font-size:20px;color:#70452b;"><?= App::e(App::formatCurrency((int) $recipe['estimated_ingredients_cost'] + (int) $recipe['estimated_tools_cost'])) ?></strong>
         </div>
 
         <button type="button" id="btn-add-recipe-combo" class="btn btn--primary btn--full" data-recipe-slug="<?= App::e($recipe['slug']) ?>">
           Thêm nguyên liệu &amp; dụng cụ đã chọn vào giỏ
         </button>
+        <a href="<?= App::e(App::url('?c=order&a=cart')) ?>" style="display:block;text-align:center;margin-top:12px;font-size:16px;font-weight:800;color:#70452b;text-decoration:underline;">
+          Xem giỏ hàng &rarr;
+        </a>
       </section>
 
       <!-- Cột 2: Hướng dẫn từng bước + Thanh tiến độ % + Đồng hồ nướng bánh -->
       <section style="display:grid;gap:20px;">
-        <div class="php-card">
+        <div class="php-card recipe-progress-card" id="recipe-progress-card">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-            <h2 style="margin:0;color:#70452b;font-size:20px;">Hướng dẫn thực hiện</h2>
+            <h2 style="margin:0;color:#70452b;font-size:20px;">Cách làm - Từng bước thật dễ dàng</h2>
             <span id="recipe-progress-text" style="font-weight:700;color:#c88b52;font-size:14px;">0% hoàn thành</span>
           </div>
-          <div style="height:8px;background:#f2e5d5;border-radius:999px;overflow:hidden;margin-bottom:16px;">
-            <div id="recipe-progress-bar" role="progressbar" aria-label="Tiến độ thực hiện công thức" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:100%;width:0%;background:#c88b52;transition:width .25s ease;"></div>
+          <div style="height:10px;background:#f2e5d5;border-radius:999px;overflow:hidden;margin-bottom:16px;">
+            <div id="recipe-progress-bar" role="progressbar" aria-label="Tiến độ thực hiện công thức" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="height:100%;width:0%;background:#c88b52;transition:width .25s ease, background .25s ease;"></div>
+          </div>
+
+          <div id="recipe-complete-callout" class="recipe-complete-callout" hidden style="margin-bottom:14px;">
+            <div>
+              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh!</strong>
+              <p>Bạn có muốn chia sẻ trải nghiệm làm bánh của mình không?</p>
+            </div>
+            <button type="button" id="btn-scroll-to-review" class="btn btn--primary btn--sm" style="white-space:nowrap;">
+              &darr; Chia sẻ cảm nhận ngay
+            </button>
           </div>
 
           <div style="display:grid;gap:10px;">
@@ -148,8 +161,18 @@ declare(strict_types=1);
         </div>
 
         <div class="php-card" style="background:#fff8ed;">
-          <h3 style="margin:0 0 8px;color:#70452b;font-size:18px;">Đồng hồ đếm ngược nướng bánh (Baking Timer)</h3>
-          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+          <h3 style="margin:0 0 8px;color:#70452b;font-size:18px;">Đồng hồ hẹn giờ nướng / ủ bánh</h3>
+          <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <label style="font-size:13px;color:#5c402d;font-weight:600;">
+                Phút:
+                <input type="number" id="timer-custom-min" class="form-input" min="0" max="180" value="<?= (int) $recipe['bake_minutes'] ?>" style="width:68px;text-align:center;margin-left:4px;">
+              </label>
+              <label style="font-size:13px;color:#5c402d;font-weight:600;">
+                Giây:
+                <input type="number" id="timer-custom-sec" class="form-input" min="0" max="59" value="0" style="width:64px;text-align:center;margin-left:4px;">
+              </label>
+            </div>
             <div id="baking-timer-display" style="font-size:32px;font-weight:800;color:#70452b;font-variant-numeric:tabular-nums;">
               <?= str_pad((string) $recipe['bake_minutes'], 2, '0', STR_PAD_LEFT) ?>:00
             </div>
@@ -157,8 +180,6 @@ declare(strict_types=1);
               <button type="button" class="btn btn--primary btn--sm" id="timer-start">Bắt đầu</button>
               <button type="button" class="btn btn--outline btn--sm" id="timer-pause">Tạm dừng</button>
               <button type="button" class="btn btn--outline btn--sm" id="timer-reset">Đặt lại</button>
-              <button type="button" class="btn btn--outline btn--sm" id="timer-minus5">−5 phút</button>
-              <button type="button" class="btn btn--outline btn--sm" id="timer-plus5">+5 phút</button>
             </div>
           </div>
         </div>
@@ -175,6 +196,18 @@ declare(strict_types=1);
         <?php endif; ?>
       </section>
     </div>
+
+    <section id="recipe-reviews-section" class="php-card" style="margin-top:24px;">
+      <h2 style="margin:0 0 10px;color:#70452b;font-size:20px;">Căn bếp của bạn, câu chuyện của bạn</h2>
+      <p style="margin:0 0 12px;color:#7c5c46;font-size:14px;">Chia sẻ cảm nhận sau khi thực hiện công thức <strong><?= App::e($recipe['title']) ?></strong> cùng cộng đồng BakeMate.</p>
+      <form id="php-recipe-share-form" style="display:grid;gap:10px;max-width:640px;">
+        <textarea id="php-recipe-share-text" class="form-textarea" rows="3" placeholder="Chia sẻ cảm nhận..." required></textarea>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+          <button type="submit" class="btn btn--primary btn--sm">Gửi chia sẻ trải nghiệm</button>
+          <span id="php-recipe-share-msg" style="font-size:13px;color:#15803d;font-weight:600;" hidden></span>
+        </div>
+      </form>
+    </section>
   <?php endif; ?>
 </main>
 
@@ -356,28 +389,58 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // Step Progress Bar
+  // Step Progress Bar + Celebratory 100% Callout
+  const progressCard = document.getElementById("recipe-progress-card");
   const stepChecks = Array.from(document.querySelectorAll(".js-recipe-step-check"));
   const progBar = document.getElementById("recipe-progress-bar");
   const progTxt = document.getElementById("recipe-progress-text");
+  const completeCallout = document.getElementById("recipe-complete-callout");
   const updateProgress = () => {
     const total = stepChecks.length;
     const done = stepChecks.filter((checkbox) => checkbox.checked).length;
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+    const isComplete = total > 0 && done === total;
     if (progBar) {
       progBar.style.width = pct + "%";
+      progBar.style.background = isComplete ? "linear-gradient(90deg, #f472b6, #f59e0b, #10b981)" : "#c88b52";
       progBar.setAttribute("aria-valuenow", String(pct));
     }
     if (progTxt) progTxt.textContent = pct + "% hoàn thành";
+    if (progressCard) progressCard.classList.toggle("is-complete", isComplete);
+    if (completeCallout) completeCallout.hidden = !isComplete;
   };
   stepChecks.forEach((checkbox) => checkbox.addEventListener("change", updateProgress));
   updateProgress();
 
-  // Baking Countdown Timer
+  document.getElementById("btn-scroll-to-review")?.addEventListener("click", () => {
+    document.getElementById("recipe-reviews-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  document.getElementById("php-recipe-share-form")?.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const ta = document.getElementById("php-recipe-share-text");
+    const msg = document.getElementById("php-recipe-share-msg");
+    if (!ta || ta.value.trim().length < 4) return;
+    if (msg) {
+      msg.textContent = "Cảm ơn bạn đã chia sẻ câu chuyện vào bếp với BakeMate!";
+      msg.hidden = false;
+    }
+    window.BakeApp.showToast("Đã ghi nhận cảm nhận làm bánh của bạn!", "success");
+    ta.value = "";
+  });
+
+  // Baking Countdown Timer (Phút / Giây tùy chỉnh)
   const defaultSec = <?= (int) $recipe['bake_minutes'] * 60 ?>;
   let remainSec = defaultSec;
   let timerInt = null;
   const disp = document.getElementById("baking-timer-display");
+  const minInput = document.getElementById("timer-custom-min");
+  const secInput = document.getElementById("timer-custom-sec");
+  const readCustomSec = () => {
+    const m = Math.max(0, Math.min(180, Math.floor(Number(minInput?.value || 0))));
+    const s = Math.max(0, Math.min(59, Math.floor(Number(secInput?.value || 0))));
+    return m * 60 + s;
+  };
   const renderTimer = () => {
     const minutes = Math.floor(remainSec / 60);
     const seconds = remainSec % 60;
@@ -389,11 +452,20 @@ document.addEventListener("DOMContentLoaded", function () {
       timerInt = null;
     }
   };
+  [minInput, secInput].forEach((inp) => {
+    inp?.addEventListener("change", () => {
+      if (timerInt === null) {
+        remainSec = readCustomSec();
+        renderTimer();
+      }
+    });
+  });
 
   document.getElementById("timer-start")?.addEventListener("click", () => {
     if (timerInt !== null) return;
+    if (remainSec <= 0) remainSec = readCustomSec() || defaultSec;
     if (remainSec <= 0) {
-      window.BakeApp.showToast("Thời gian đã hết. Hãy đặt lại hoặc cộng thêm thời gian trước khi bắt đầu.", "info");
+      window.BakeApp.showToast("Vui lòng nhập phút hoặc giây lớn hơn 0.", "info");
       return;
     }
     timerInt = setInterval(() => {
@@ -408,15 +480,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("timer-pause")?.addEventListener("click", stopTimer);
   document.getElementById("timer-reset")?.addEventListener("click", () => {
     stopTimer();
-    remainSec = defaultSec;
-    renderTimer();
-  });
-  document.getElementById("timer-minus5")?.addEventListener("click", () => {
-    remainSec = Math.max(0, remainSec - 300);
-    renderTimer();
-  });
-  document.getElementById("timer-plus5")?.addEventListener("click", () => {
-    remainSec = Math.min(7200, remainSec + 300);
+    remainSec = readCustomSec();
     renderTimer();
   });
 

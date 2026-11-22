@@ -28,15 +28,15 @@
         <div class="promo-topbar__item">
           <span>Giảm 10% đơn đầu:</span>
           <span class="promo-topbar__code-badge">CHAOBANMOI</span>
-          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" aria-label="Sao chép mã CHAOBANMOI">
-            <span class="js-copy-promo-label">Sao chép</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="CHAOBANMOI" title="Sao chép mã" aria-label="Sao chép mã CHAOBANMOI">
+            <svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
           </button>
         </div>
         <div class="promo-topbar__item">
           <span>Freeship 20K (đơn từ 200K):</span>
           <span class="promo-topbar__code-badge">FREESHIP20</span>
-          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" aria-label="Sao chép mã FREESHIP20">
-            <span class="js-copy-promo-label">Sao chép</span>
+          <button type="button" class="promo-topbar__copy js-copy-promo" data-coupon="FREESHIP20" title="Sao chép mã" aria-label="Sao chép mã FREESHIP20">
+            <svg class="js-copy-promo-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
           </button>
         </div>
       </div>
@@ -83,7 +83,6 @@
                   <li><a href="products.html?sub=H%E1%BB%99p%20v%C3%A0%20t%C3%BAi%20%C4%91%E1%BB%B1ng%20b%C3%A1nh" class="mega-menu__link">Hộp và túi đựng bánh</a></li>
                   <li><a href="products.html?sub=%C4%90%E1%BA%BF%20v%C3%A0%20khay%20b%C3%A1nh" class="mega-menu__link">Đế và khay bánh</a></li>
                   <li><a href="products.html?sub=Trang%20tr%C3%AD%20b%C3%A1nh" class="mega-menu__link">Trang trí bánh</a></li>
-                  <li><a href="products.html?sub=B%E1%BA%A3o%20qu%E1%BA%A3n%20nguy%C3%AAn%20li%E1%BB%87u" class="mega-menu__link">Bảo quản nguyên liệu</a></li>
                 </ul>
               </div>
             </div>
@@ -170,12 +169,19 @@
       <!-- Cột phải: Thông tin sản phẩm & Khối mua hàng -->
       <div class="product-detail__info">
         <span class="product-detail__brand" id="product-brand">Thương hiệu: <strong>MEIZAN</strong> | Xuất xứ: Việt Nam</span>
-        <h1 class="product-detail__title" id="product-title">Bột mì đa dụng Meizan</h1>
+        <div class="pd-title-row">
+          <h1 class="product-detail__title" id="product-title">Bột mì đa dụng Meizan</h1>
+          <button type="button" class="wishlist-heart-btn pd-title-wish-btn" id="btn-wishlist-detail" aria-pressed="false" aria-label="Lưu vào danh sách yêu thích" title="Yêu thích sản phẩm">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+          </button>
+        </div>
 
         <div class="product-detail__meta">
           <span class="meta__rating" id="product-rating">★★★★★ <strong>4.9</strong> (185 đánh giá)</span>
           <span class="meta__divider">|</span>
-          <span class="meta__sold" id="product-sold">Đã bán <strong>1.5k</strong> gói</span>
+          <span class="meta__sold" id="product-sold">Đã bán <strong>1.5k</strong></span>
           <span class="meta__divider">|</span>
           <span class="meta__code" id="product-code-meta">Mã: <strong>#BM-003</strong></span>
           <span class="meta__divider">|</span>
@@ -211,7 +217,7 @@
             <input type="number" id="product-qty" class="qty-input" value="1" min="1" max="99">
             <button type="button" class="qty-btn" id="btn-qty-plus" aria-label="Tăng số lượng">+</button>
           </div>
-          <span class="quantity-group__hint" id="stock-hint">Kho còn 150 gói sẵn sàng giao</span>
+          <span class="quantity-group__hint" id="stock-hint">Kho còn 150 gói</span>
         </div>
 
         <div class="product-detail__actions">
@@ -225,12 +231,6 @@
             <span class="js-add-cart-label">Thêm vào giỏ hàng</span>
           </button>
           <button type="button" class="btn btn--buy" id="btn-buy-now">Mua ngay</button>
-          <button type="button" class="btn--wishlist-detail" id="btn-wishlist-detail" aria-pressed="false" aria-label="Lưu vào danh sách yêu thích">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
-            </svg>
-            <span class="js-wish-detail-label">Yêu thích</span>
-          </button>
         </div>
 
         <div class="policy-box">
@@ -281,7 +281,6 @@
     <section class="recipe-crosslink-section">
       <div class="section-header-flex">
         <div>
-          <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
           <h2 class="section-heading" id="recipe-section-title">Sản phẩm này dùng cho công thức nào?</h2>
           <p class="section-desc">Khám phá các công thức làm bánh chuẩn vị và tự động gom trọn bộ nguyên liệu cần mua chỉ với 1 click:</p>
         </div>
@@ -305,7 +304,6 @@
     <section class="recent-viewed-section" id="pd-recent-viewed-section" hidden aria-labelledby="pd-recent-title">
       <div class="recent-viewed__head">
         <div>
-          <span class="sub-badge">Ghi nhớ sản phẩm</span>
           <h2 class="recent-viewed__title" id="pd-recent-title">Sản phẩm đã xem gần đây</h2>
         </div>
         <button type="button" class="recent-viewed__clear-btn" id="btn-clear-recent-pd">Xóa lịch sử xem</button>
@@ -325,7 +323,7 @@
       <div class="footer-col">
         <h3 class="footer-col__title">BakeMate - Làm bánh chuẩn vị</h3>
         <p class="footer-col__desc">Nền tảng thương mại điện tử cung cấp nguyên liệu, dụng cụ và phụ kiện làm bánh theo công thức hàng đầu.</p>
-        <p class="footer-col__contact">Slogan: Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
+        <p class="footer-col__contact">Làm bánh chuẩn vị, nguyên liệu chuẩn tay.</p>
       </div>
       <div class="footer-col">
         <h3 class="footer-col__title">Khám phá</h3>
@@ -345,7 +343,6 @@
           <li><a href="#" class="js-policy-trigger" data-policy="shipping">Chính sách giao hàng</a></li>
           <li><a href="#" class="js-policy-trigger" data-policy="returns">Chính sách đổi trả</a></li>
           <li><a href="contact.html#faq-section">Câu hỏi thường gặp (FAQ)</a></li>
-          <li><a href="wishlist.html">Danh sách yêu thích</a></li>
         </ul>
       </div>
       <div class="footer-col">
