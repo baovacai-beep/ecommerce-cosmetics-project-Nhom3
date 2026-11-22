@@ -26,6 +26,11 @@
         "yieldLabel": "1 ổ 20cm (4 người ăn)",
         "peopleLabel": "4 người",
         "image": "images/recipes/banh-bong-lan-co-ban.jpg",
+        "relatedIds": [
+            "recipe-matcha-cupcake",
+            "recipe-banh-quy-bo",
+            "recipe-mousse-socola"
+        ],
         "tips": [
             "Dùng trứng gà ở nhiệt độ phòng giúp lòng trắng dễ đánh bông đạt chóp mềm và không bị tách nước.",
             "Luôn rây mịn bột mì số 8 trước khi trộn (fold) theo một chiều từ dưới đáy âu lên để giữ trọn bọt khí.",
@@ -131,7 +136,7 @@
         "id": "recipe-matcha-cupcake",
         "code": "RECIPE NO. 02",
         "title": "Bánh cupcake Matcha",
-        "subtitle": "Những chiếc cupcake mềm thơm kết hợp bột mì số 8, Matcha Nhật và lớp kem whipping mịn mượt.",
+        "subtitle": "Những chiếc cupcake mềm xốp, thơm nhẹ vị trà xanh Matcha, kết hợp cùng lớp kem Matcha béo mịn, tạo nên hương vị hài hòa và hấp dẫn.",
         "category": "Bánh ngọt",
         "tags": [
             "Bánh ngọt",
@@ -146,15 +151,23 @@
         "yieldLabel": "6 chiếc (6 người ăn)",
         "peopleLabel": "6 người",
         "image": "images/recipes/banh-cupcake-matcha.jpg",
+        "relatedIds": [
+            "recipe-bong-lan",
+            "recipe-banh-quy-bo",
+            "recipe-muffin-socola"
+        ],
         "tips": [
-            "Whipping Cream cần giữ lạnh sâu 2–4°C trước khi đánh để lên phom đứng sắc nét khi bắt đui.",
-            "Chỉ đổ bột đầy khoảng 2/3 cup giấy để bánh nở tròn đẹp không bị tràn viền khi nướng."
+            "Rây bột Matcha trước khi trộn để hạn chế tình trạng vón cục và giúp màu bánh phân bố đồng đều.",
+            "Không trộn hỗn hợp bột quá lâu vì có thể khiến cốt cupcake bị chai và mất độ mềm xốp.",
+            "Đảm bảo cupcake nguội hoàn toàn trước khi bắt kem để tránh lớp kem Matcha bị chảy.",
+            "Khi đánh Whipping Cream, cần kiểm soát tốc độ và thời gian đánh để kem đạt độ bông phù hợp, không bị tách nước.",
+            "Bảo quản cupcake đã trang trí kem trong ngăn mát tủ lạnh nếu chưa sử dụng ngay."
         ],
         "steps": [
-            "Xếp cup giấy nướng bánh vào Khuôn Nướng Cupcake & Muffin và bật lò làm nóng trước ở 175°C.",
-            "Đánh tan Bơ lạt Anchor mềm với đường tinh luyện đến khi chuyển màu kem nhạt, cho trứng và sữa tươi vào đánh đều.",
-            "Rây Bột mì số 8 và Bột Matcha vào âu, trộn nhẹ tay vừa quyện hết bột khô.",
-            "Múc bột vào cup giấy nướng 22 phút; để nguội hẳn rồi dùng túi bắt kem + đui Inox trang trí Whipping Cream lên mặt bánh."
+            "Chuẩn bị nguyên liệu: Cân đong các nguyên liệu làm cốt bánh và kem Matcha. Rây mịn bột mì và bột Matcha, chuẩn bị khuôn cupcake và giấy lót.",
+            "Trộn hỗn hợp cốt bánh: Đánh bơ với đường đến khi hỗn hợp mềm mịn. Thêm trứng và sữa tươi không đường Vinamilk, sau đó kết hợp với hỗn hợp bột mì số 8 và Bột Matcha.",
+            "Chia bột và nướng bánh: Chia đều hỗn hợp vào 6 khuôn cupcake đã lót giấy. Cho vào lò nướng ở 175°C khoảng 20–22 phút cho đến khi bánh chín vàng.",
+            "Làm kem Matcha và trang trí: Đánh Whipping Cream với đường và Matcha đến khi đạt chóp mềm mịn. Cho kem vào túi bắt kem, trang trí lên cupcake sau khi bánh nguội hoàn toàn."
         ],
         "ingredients": [
             {
@@ -265,6 +278,11 @@
         "yieldLabel": "~30 chiếc (6 người ăn)",
         "peopleLabel": "6 người",
         "image": "images/recipes/cookies-bo.jpg",
+        "relatedIds": [
+            "recipe-bong-lan",
+            "recipe-matcha-cupcake",
+            "recipe-brownie"
+        ],
         "tips": [
             "Bơ lạt chỉ nên để mềm ấn nhẹ lún tay (khoảng 18–20°C), không đun chảy lỏng sẽ làm bánh bị chảy bè khi nướng.",
             "Làm lạnh khay bánh đã bắt hình 15 phút trong ngăn mát trước khi đưa vào lò để vân hoa giữ nguyên nét."
@@ -355,7 +373,7 @@
         "id": "recipe-hoa-cuc",
         "code": "RECIPE NO. 04",
         "title": "Bánh mì hoa cúc",
-        "subtitle": "Từng thớ bánh dai mềm kéo sợi hòa quyện bơ sữa thơm lừng chuẩn vị Pháp.",
+        "subtitle": "Bánh mì hoa cúc có thớ bánh mềm dai, xốp nhẹ, thơm béo mùi bơ sữa và hương thơm đặc trưng. Bánh được tạo hình bện ba đẹp mắt.",
         "category": "Bánh mì",
         "tags": [
             "Bánh mì"
@@ -369,15 +387,23 @@
         "yieldLabel": "2 ổ 450g (4 người ăn)",
         "peopleLabel": "4 người",
         "image": "images/recipes/banh-mi-hoa-cuc.jpg",
+        "relatedIds": [
+            "recipe-bong-lan",
+            "recipe-banh-quy-bo",
+            "recipe-muffin-socola"
+        ],
         "tips": [
-            "Bắt buộc dùng Bột mì số 11 giàu protein (11.5–13%) để tạo mạng gluten dai khỏe giúp bánh kéo sợi.",
-            "Kiểm tra nhiệt độ sữa ấm quanh 38°C bằng nhiệt kế điện tử để kích hoạt men nở Mauripan đạt hiệu quả tốt nhất."
+            "Bơ lạt nên được bổ sung từ từ trong quá trình nhào để bột hấp thụ tốt, tránh cho toàn bộ bơ vào cùng lúc khiến hỗn hợp khó hòa quyện.",
+            "Không sử dụng quá nhiều bột áo khi tạo hình vì có thể làm thay đổi tỷ lệ nguyên liệu và khiến bánh bị khô.",
+            "Cần đảm bảo bột được nhào đủ độ đàn hồi trước khi ủ để bánh có thớ dai và mềm xốp.",
+            "Không rút ngắn thời gian ủ bột tùy tiện vì bánh có thể không nở đủ.",
+            "Để bánh nguội hoàn toàn trước khi cho vào túi hoặc hộp kín nhằm hạn chế hơi nước làm bánh bị ẩm."
         ],
         "steps": [
-            "Cân chuẩn Bột mì số 11, hòa tan Men nở với Sữa tươi Vinamilk ấm 38°C và đường tinh luyện.",
-            "Nhồi bột cùng trứng đến khi kết khối dẻo mịn, thêm từng lát Bơ lạt Anchor nhồi tiếp đến khi kéo được màng mỏng không rách.",
-            "Ủ bột lần 1 trong 50 phút cho nở gấp đôi; chia dải, cán mỏng và thắt bím gọn đặt vào khuôn.",
-            "Ủ lần 2 thêm 35 phút rồi nướng ở 175°C trong 25–28 phút đến khi vỏ vàng ruộm thơm nức."
+            "Chuẩn bị và trộn nguyên liệu: Cân đong Bột mì số 11, Men nở, đường, muối, trứng gà và Sữa tươi không đường Vinamilk; trộn đến khi hỗn hợp kết dính.",
+            "Nhào bột và ủ lần một: Nhào bột đến khi khối bột mịn đàn hồi, thêm từng phần Bơ lạt Anchor mềm nhào tiếp đến khi kéo màng mỏng. Đậy kín ủ 50 phút cho nở gấp đôi.",
+            "Tạo hình và ủ lần hai: Chia bột thành các phần bằng nhau, cán thành dải dài và bện ba tạo hình 2 ổ bánh mì hoa cúc 450g. Đặt lên khay và ủ lần hai 35 phút.",
+            "Quét mặt và nướng bánh: Quét hỗn hợp trứng lên mặt bánh rồi nướng ở 175°C khoảng 25–28 phút đến khi chín vàng ruộm thơm nức."
         ],
         "ingredients": [
             {
@@ -483,6 +509,11 @@
         "yieldLabel": "6 chiếc (6 người ăn)",
         "peopleLabel": "6 người",
         "image": "images/recipes/banh-chocolate-muffin.jpg",
+        "relatedIds": [
+            "recipe-bong-lan",
+            "recipe-brownie",
+            "recipe-pancake"
+        ],
         "tips": [
             "Hòa tan cacao vào bơ ấm giúp khơi dậy hương thơm chocolate sâu hơn hẳn khi trộn khô.",
             "Không khuấy quá lâu sau khi rây bột mì đa dụng Meizan để bánh giữ độ tơi xốp đặc trưng."
@@ -596,6 +627,11 @@
         "yieldLabel": "1 khuôn 20cm (4 người ăn)",
         "peopleLabel": "4 người",
         "image": "images/recipes/banh-brownie.jpg",
+        "relatedIds": [
+            "recipe-muffin-socola",
+            "recipe-mousse-socola",
+            "recipe-bong-lan"
+        ],
         "tips": [
             "Giữ hỗn hợp bơ + cacao đun cách thủy quanh 50–55°C và đánh tan hoàn toàn đường với trứng để mặt bánh bóng vỡ.",
             "Lót dư hai mép giấy nến để dễ dàng nhấc nguyên khối Brownie ra khỏi khay cắt vuông vức."
@@ -688,7 +724,7 @@
         "id": "recipe-mousse-socola",
         "code": "RECIPE NO. 07",
         "title": "Bánh Mousse Chocolate",
-        "subtitle": "Công thức không cần lò nướng mát lạnh tan chảy với Whipping Cream và Lá Gelatine Ewald chuẩn mịn.",
+        "subtitle": "Bánh Mousse Chocolate là món bánh lạnh có kết cấu mềm mịn, xốp nhẹ, mang hương vị chocolate cacao đậm đà tan nhẹ trong miệng.",
         "category": "Tráng miệng",
         "tags": [
             "Tráng miệng",
@@ -704,15 +740,22 @@
         "yieldLabel": "1 ổ 20cm (4 người ăn)",
         "peopleLabel": "4 người",
         "image": "images/recipes/banh-mousse-chocolate.jpg",
+        "relatedIds": [
+            "recipe-brownie",
+            "recipe-muffin-socola",
+            "recipe-bong-lan"
+        ],
         "tips": [
-            "Ngâm Lá Gelatine Ewald trong nước đá lạnh 5–10 phút rồi vắt ráo trước khi khuấy tan cùng sữa cacao ấm.",
-            "Làm lạnh âu trộn 15 phút trước khi đánh Whipping Cream giúp kem bông mịn nhanh mà không bị tách bơ."
+            "Đảm bảo hỗn hợp cacao đã nguội bớt trước khi trộn với Whipping Cream để tránh làm kem bị tan.",
+            "Không đánh Whipping Cream quá cứng vì có thể khiến mousse khó hòa quyện và kém mịn.",
+            "Khi kết hợp các hỗn hợp, nên dùng thao tác fold nhẹ nhàng từ dưới đáy âu lên để giữ độ xốp.",
+            "Làm lạnh đủ thời gian ít nhất 4 giờ trước khi tháo khuôn để bánh giữ được hình dáng sắc nét."
         ],
         "steps": [
-            "Ngâm mềm Lá Gelatine Ewald trong nước lạnh; đun ấm Sữa tươi Vinamilk và hòa tan Bột cacao Hershey's cho bóng mượt rồi khuấy tan gelatine.",
-            "Đánh bông lạnh Whipping Cream Anchor đến khi sánh đặc tạo vân mềm chảy nhẹ (soft peak).",
-            "Trộn nhẹ (fold) sốt cacao ấm nguội (khoảng 30°C) vào kem tươi rồi đổ vào khuôn tròn đế rời 20cm có lót đế mousse.",
-            "Làm lạnh ngăn mát tối thiểu 4 giờ trước khi tách khuôn và rắc thêm lớp cacao mịn."
+            "Chuẩn bị nguyên liệu và khuôn bánh: Cân các nguyên liệu theo công thức, chuẩn bị khuôn tròn đế rời 20cm lót đế mousse; ngâm mềm Lá Gelatine Ewald trong nước lạnh.",
+            "Xử lý hỗn hợp cacao & gelatine: Đun ấm Sữa tươi không đường Vinamilk, khuấy tan Bột cacao Hershey's và đường, vắt ráo Lá Gelatine hòa tan đều rồi để nguội về ~30°C.",
+            "Đánh bông Whipping Cream & trộn mousse: Đánh bông lạnh Whipping Cream Anchor đến chóp mềm mịn, nhẹ nhàng fold cùng sốt cacao để giữ độ thoáng xốp.",
+            "Làm lạnh và hoàn thiện: Đổ hỗn hợp mousse vào khuôn, dàn phẳng mặt và đặt ngăn mát tủ lạnh ít nhất 4 giờ. Tách khuôn nhẹ nhàng và rắc bột cacao trang trí."
         ],
         "ingredients": [
             {
@@ -787,7 +830,7 @@
         "id": "recipe-pancake",
         "code": "RECIPE NO. 08",
         "title": "Bánh Pancake mật ong",
-        "subtitle": "Chỉ 25 phút với bột mì đa dụng Meizan và Baking Soda cho chồng bánh vàng ươm bông xốp.",
+        "subtitle": "Những chiếc pancake vàng mềm, xốp nhẹ, thơm mùi bơ sữa, kết hợp cùng mật ong ngọt dịu, phù hợp cho bữa sáng hoặc bữa ăn nhẹ.",
         "category": "Bánh ngọt",
         "tags": [
             "Bánh ngọt",
@@ -802,15 +845,23 @@
         "yieldLabel": "8 chiếc (4 người ăn)",
         "peopleLabel": "4 người",
         "image": "images/recipes/banh-pancake-mat-ong.jpg",
+        "relatedIds": [
+            "recipe-bong-lan",
+            "recipe-matcha-cupcake",
+            "recipe-banh-quy-bo"
+        ],
         "tips": [
-            "Để bột nghỉ 10 phút trước khi áp chảo và rót bột bằng ca đong chia vạch giúp bánh tròn đều kích cỡ.",
-            "Chỉ lật mặt bánh khi thấy bề mặt sủi bọt khí đều và mép bánh hơi se khô."
+            "Không khuấy hỗn hợp bột quá lâu vì có thể khiến pancake bị dai và mất độ mềm xốp.",
+            "Nên để hỗn hợp bột nghỉ khoảng 5–10 phút trước khi chiên giúp bột mịn đều.",
+            "Sử dụng lửa nhỏ đến vừa để bánh chín đều từ trong ra ngoài không bị cháy mặt.",
+            "Chỉ lật bánh khi mặt trên xuất hiện các bọt khí nhỏ đều và phần viền bắt đầu se lại.",
+            "Phết một lớp bơ mỏng lên chảo để tạo mùi thơm, tránh dùng quá nhiều gây ngấy."
         ],
         "steps": [
-            "Đánh tan trứng gà với đường tinh luyện, Sữa tươi Vinamilk và Bơ lạt Anchor đun chảy trong ca đong có vạch chia ml.",
-            "Rây Bột mì đa dụng Meizan cùng Baking Soda vào khuấy đều vừa tan bột (hỗn hợp sánh chảy mịn).",
-            "Làm nóng chảo chống dính lửa vừa nhỏ, rót từng muỗng bột đều tay đợi bọt khí nổi đều rồi lật mặt.",
-            "Xếp chồng 8 chiếc Pancake ra đĩa, ăn kèm mật ong và lát Bơ lạt Anchor."
+            "Chuẩn bị nguyên liệu: Cân đong Bột mì đa dụng Meizan, Baking Soda, trứng gà, Sữa tươi không đường Vinamilk, Bơ lạt Anchor và đường tinh luyện.",
+            "Pha hỗn hợp pancake: Rây bột và Baking Soda vào tô, cho trứng gà, Sữa tươi Vinamilk và bơ đun chảy vào khuấy nhẹ vừa quyện mịn không vón cục.",
+            "Chiên bánh pancake: Làm nóng chảo chống dính lửa nhỏ vừa, phết lớp bơ mỏng, dùng ca đong rót từng phần bột tròn đều; đợi mặt sủi bọt khí se viền rồi lật mặt.",
+            "Hoàn thiện và thưởng thức: Chiên lần lượt đến khi đủ 8 chiếc pancake vàng đều hai mặt, xếp chồng ra đĩa rưới mật ong và thêm lát bơ."
         ],
         "ingredients": [
             {

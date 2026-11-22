@@ -8090,3 +8090,52 @@ textarea:focus-visible,
   color: #4a2e19;
   font-weight: 700;
 }
+
+.blog-figcaption {
+  font-size: 13px;
+  font-style: italic;
+  color: #7c5c46;
+  text-align: center;
+  margin: 6px 0 16px;
+}
+
+.blog-editorial-block {
+  margin: 18px 0;
+}
+
+.blog-mistakes-box {
+  background-color: #fff5f3;
+  border: 1px solid #f0d0ca;
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 18px 0;
+}
+
+.blog-related-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .blog-related-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.recipe-tool-card__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.recipe-tool-card__thumb {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #efe3d2;
+  background-color: #fffdf9;
+  flex-shrink: 0;
+}

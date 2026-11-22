@@ -75,10 +75,40 @@ class HomeController extends Controller
         $relatedRecipe = ($post && !empty($post['recipe_slug']))
             ? $recipeModel->getRecipeDetail((string) $post['recipe_slug'])
             : null;
-        $otherPosts = array_slice(array_values(array_filter(
-            $contentModel->getBlogPosts(),
-            static fn(array $p): bool => !$post || (int) $p['id'] !== (int) $post['id']
-        )), 0, 3);
+        $allPosts = $contentModel->getBlogPosts();
+        $relatedSlugs = is_array($post['content']['related_slugs'] ?? null)
+            ? $post['content']['related_slugs']
+            : [];
+        $otherPosts = [];
+        if (!empty($relatedSlugs)) {
+            $bySlug = [];
+            foreach ($allPosts as $p) {
+                $bySlug[(string) $p['slug']] = $p;
+            }
+            foreach ($relatedSlugs as $rSlug) {
+                if (isset($bySlug[$rSlug]) && (!$post || (int) $bySlug[$rSlug]['id'] !== (int) $post['id'])) {
+                    $otherPosts[] = $bySlug[$rSlug];
+                }
+            }
+        }
+        if (count($otherPosts) < 3) {
+            $seenIds = array_map(static fn(array $p): int => (int) $p['id'], $otherPosts);
+            foreach ($allPosts as $p) {
+                $pid = (int) $p['id'];
+                if ($post && $pid === (int) $post['id']) {
+                    continue;
+                }
+                if (in_array($pid, $seenIds, true)) {
+                    continue;
+                }
+                $otherPosts[] = $p;
+                $seenIds[] = $pid;
+                if (count($otherPosts) >= 3) {
+                    break;
+                }
+            }
+        }
+        $otherPosts = array_slice($otherPosts, 0, 3);
 
         $this->view('pages/blog-detail', [
             'pageTitle' => ($post ? $post['title'] : 'Bài viết không tồn tại') . ' | BakeMate',

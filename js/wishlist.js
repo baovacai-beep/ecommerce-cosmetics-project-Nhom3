@@ -67,10 +67,10 @@
           <div class="product-grid">
             ${savedProducts
               .map((product) => {
-                const isSoon = product.stockStatus === "coming_soon";
+                const isSoon = product.stockStatus === "coming_soon" || product.stockStatus === "out_of_stock";
                 return `
                   <article class="product-card">
-                    ${isSoon ? `<span class="product-card__status-tag product-card__status-tag--soon">Sắp có hàng</span>` : ""}
+                    ${isSoon ? `<span class="product-card__status-tag product-card__status-tag--soon">Hết hàng</span>` : ""}
                     <a href="product-detail.html?id=${product.id}" class="product-card__thumb">
                       <img src="${escapeHtml(product.image || FALLBACK_IMG)}" alt="${escapeHtml(product.name)}" class="product-card__img" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">
                     </a>
@@ -88,7 +88,7 @@
                         <span class="product-card__price">${formatPrice(product.price)}</span>
                       </div>
                       <button type="button" class="product-card__add-btn product-card__add-btn--brown js-wish-add-cart" data-product-id="${product.id}" ${isSoon ? "disabled" : ""}>
-                        ${isSoon ? "Sắp về hàng" : "+ Thêm vào giỏ"}
+                        ${isSoon ? "Hết hàng" : "+ Thêm vào giỏ"}
                       </button>
                     </div>
                   </article>

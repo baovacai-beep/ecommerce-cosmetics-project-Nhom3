@@ -382,7 +382,21 @@
         ? window.isRecipeWishlisted(recipe.id)
         : false;
 
-    const inspirationRecipes = allRecipes.filter((r) => r.id !== recipe.id).slice(0, 3);
+    let inspirationRecipes = [];
+    if (Array.isArray(recipe.relatedIds) && recipe.relatedIds.length > 0) {
+      const bySlug = new Map(allRecipes.map((r) => [r.id, r]));
+      inspirationRecipes = recipe.relatedIds
+        .map((id) => bySlug.get(id))
+        .filter((r) => r && r.id !== recipe.id);
+    }
+    if (inspirationRecipes.length < 3) {
+      const seen = new Set(inspirationRecipes.map((r) => r.id));
+      inspirationRecipes = [
+        ...inspirationRecipes,
+        ...allRecipes.filter((r) => r.id !== recipe.id && !seen.has(r.id))
+      ];
+    }
+    inspirationRecipes = inspirationRecipes.slice(0, 3);
 
     root.innerHTML = `
       <!-- 1. Hero Công thức -->
@@ -450,7 +464,10 @@
 
             <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-top:12px;padding-top:10px;border-top:1px dashed #eadbc6;">
               <span style="font-size:12px;color:#7c5c46;">Bỏ chọn nguyên liệu đã có sẵn — BakeMate sẽ tự động ghi nhớ cho bếp của bạn.</span>
-              <button type="button" id="btn-reset-ing-selection" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Chọn lại tất cả</button>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <button type="button" id="btn-reset-ing-selection" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Chọn tất cả</button>
+                <button type="button" id="btn-uncheck-all-ing" class="btn btn--outline-dark" style="padding:4px 10px;font-size:12px;">Bỏ chọn tất cả</button>
+              </div>
             </div>
           </div>
 
@@ -500,22 +517,47 @@
                   ? window.getProductOption(prod.id, tool.optionIndex || 0)
                   : null;
               const price = opt ? opt.price : prod ? prod.price : 0;
+              const toolImg = prod && prod.image ? prod.image : recipe.image || FALLBACK_IMG;
+              const canBuyTool = Boolean(prod && prod.stock > 0 && String(prod.stockStatus || "") !== "out_of_stock");
               return `
                 <div class="recipe-tool-card">
-                  <div>
-                    <a href="product-detail.html?id=${tool.productId}" style="font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</a>
-                    <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 4px;">${escapeHtml(tool.desc || "")}</p>
-                    <strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>
+                  <div class="recipe-tool-card__left">
+                    <img
+                      src="${escapeHtml(toolImg)}"
+                      alt="${escapeHtml(tool.name)}"
+                      class="recipe-tool-card__thumb"
+                      loading="lazy"
+                      onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
+                    >
+                    <div>
+                      ${
+                        prod
+                          ? `<a href="product-detail.html?id=${tool.productId}" style="font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</a>`
+                          : `<strong style="display:block;font-weight:700;color:#4a2e19;font-size:14.5px;">${escapeHtml(tool.name)}</strong>`
+                      }
+                      <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 4px;">${escapeHtml(tool.desc || "")}</p>
+                      ${
+                        prod
+                          ? `<strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>`
+                          : `<span style="font-size:12.5px;color:#7c5c46;">Chuẩn bị sẵn tại bếp</span>`
+                      }
+                    </div>
                   </div>
-                  <button
-                    type="button"
-                    class="btn btn--outline-dark js-add-tool-btn"
-                    data-product-id="${tool.productId}"
-                    data-option-index="${tool.optionIndex || 0}"
-                    style="padding:7px 12px;font-size:12.5px;white-space:nowrap;"
-                  >
-                    + Thêm vào giỏ
-                  </button>
+                  ${
+                    canBuyTool
+                      ? `<button
+                          type="button"
+                          class="btn btn--outline-dark js-add-tool-btn"
+                          data-product-id="${tool.productId}"
+                          data-option-index="${tool.optionIndex || 0}"
+                          style="padding:7px 12px;font-size:12.5px;white-space:nowrap;"
+                        >
+                          + Thêm vào giỏ
+                        </button>`
+                      : prod
+                        ? `<span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">Hết hàng</span>`
+                        : ""
+                  }
                 </div>
               `;
             })
@@ -537,7 +579,7 @@
           </div>
           <div id="recipe-complete-callout" class="recipe-complete-callout" hidden>
             <div>
-              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh!</strong>
+              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh ${escapeHtml(recipe.title)}!</strong>
               <p>Bạn có muốn chia sẻ trải nghiệm làm bánh của mình không?</p>
             </div>
             <button type="button" id="btn-scroll-to-review" class="btn btn--primary" style="white-space:nowrap;">
@@ -986,6 +1028,7 @@
     const plusBtn = document.getElementById("btn-servings-plus");
     const ingListEl = document.getElementById("recipe-ingredients-list");
     const resetIngBtn = document.getElementById("btn-reset-ing-selection");
+    const uncheckAllIngBtn = document.getElementById("btn-uncheck-all-ing");
     const addSelectedBtn = document.getElementById("btn-add-selected-ing");
     const addAllBtn = document.getElementById("btn-add-all-ing");
     const wishBtn = document.getElementById("btn-recipe-wish");
@@ -1027,6 +1070,14 @@
     if (resetIngBtn) {
       resetIngBtn.addEventListener("click", function () {
         availableIndices.forEach((idx) => checkedIndices.add(idx));
+        persistPantryRemember();
+        renderCalculator();
+      });
+    }
+
+    if (uncheckAllIngBtn) {
+      uncheckAllIngBtn.addEventListener("click", function () {
+        checkedIndices.clear();
         persistPantryRemember();
         renderCalculator();
       });

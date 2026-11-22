@@ -73,10 +73,51 @@ class RecipeController extends Controller
             : null;
         $recipe = $idOrSlug !== '' ? $recipeModel->getRecipeDetail($idOrSlug, $servings, $uid) : null;
 
+        $relatedRecipes = [];
+        if ($recipe) {
+            $relatedSlugsMap = [
+                'recipe-bong-lan' => ['recipe-matcha-cupcake', 'recipe-banh-quy-bo', 'recipe-mousse-socola'],
+                'recipe-matcha-cupcake' => ['recipe-bong-lan', 'recipe-banh-quy-bo', 'recipe-muffin-socola'],
+                'recipe-banh-quy-bo' => ['recipe-bong-lan', 'recipe-matcha-cupcake', 'recipe-brownie'],
+                'recipe-hoa-cuc' => ['recipe-bong-lan', 'recipe-banh-quy-bo', 'recipe-muffin-socola'],
+                'recipe-muffin-socola' => ['recipe-bong-lan', 'recipe-brownie', 'recipe-pancake'],
+                'recipe-brownie' => ['recipe-muffin-socola', 'recipe-mousse-socola', 'recipe-bong-lan'],
+                'recipe-mousse-socola' => ['recipe-brownie', 'recipe-muffin-socola', 'recipe-bong-lan'],
+                'recipe-pancake' => ['recipe-bong-lan', 'recipe-matcha-cupcake', 'recipe-banh-quy-bo'],
+            ];
+            $allRecipes = $recipeModel->getAllRecipes();
+            $bySlug = [];
+            foreach ($allRecipes as $item) {
+                $bySlug[(string) ($item['slug'] ?? '')] = $item;
+            }
+            $wantedSlugs = $relatedSlugsMap[(string) ($recipe['slug'] ?? '')] ?? [];
+            foreach ($wantedSlugs as $rSlug) {
+                if (isset($bySlug[$rSlug])) {
+                    $relatedRecipes[] = $bySlug[$rSlug];
+                }
+            }
+            if (count($relatedRecipes) < 3) {
+                $seenIds = array_map(static fn(array $r): int => (int) $r['id'], $relatedRecipes);
+                foreach ($allRecipes as $item) {
+                    $iid = (int) $item['id'];
+                    if ($iid === (int) $recipe['id'] || in_array($iid, $seenIds, true)) {
+                        continue;
+                    }
+                    $relatedRecipes[] = $item;
+                    $seenIds[] = $iid;
+                    if (count($relatedRecipes) >= 3) {
+                        break;
+                    }
+                }
+            }
+            $relatedRecipes = array_slice($relatedRecipes, 0, 3);
+        }
+
         $this->view('pages/recipe-detail', [
             'pageTitle' => ($recipe ? $recipe['title'] : 'Công thức không tồn tại') . ' | BakeMate',
             'activeNav' => 'recipes',
             'recipe' => $recipe,
+            'relatedRecipes' => $relatedRecipes,
         ]);
     }
 

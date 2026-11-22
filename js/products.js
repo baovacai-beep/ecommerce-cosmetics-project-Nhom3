@@ -305,8 +305,7 @@ const baseProducts = [
         "oldPrice": 140000,
         "category": "Dụng cụ",
         "subCategories": [
-            "Khuôn bánh",
-            "Đế và khay bánh"
+            "Khuôn bánh"
         ],
         "brand": "BakeMate",
         "packagingLabel": "Đường kính 20cm",
@@ -324,7 +323,7 @@ const baseProducts = [
         "oldPrice": 29000,
         "category": "Phụ kiện & Đóng gói",
         "subCategories": [
-            "Đế và khay bánh"
+            "Trang trí bánh"
         ],
         "brand": "BakeMate",
         "packagingLabel": "Cuộn 5m × 30cm",
@@ -342,7 +341,6 @@ const baseProducts = [
         "oldPrice": 24000,
         "category": "Phụ kiện & Đóng gói",
         "subCategories": [
-            "Đế và khay bánh",
             "Trang trí bánh"
         ],
         "brand": "BakeMate",
@@ -407,7 +405,7 @@ const baseProducts = [
         "onSale": true,
         "featured": true,
         "image": "images/products/sua-tuoi-vinamilk-1.webp",
-        "description": "Sữa tươi tiệt trùng 100% nguyên chất không đường Vinamilk giàu dưỡng chất, giúp cốt bánh mềm ẩm, thơm béo tự nhiên cho bông lan, pudding và flan.",
+        "description": "Sữa tươi 100% nguyên chất không đường, vị thanh nhẹ tự nhiên giúp dễ dàng cân chỉnh độ ngọt chuẩn xác khi làm bánh, pha chế và nấu sốt kem.",
         "isPerishable": true
     },
     {
@@ -426,7 +424,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/la-gelatine-ewald-bronze-1.jpg",
-        "description": "Lá Gelatine Ewald Bronze nhập khẩu Đức độ Bloom 135-155 chuẩn, giúp tạo đông mịn mượt không tách nước cho Mousse, Panna Cotta và Cheesecake lạnh."
+        "description": "Lá Gelatine Ewald dòng Bronze nhập khẩu chính hãng từ Đức, độ tinh khiết cao giúp tạo độ đông đàn hồi chuẩn xác cho mousse, panna cotta, thạch và kẹo dẻo."
     },
     {
         "id": 26,
@@ -444,7 +442,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/baking-soda-1.webp",
-        "description": "Baking Soda (Muối nở) tinh khiết Arm & Hammer giúp bánh quy giòn xốp, muffin nở đều và cân bằng độ chua trong công thức có cacao/buttermilk."
+        "description": "Bột nở Baking Soda nguyên chất số 1 tại Mỹ, giúp tạo độ xốp, trung hòa axit và hỗ trợ nở bánh quy, bánh muffin, bánh bông lan hiệu quả."
     },
     {
         "id": 27,
@@ -462,7 +460,7 @@ const baseProducts = [
         "onSale": true,
         "featured": true,
         "image": "images/products/men-no-1.webp",
-        "description": "Men nở khô ngọt Mauripan hoạt tính mạnh, phù hợp kích nở bột bánh mì hoa cúc, bánh mì ngọt và bánh bao cực kỳ ổn định."
+        "description": "Men nở khô instant Mauripan chuyên dụng cho các loại bánh mì ngọt, bánh mì sandwich, giúp bột nở nhanh, đều và không bị đắng hậu vị."
     },
     {
         "id": 28,
@@ -480,7 +478,7 @@ const baseProducts = [
         "onSale": true,
         "featured": true,
         "image": "images/products/may-danh-trung-cam-tay-philips-hr3705-1.jpg",
-        "description": "Máy đánh trứng cầm tay Philips HR3705 công suất 300W với 5 tốc độ + Turbo, que đánh thép không gỉ hình nón giúp đánh bông trứng & kem nhanh gấp đôi."
+        "description": "Máy đánh trứng cầm tay Philips HR3705 công suất 300W mạnh mẽ, thiết kế hiện đại với 5 cấp độ tốc độ và chức năng turbo, giúp đánh bông kem, lòng trắng trứng và nhào bột nhẹ nhàng."
     },
     {
         "id": 29,
@@ -498,7 +496,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/to-tron-inox-1.jpg",
-        "description": "Âu / Tô trộn Inox dày dặn không gỉ sét, lòng sâu chống văng khi đánh kem và đánh trứng bằng máy cầm tay, dễ vệ sinh."
+        "description": "Tô trộn inox 304 cao cấp chuyên dụng làm bánh, lòng sâu chống bắn, sáng bóng, an toàn vệ sinh thực phẩm và chịu nhiệt tốt. Có thể mua lẻ từng kích thước hoặc mua trọn bộ tiện lợi."
     },
     {
         "id": 30,
@@ -516,7 +514,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/ray-bot-1.jpg",
-        "description": "Rây bột lưới mịn inox Sanneng giúp lọc tơi bột mì, cacao, matcha và đường bột hoàn toàn không vón cục trước khi fold bánh."
+        "description": "Rây lọc bột inox 304 mắt lưới siêu mịn, thiết kế tay cầm dài chắc chắn kèm tai móc gác lên miệng tô tiện lợi, giúp rây bột tơi xốp và lọc hỗn hợp kem trứng mịn mượt không lợn cợn."
     },
     {
         "id": 31,
@@ -534,7 +532,7 @@ const baseProducts = [
         "onSale": true,
         "featured": true,
         "image": "images/products/khuon-nuong-cupcake-muffin-6-lo-chong-dinh-1.jpg",
-        "description": "Khay khuôn nướng cupcake và muffin thép carbon phủ chống dính 2 mặt giúp truyền nhiệt đồng đều, bánh nở đứng phom không dính đáy."
+        "description": "Khuôn nướng 6 lỗ chuyên dụng làm cupcake và muffin, chất liệu thép carbon chịu nhiệt cao phủ lớp chống dính cao cấp giúp lấy bánh dễ dàng và dễ vệ sinh."
     },
     {
         "id": 32,
@@ -552,7 +550,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/khuon-silicon-1.jpg",
-        "description": "Khuôn silicon thực phẩm dẻo cao cấp Silikomart chịu nhiệt -40°C đến 230°C, hoàn hảo cho bánh mousse, thạch rau câu và socola tạo hình."
+        "description": "Khuôn silicon thực phẩm cao cấp dẻo dai, chịu nhiệt cực tốt từ -40°C đến 230°C, chuyên dùng làm socola, kẹo dẻo, thạch hoặc bánh nướng nhỏ."
     },
     {
         "id": 33,
@@ -570,7 +568,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/ban-xoay-banh-1.jpg",
-        "description": "Bàn xoay chà láng bánh kem ổ bi xoay 360 độ êm mượt chống rung lắc, có vạch chia đường kính tiện căn tâm ổ bánh."
+        "description": "Bàn xoay làm bánh chuyên dụng bằng nhựa ABS cao cấp, trục bi xoay êm ái 360 độ giúp chà láng mặt bánh kem và trang trí bánh dễ dàng, chuẩn xác."
     },
     {
         "id": 34,
@@ -588,7 +586,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/hop-cupcake-1.jpg",
-        "description": "Hộp giấy đựng cupcake kèm khay giữ đế cố định và mặt kính mica trong suốt giúp bảo vệ lớp kem bắt bông khi di chuyển."
+        "description": "Hộp giấy đựng cupcake chuyên dụng thiết kế sang trọng, có vỉ định hình giúp cố định bánh chắc chắn không bị dịch chuyển khi vận chuyển."
     },
     {
         "id": 35,
@@ -606,7 +604,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/tui-giay-kraft-dung-banh-1.jpg",
-        "description": "Túi giấy Kraft nâu thân thiện môi trường, đáy vuông đứng vững sang trọng chuyên đựng bánh mì hoa cúc, cookie và hộp bánh tặng."
+        "description": "Túi giấy kraft đựng bánh thiết kế đáy vuông dày dặn, quai xách chắc chắn, sang trọng và lịch sự, phù hợp đựng các hộp bánh đem biếu tặng hoặc giao cho khách."
     },
     {
         "id": 36,
@@ -624,7 +622,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/tui-zip-1.jpg",
-        "description": "Túi zip khóa kéo kín hơi chống ẩm cực tốt cho bánh quy bơ, granola và nguyên liệu khô chiết lẻ."
+        "description": "Túi zip đựng bánh thiết kế khóa miết kín khít, chất liệu nhựa trong suốt dẻo dai giúp bảo quản bánh cookies, kẹo và các loại hạt khô tránh bị ỉu, ẩm mốc."
     },
     {
         "id": 37,
@@ -642,7 +640,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/de-banh-kem-1.jpg",
-        "description": "Đế lót bánh kem carton cứng ép màng chống thấm dầu ẩm, chịu lực tốt giúp nâng đỡ và trưng bày bánh sinh nhật sang trọng."
+        "description": "Đế lót bánh kem chuyên dụng cứng cáp, chịu lực tốt, giúp cố định form bánh sinh nhật và bánh gato dễ dàng di chuyển mà không bị biến dạng."
     },
     {
         "id": 38,
@@ -660,7 +658,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/khay-giay-dung-banh-kem-nap-trong-1.jpg",
-        "description": "Khay giấy chịu dầu kèm nắp nhựa PET trong suốt gài khít, lý tưởng đựng bánh bông lan cuộn, tiramisu và bánh mì hoa cúc."
+        "description": "Khay giấy kraft đựng bánh thiết kế đáy vuông kết hợp nắp nhựa trong suốt cao cấp, giúp bảo quản và khoe trọn vẻ đẹp của các loại bánh su kem, bánh cuộn, tiramisu hoặc bánh mì ngọt."
     },
     {
         "id": 39,
@@ -678,7 +676,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/khay-nhom-nuong-banh-1.jpg",
-        "description": "Khay nhôm nguyên khối dẫn nhiệt cực nhanh và đều, chuyên nướng cookie bơ, bánh mì, su kem và bông lan cuộn."
+        "description": "Khay nhôm nướng bánh cao cấp chuyên dụng cho lò nướng, thiết kế phẳng đều giúp truyền nhiệt cực tốt, giúp bánh chín vàng đều các mặt. Có phân loại thành cao và thành thấp tùy nhu cầu sử dụng."
     },
     {
         "id": 40,
@@ -696,7 +694,7 @@ const baseProducts = [
         "onSale": true,
         "featured": false,
         "image": "images/products/de-lot-banh-mousse-1.jpg",
-        "description": "Đế giấy cứng phủ bạc/vàng sang trọng có tai cầm tiện nhấc bánh mousse, tiramisu mini và cheesecake ra khỏi hộp."
+        "description": "Tấm đế lót chuyên dụng cho bánh mousse, tiramisu và bánh ngọt nhỏ, thiết kế gọn gàng giúp cố định bánh đẹp mắt và thuận tiện khi cầm nắm, thưởng thức."
     },
     {
         "id": 41,

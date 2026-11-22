@@ -419,6 +419,135 @@
     if (breadcrumbCurrent) breadcrumbCurrent.textContent = post.title;
 
     const combo = getComboBreakdown(post.recipeGroupId);
+    const rich = post.content && typeof post.content === "object" ? post.content : null;
+
+    const richHtml = rich
+      ? `
+        ${
+          rich.intro_title || (Array.isArray(rich.intro_paragraphs) && rich.intro_paragraphs.length)
+            ? `
+              <section class="blog-modal__section blog-editorial-block">
+                ${rich.intro_title ? `<h2>${escapeHtml(rich.intro_title)}</h2>` : ""}
+                ${(rich.intro_paragraphs || []).map((p) => `<p>${escapeHtml(p)}</p>`).join("")}
+              </section>
+            `
+            : ""
+        }
+        ${
+          Array.isArray(rich.prep_groups) && rich.prep_groups.length
+            ? `
+              <section class="blog-modal__section blog-editorial-block" style="background:#fdf8f1;border:1px solid #efe3d2;border-radius:12px;padding:16px 18px;">
+                <h2>Chuẩn bị nguyên liệu &amp; dụng cụ</h2>
+                ${rich.prep_groups
+                  .map(
+                    (grp) => `
+                      <div style="margin-top:10px;">
+                        <strong style="color:#4a2e19;display:block;margin-bottom:4px;">${escapeHtml(grp.label || "")}:</strong>
+                        <ul style="margin:0;padding-left:20px;line-height:1.65;">
+                          ${(grp.items || []).map((it) => `<li>${escapeHtml(it)}</li>`).join("")}
+                        </ul>
+                      </div>
+                    `
+                  )
+                  .join("")}
+              </section>
+            `
+            : ""
+        }
+        ${
+          Array.isArray(rich.step_blocks) && rich.step_blocks.length
+            ? `
+              <section class="blog-modal__section blog-editorial-block">
+                ${rich.step_blocks
+                  .map(
+                    (blk) => `
+                      <div style="margin-bottom:20px;">
+                        <h3 style="color:#70452b;font-size:18px;margin:0 0 8px;">${escapeHtml(blk.title || "")}</h3>
+                        ${(blk.paragraphs || []).map((sp) => `<p style="margin:0 0 8px;line-height:1.7;">${escapeHtml(sp)}</p>`).join("")}
+                        ${
+                          blk.video_article_url
+                            ? `<p style="margin:8px 0 0;"><a href="${escapeHtml(blk.video_article_url)}" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark">🎬 ${escapeHtml(blk.video_label || "Xem video hướng dẫn thực hành")} &nearr;</a></p>`
+                            : ""
+                        }
+                        ${
+                          blk.image
+                            ? `
+                              <figure style="margin:12px 0 6px;">
+                                <img src="${escapeHtml(blk.image)}" alt="${escapeHtml(blk.caption || post.title)}" loading="lazy" style="width:100%;max-height:360px;object-fit:cover;border-radius:10px;" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">
+                                ${blk.caption ? `<figcaption class="blog-figcaption">${escapeHtml(blk.caption)}</figcaption>` : ""}
+                              </figure>
+                            `
+                            : ""
+                        }
+                      </div>
+                    `
+                  )
+                  .join("")}
+              </section>
+            `
+            : ""
+        }
+        ${
+          Array.isArray(rich.mistakes) && rich.mistakes.length
+            ? `
+              <section class="blog-modal__section blog-mistakes-box">
+                <h2>${escapeHtml(rich.mistakes_title || "Những lỗi thường gặp")}</h2>
+                <ul style="margin:0;padding-left:20px;line-height:1.7;">
+                  ${rich.mistakes
+                    .map((mk) => `<li style="margin-bottom:6px;"><strong>${escapeHtml(mk.label || "")}:</strong> ${escapeHtml(mk.desc || "")}</li>`)
+                    .join("")}
+                </ul>
+              </section>
+            `
+            : ""
+        }
+        ${
+          Array.isArray(rich.tips) && rich.tips.length
+            ? `
+              <section class="blog-modal__section blog-editorial-block" style="background:#fffaf2;border-left:4px solid #c88b52;padding:14px 16px;border-radius:8px;">
+                <h2>Mẹo nhỏ từ BakeMate</h2>
+                ${rich.tips.map((tp) => `<p style="margin:0 0 6px;">${escapeHtml(tp)}</p>`).join("")}
+              </section>
+            `
+            : ""
+        }
+        ${
+          Array.isArray(rich.conclusion) && rich.conclusion.length
+            ? `
+              <section class="blog-modal__section blog-editorial-block">
+                <h2>Lời kết</h2>
+                ${rich.conclusion.map((cp) => `<p style="margin:0 0 8px;">${escapeHtml(cp)}</p>`).join("")}
+              </section>
+            `
+            : ""
+        }
+      `
+      : `
+        <section class="blog-modal__section">
+          <h2>Các bước thực hiện chuẩn BakeMate</h2>
+          <ol class="blog-modal__steps">
+            ${(post.steps || []).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
+          </ol>
+        </section>
+
+        ${
+          Array.isArray(post.gallery) && post.gallery.length > 1
+            ? `
+              <section class="blog-modal__section">
+                <h2>Hình ảnh minh họa thực tế</h2>
+                <div class="blog-gallery-grid">
+                  ${post.gallery
+                    .map(
+                      (imgPath) =>
+                        `<img src="${escapeHtml(imgPath)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">`
+                    )
+                    .join("")}
+                </div>
+              </section>
+            `
+            : ""
+        }
+      `;
 
     detailRoot.innerHTML = `
       <article class="blog-article-container">
@@ -429,6 +558,7 @@
             class="blog-modal__img"
             onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
           >
+          ${rich && rich.hero_caption ? `<p class="blog-figcaption">${escapeHtml(rich.hero_caption)}</p>` : ""}
         </div>
 
         <div class="blog-modal__header">
@@ -437,7 +567,7 @@
             ${post.displayMode ? `<span class="blog-format-badge" style="position:static;">${escapeHtml(post.displayMode)}</span>` : ""}
           </div>
           <h1 class="blog-modal__title">${escapeHtml(post.title)}</h1>
-          <p class="blog-modal__meta">${escapeHtml(post.author)} · ${escapeHtml(post.publishedAt)} · ${escapeHtml(post.readTime)} · Độ khó: ${escapeHtml(post.diff)}</p>
+          <p class="blog-modal__meta">${escapeHtml(post.author)} · ${escapeHtml(post.publishedAt)} · ${escapeHtml(post.readTime)} · Độ khó: ${escapeHtml(post.diff)}${rich && rich.yield_note ? ` · Khẩu phần: ${escapeHtml(rich.yield_note)}` : ""}</p>
         </div>
 
         <p class="blog-modal__lead">${escapeHtml(post.excerpt)}</p>
@@ -513,35 +643,12 @@
             : ""
         }
 
-        <section class="blog-modal__section">
-          <h2>Các bước thực hiện chuẩn BakeMate</h2>
-          <ol class="blog-modal__steps">
-            ${(post.steps || []).map((step) => `<li>${escapeHtml(step)}</li>`).join("")}
-          </ol>
-        </section>
-
-        ${
-          Array.isArray(post.gallery) && post.gallery.length > 1
-            ? `
-              <section class="blog-modal__section">
-                <h2>Hình ảnh minh họa thực tế</h2>
-                <div class="blog-gallery-grid">
-                  ${post.gallery
-                    .map(
-                      (imgPath) =>
-                        `<img src="${escapeHtml(imgPath)}" alt="${escapeHtml(post.title)}" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_IMG}';">`
-                    )
-                    .join("")}
-                </div>
-              </section>
-            `
-            : ""
-        }
+        ${richHtml}
 
         <section class="blog-modal__combo-box" aria-label="Combo nguyên liệu Recipe-to-Cart">
           <div class="blog-modal__combo-head">
             <div>
-              <span class="sub-badge">Giải pháp Recipe-to-Cart</span>
+              <span class="sub-badge">Chuẩn bị nguyên liệu cùng BakeMate</span>
               <h3>${escapeHtml(combo.title)}</h3>
               <p>Khẩu phần gợi ý: ${escapeHtml(combo.servings)}</p>
             </div>
@@ -593,9 +700,20 @@
     });
 
     if (relatedGrid) {
-      const sameCategory = posts.filter((p) => p.id !== post.id && p.category === post.category);
-      const others = posts.filter((p) => p.id !== post.id && p.category !== post.category);
-      const related = [...sameCategory, ...others].slice(0, 3);
+      let related = [];
+      if (rich && Array.isArray(rich.related_slugs) && rich.related_slugs.length > 0) {
+        const byId = new Map(posts.map((p) => [p.id, p]));
+        related = rich.related_slugs
+          .map((slug) => byId.get(slug))
+          .filter((p) => p && p.id !== post.id);
+      }
+      if (related.length < 3) {
+        const seenIds = new Set(related.map((p) => p.id));
+        const sameCategory = posts.filter((p) => p.id !== post.id && !seenIds.has(p.id) && p.category === post.category);
+        const others = posts.filter((p) => p.id !== post.id && !seenIds.has(p.id) && p.category !== post.category);
+        related = [...related, ...sameCategory, ...others];
+      }
+      related = related.slice(0, 3);
       relatedGrid.innerHTML = related.map(buildBlogCardHtml).join("");
       relatedGrid.addEventListener("click", function (event) {
         const comboBtn = event.target.closest(".js-blog-add-combo");

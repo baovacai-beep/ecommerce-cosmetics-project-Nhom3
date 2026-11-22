@@ -34,6 +34,8 @@ class ContentModel extends Model
             $row['steps'] = is_array($steps) ? $steps : [];
             $gallery = json_decode((string) ($row['gallery_json'] ?? '[]'), true);
             $row['gallery'] = is_array($gallery) && !empty($gallery) ? $gallery : [$row['image_path']];
+            $content = json_decode((string) ($row['content_json'] ?? ''), true);
+            $row['content'] = is_array($content) ? $content : null;
             if ($qNorm !== '') {
                 $hay = ProductModel::normalizeSearch($row['title'] . ' ' . $row['category'] . ' ' . $row['keywords_text'] . ' ' . $row['excerpt']);
                 if (!str_contains($hay, $qNorm)) {
@@ -60,6 +62,8 @@ class ContentModel extends Model
         $row['steps'] = is_array($steps) ? $steps : [];
         $gallery = json_decode((string) ($row['gallery_json'] ?? '[]'), true);
         $row['gallery'] = is_array($gallery) && !empty($gallery) ? $gallery : [$row['image_path']];
+        $content = json_decode((string) ($row['content_json'] ?? ''), true);
+        $row['content'] = is_array($content) ? $content : null;
         return $row;
     }
 

@@ -74,637 +74,637 @@
    * Mục đầu tiên (index 0) luôn đồng bộ 100% với đơn giá gốc product.price.
    */
   const PRODUCT_PACKAGING_OPTIONS = {
-    "1": [
-        {
-            "shortLabel": "Gói 1kg",
-            "price": 52000,
-            "oldPrice": 64000
-        },
-        {
-            "shortLabel": "Túi 500g",
-            "price": 28000,
-            "oldPrice": 34000
-        },
-        {
-            "shortLabel": "Túi 300g",
-            "price": 19000,
-            "oldPrice": 24000
-        },
-        {
-            "shortLabel": "Gói 100g dùng thử",
-            "price": 9000,
-            "oldPrice": 12000
-        }
-    ],
-    "2": [
-        {
-            "shortLabel": "Gói 1kg",
-            "price": 45000,
-            "oldPrice": 54000
-        },
-        {
-            "shortLabel": "Túi 500g",
-            "price": 25000,
-            "oldPrice": 30000
-        },
-        {
-            "shortLabel": "Túi 300g",
-            "price": 17000,
-            "oldPrice": 22000
-        },
-        {
-            "shortLabel": "Gói 100g dùng thử",
-            "price": 8000,
-            "oldPrice": 11000
-        }
-    ],
-    "3": [
-        {
-            "shortLabel": "Gói 1kg",
-            "price": 32000,
-            "oldPrice": 40000
-        },
-        {
-            "shortLabel": "Túi 500g",
-            "price": 18000,
-            "oldPrice": 23000
-        },
-        {
-            "shortLabel": "Túi 300g",
-            "price": 13000,
-            "oldPrice": 17000
-        },
-        {
-            "shortLabel": "Gói 100g dùng thử",
-            "price": 6500,
-            "oldPrice": 9000
-        }
-    ],
-    "4": [
-        {
-            "shortLabel": "Hộp 100g",
-            "price": 65000,
-            "oldPrice": 78000
-        },
-        {
-            "shortLabel": "Hộp 226g",
-            "price": 135000,
-            "oldPrice": 160000
-        }
-    ],
-    "5": [
-        {
-            "shortLabel": "Gói 100g",
-            "price": 75000,
-            "oldPrice": 90000
-        },
-        {
-            "shortLabel": "Gói 200g",
-            "price": 140000,
-            "oldPrice": 165000
-        }
-    ],
-    "6": [
-        {
-            "shortLabel": "Hộp 250ml",
-            "price": 45000,
-            "oldPrice": 54000
-        },
-        {
-            "shortLabel": "Hộp 1 Lít",
-            "price": 155000,
-            "oldPrice": 180000
-        }
-    ],
-    "7": [
-        {
-            "shortLabel": "Mẫu 5kg / 1g",
-            "price": 120000,
-            "oldPrice": 120000
-        }
-    ],
-    "8": [
-        {
-            "shortLabel": "Ca 500ml",
-            "price": 45000,
-            "oldPrice": 45000
-        },
-        {
-            "shortLabel": "Ca 1000ml",
-            "price": 68000,
-            "oldPrice": 68000
-        }
-    ],
-    "9": [
-        {
-            "shortLabel": "Bộ 5 thìa tiêu chuẩn",
-            "price": 35000,
-            "oldPrice": 35000
-        },
-        {
-            "shortLabel": "Bộ 8 thìa inox",
-            "price": 58000,
-            "oldPrice": 58000
-        }
-    ],
-    "10": [
-        {
-            "shortLabel": "Đầu dò tiêu chuẩn",
-            "price": 95000,
-            "oldPrice": 115000
-        },
-        {
-            "shortLabel": "Đầu dò dài chuyên dụng",
-            "price": 118000,
-            "oldPrice": 140000
-        }
-    ],
-    "11": [
-        {
-            "shortLabel": "Túi 50 cái cỡ vừa",
-            "price": 25000,
-            "oldPrice": 25000
-        },
-        {
-            "shortLabel": "Túi 100 cái cỡ lớn",
-            "price": 42000,
-            "oldPrice": 42000
-        }
-    ],
-    "12": [
-        {
-            "shortLabel": "Khối 227g",
-            "price": 68000,
-            "oldPrice": 82000
-        },
-        {
-            "shortLabel": "Combo 2 khối (454g)",
-            "price": 130000,
-            "oldPrice": 158000
-        }
-    ],
-    "13": [
-        {
-            "shortLabel": "Túi 1kg",
-            "price": 28000,
-            "oldPrice": 28000
-        },
-        {
-            "shortLabel": "Túi 500g",
-            "price": 16000,
-            "oldPrice": 16000
-        }
-    ],
-    "14": [
-        {
-            "shortLabel": "Hộp 100g",
-            "price": 48000,
-            "oldPrice": 58000
-        },
-        {
-            "shortLabel": "Gói 50g dùng thử",
-            "price": 27000,
-            "oldPrice": 34000
-        }
-    ],
-    "15": [
-        {
-            "shortLabel": "Vỉ 10 quả",
-            "price": 34000,
-            "oldPrice": 34000
-        },
-        {
-            "shortLabel": "Hộp 6 quả",
-            "price": 22000,
-            "oldPrice": 22000
-        }
-    ],
-    "16": [
-        {
-            "shortLabel": "Cỡ 25cm tiêu chuẩn",
-            "price": 42000,
-            "oldPrice": 52000
-        },
-        {
-            "shortLabel": "Cỡ 30cm cán dài",
-            "price": 54000,
-            "oldPrice": 66000
-        }
-    ],
-    "17": [
-        {
-            "shortLabel": "Đường kính 20cm (Đế rời)",
-            "price": 115000,
-            "oldPrice": 140000
-        },
-        {
-            "shortLabel": "Đường kính 22cm (Đế rời)",
-            "price": 135000,
-            "oldPrice": 165000
-        }
-    ],
-    "18": [
-        {
-            "shortLabel": "Cuộn 5m × 30cm",
-            "price": 29000,
-            "oldPrice": 29000
-        },
-        {
-            "shortLabel": "Cuộn 10m × 30cm",
-            "price": 52000,
-            "oldPrice": 52000
-        }
-    ],
-    "19": [
-        {
-            "shortLabel": "Lốc 50 cup tiêu chuẩn",
-            "price": 24000,
-            "oldPrice": 24000
-        },
-        {
-            "shortLabel": "Lốc 100 cup",
-            "price": 44000,
-            "oldPrice": 44000
-        }
-    ],
-    "20": [
-        {
-            "shortLabel": "Bộ 12 đui + khớp nối",
-            "price": 65000,
-            "oldPrice": 79000
-        },
-        {
-            "shortLabel": "Bộ 24 đui chuyên nghiệp",
-            "price": 115000,
-            "oldPrice": 140000
-        }
-    ],
-    "21": [
-        {
-            "shortLabel": "Set 2 hộp (25×25×18cm)",
-            "price": 38000,
-            "oldPrice": 38000
-        },
-        {
-            "shortLabel": "Set 5 hộp tiết kiệm",
-            "price": 88000,
-            "oldPrice": 88000
-        }
-    ],
-    "24": [
-        {
-            "shortLabel": "Hộp 1 Lít",
-            "price": 34000,
-            "oldPrice": 39000
-        },
-        {
-            "shortLabel": "Lốc 4 hộp x 180ml",
-            "price": 32000,
-            "oldPrice": 36000
-        }
-    ],
-    "25": [
-        {
-            "shortLabel": "Gói chiết lẻ 100g",
-            "price": 45000,
-            "oldPrice": 55000
-        },
-        {
-            "shortLabel": "Hộp 1kg",
-            "price": 410000,
-            "oldPrice": 480000
-        }
-    ],
-    "26": [
-        {
-            "shortLabel": "Hộp 226g",
-            "price": 32000,
-            "oldPrice": 38000
-        },
-        {
-            "shortLabel": "Gói lớn 454g",
-            "price": 54000,
-            "oldPrice": 65000
-        }
-    ],
-    "27": [
-        {
-            "shortLabel": "Gói lẻ 10g",
-            "price": 5000,
-            "oldPrice": 7000
-        },
-        {
-            "shortLabel": "Hộp 5 gói x 10g",
-            "price": 22000,
-            "oldPrice": 29000
-        }
-    ],
-    "28": [
-        {
-            "shortLabel": "Nguyên bộ",
-            "price": 690000,
-            "oldPrice": 850000
-        }
-    ],
-    "29": [
-        {
-            "shortLabel": "Tô đơn lẻ size 22cm",
-            "price": 35000,
-            "oldPrice": 45000
-        },
-        {
-            "shortLabel": "Set 5 cái",
-            "price": 155000,
-            "oldPrice": 195000
-        }
-    ],
-    "30": [
-        {
-            "shortLabel": "Size 16cm",
-            "price": 28000,
-            "oldPrice": 35000
-        },
-        {
-            "shortLabel": "Size 20cm",
-            "price": 38000,
-            "oldPrice": 46000
-        }
-    ],
-    "31": [
-        {
-            "shortLabel": "Khay 6 lỗ chuẩn",
-            "price": 85000,
-            "oldPrice": 110000
-        },
-        {
-            "shortLabel": "Khay 12 lỗ lớn",
-            "price": 135000,
-            "oldPrice": 170000
-        }
-    ],
-    "32": [
-        {
-            "shortLabel": "5 ô",
-            "price": 45000,
-            "oldPrice": 58000
-        },
-        {
-            "shortLabel": "12 ô",
-            "price": 68000,
-            "oldPrice": 85000
-        },
-        {
-            "shortLabel": "30 ô",
-            "price": 95000,
-            "oldPrice": 120000
-        }
-    ],
-    "33": [
-        {
-            "shortLabel": "Đường kính 27.5cm",
-            "price": 75000,
-            "oldPrice": 95000
-        },
-        {
-            "shortLabel": "Đường kính 35cm",
-            "price": 105000,
-            "oldPrice": 130000
-        }
-    ],
-    "34": [
-        {
-            "shortLabel": "Hộp 1 bánh",
-            "price": 8000,
-            "oldPrice": 13000
-        },
-        {
-            "shortLabel": "Hộp 4 bánh",
-            "price": 15000,
-            "oldPrice": 20000
-        },
-        {
-            "shortLabel": "Hộp 6 bánh",
-            "price": 19000,
-            "oldPrice": 25000
-        }
-    ],
-    "35": [
-        {
-            "shortLabel": "Size S",
-            "price": 6000,
-            "oldPrice": 8000
-        },
-        {
-            "shortLabel": "Size M",
-            "price": 8000,
-            "oldPrice": 10000
-        },
-        {
-            "shortLabel": "Size L",
-            "price": 10000,
-            "oldPrice": 13000
-        },
-        {
-            "shortLabel": "Size XL",
-            "price": 12000,
-            "oldPrice": 16000
-        }
-    ],
-    "36": [
-        {
-            "shortLabel": "Size trung bình đa năng",
-            "price": 3000,
-            "oldPrice": 4000
-        }
-    ],
-    "37": [
-        {
-            "shortLabel": "Đế tròn 20cm",
-            "price": 4000,
-            "oldPrice": 6000
-        },
-        {
-            "shortLabel": "Đế vuông 20x20cm",
-            "price": 5000,
-            "oldPrice": 7000
-        }
-    ],
-    "38": [
-        {
-            "shortLabel": "Size S",
-            "price": 8000,
-            "oldPrice": 10000
-        },
-        {
-            "shortLabel": "Size M",
-            "price": 11000,
-            "oldPrice": 14000
-        },
-        {
-            "shortLabel": "Size L",
-            "price": 14000,
-            "oldPrice": 18000
-        }
-    ],
-    "39": [
-        {
-            "shortLabel": "Khay thành thấp",
-            "price": 65000,
-            "oldPrice": 80000
-        },
-        {
-            "shortLabel": "Khay thành cao",
-            "price": 78000,
-            "oldPrice": 96000
-        }
-    ],
-    "40": [
-        {
-            "shortLabel": "Đế mousse mini tròn 5cm",
-            "price": 2000,
-            "oldPrice": 3000
-        },
-        {
-            "shortLabel": "Đế tròn 8cm",
-            "price": 2500,
-            "oldPrice": 3500
-        },
-        {
-            "shortLabel": "Đế vuông 10cm",
-            "price": 3000,
-            "oldPrice": 4500
-        },
-        {
-            "shortLabel": "Đế bạc 12cm",
-            "price": 4000,
-            "oldPrice": 5500
-        }
-    ],
-    "41": [
-        {
-            "shortLabel": "Nến số 0-9",
-            "price": 5000,
-            "oldPrice": 7000
-        },
-        {
-            "shortLabel": "Nến xoắn",
-            "price": 7000,
-            "oldPrice": 10000
-        },
-        {
-            "shortLabel": "Nến dài",
-            "price": 6000,
-            "oldPrice": 9000
-        },
-        {
-            "shortLabel": "Nến ngôi sao",
-            "price": 8000,
-            "oldPrice": 11000
-        },
-        {
-            "shortLabel": "Nến kim tuyến",
-            "price": 9000,
-            "oldPrice": 12000
-        }
-    ],
-    "42": [
-        {
-            "shortLabel": "Topper Happy Birthday",
-            "price": 10000,
-            "oldPrice": 14000
-        },
-        {
-            "shortLabel": "Topper Acrylic",
-            "price": 12000,
-            "oldPrice": 16000
-        },
-        {
-            "shortLabel": "Topper Trái tim",
-            "price": 10000,
-            "oldPrice": 14000
-        },
-        {
-            "shortLabel": "Topper Công chúa",
-            "price": 15000,
-            "oldPrice": 19000
-        },
-        {
-            "shortLabel": "Topper Hoạt hình",
-            "price": 14000,
-            "oldPrice": 18000
-        }
-    ],
-    "43": [
-        {
-            "shortLabel": "Cuộn tiêu chuẩn",
-            "price": 2000,
-            "oldPrice": 3000
-        }
-    ],
-    "44": [
-        {
-            "shortLabel": "Cuộn 1m",
-            "price": 5000,
-            "oldPrice": 7000
-        },
-        {
-            "shortLabel": "Cuộn 5m",
-            "price": 18000,
-            "oldPrice": 24000
-        },
-        {
-            "shortLabel": "Ruy băng trang trí hộp bánh",
-            "price": 12000,
-            "oldPrice": 16000
-        },
-        {
-            "shortLabel": "Ruy băng họa tiết bánh ngọt",
-            "price": 15000,
-            "oldPrice": 20000
-        }
-    ],
-    "45": [
-        {
-            "shortLabel": "Size S",
-            "price": 5000,
-            "oldPrice": 7000
-        },
-        {
-            "shortLabel": "Size M",
-            "price": 7000,
-            "oldPrice": 10000
-        },
-        {
-            "shortLabel": "Size L",
-            "price": 10000,
-            "oldPrice": 13000
-        }
-    ],
-    "46": [
-        {
-            "shortLabel": "Size S",
-            "price": 12000,
-            "oldPrice": 16000
-        },
-        {
-            "shortLabel": "Size M",
-            "price": 16000,
-            "oldPrice": 21000
-        },
-        {
-            "shortLabel": "Size L",
-            "price": 22000,
-            "oldPrice": 28000
-        }
-    ],
-    "47": [
-        {
-            "shortLabel": "Cái tiêu chuẩn 11cm",
-            "price": 3000,
-            "oldPrice": 5000
-        }
-    ]
-};
+      "1": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 52000,
+              "oldPrice": 64000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 28000,
+              "oldPrice": 34000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 19000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 9000,
+              "oldPrice": 12000
+          }
+      ],
+      "2": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 45000,
+              "oldPrice": 54000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 25000,
+              "oldPrice": 30000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 17000,
+              "oldPrice": 22000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 8000,
+              "oldPrice": 11000
+          }
+      ],
+      "3": [
+          {
+              "shortLabel": "Gói 1kg",
+              "price": 32000,
+              "oldPrice": 40000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 18000,
+              "oldPrice": 23000
+          },
+          {
+              "shortLabel": "Túi 300g",
+              "price": 13000,
+              "oldPrice": 17000
+          },
+          {
+              "shortLabel": "Gói 100g dùng thử",
+              "price": 6500,
+              "oldPrice": 9000
+          }
+      ],
+      "4": [
+          {
+              "shortLabel": "Hộp 100g",
+              "price": 65000,
+              "oldPrice": 78000
+          },
+          {
+              "shortLabel": "Hộp 226g",
+              "price": 135000,
+              "oldPrice": 160000
+          }
+      ],
+      "5": [
+          {
+              "shortLabel": "Gói 100g",
+              "price": 75000,
+              "oldPrice": 90000
+          },
+          {
+              "shortLabel": "Gói 200g",
+              "price": 140000,
+              "oldPrice": 165000
+          }
+      ],
+      "6": [
+          {
+              "shortLabel": "Hộp 250ml",
+              "price": 45000,
+              "oldPrice": 54000
+          },
+          {
+              "shortLabel": "Hộp 1 Lít",
+              "price": 155000,
+              "oldPrice": 180000
+          }
+      ],
+      "7": [
+          {
+              "shortLabel": "Mẫu 5kg / 1g",
+              "price": 120000,
+              "oldPrice": 120000
+          }
+      ],
+      "8": [
+          {
+              "shortLabel": "Ca 500ml",
+              "price": 45000,
+              "oldPrice": 45000
+          },
+          {
+              "shortLabel": "Ca 1000ml",
+              "price": 68000,
+              "oldPrice": 68000
+          }
+      ],
+      "9": [
+          {
+              "shortLabel": "Bộ 5 thìa tiêu chuẩn",
+              "price": 35000,
+              "oldPrice": 35000
+          },
+          {
+              "shortLabel": "Bộ 8 thìa inox",
+              "price": 58000,
+              "oldPrice": 58000
+          }
+      ],
+      "10": [
+          {
+              "shortLabel": "Đầu dò tiêu chuẩn",
+              "price": 95000,
+              "oldPrice": 115000
+          },
+          {
+              "shortLabel": "Đầu dò dài chuyên dụng",
+              "price": 118000,
+              "oldPrice": 140000
+          }
+      ],
+      "11": [
+          {
+              "shortLabel": "Túi 50 cái cỡ vừa",
+              "price": 25000,
+              "oldPrice": 25000
+          },
+          {
+              "shortLabel": "Túi 100 cái cỡ lớn",
+              "price": 42000,
+              "oldPrice": 42000
+          }
+      ],
+      "12": [
+          {
+              "shortLabel": "Khối 227g",
+              "price": 68000,
+              "oldPrice": 82000
+          },
+          {
+              "shortLabel": "Combo 2 khối (454g)",
+              "price": 130000,
+              "oldPrice": 158000
+          }
+      ],
+      "13": [
+          {
+              "shortLabel": "Túi 1kg",
+              "price": 28000,
+              "oldPrice": 28000
+          },
+          {
+              "shortLabel": "Túi 500g",
+              "price": 16000,
+              "oldPrice": 16000
+          }
+      ],
+      "14": [
+          {
+              "shortLabel": "Hộp 100g",
+              "price": 48000,
+              "oldPrice": 58000
+          },
+          {
+              "shortLabel": "Gói 50g dùng thử",
+              "price": 27000,
+              "oldPrice": 34000
+          }
+      ],
+      "15": [
+          {
+              "shortLabel": "Vỉ 10 quả",
+              "price": 34000,
+              "oldPrice": 34000
+          },
+          {
+              "shortLabel": "Hộp 6 quả",
+              "price": 22000,
+              "oldPrice": 22000
+          }
+      ],
+      "16": [
+          {
+              "shortLabel": "Cỡ 25cm tiêu chuẩn",
+              "price": 42000,
+              "oldPrice": 52000
+          },
+          {
+              "shortLabel": "Cỡ 30cm cán dài",
+              "price": 54000,
+              "oldPrice": 66000
+          }
+      ],
+      "17": [
+          {
+              "shortLabel": "Đường kính 20cm (Đế rời)",
+              "price": 115000,
+              "oldPrice": 140000
+          },
+          {
+              "shortLabel": "Đường kính 22cm (Đế rời)",
+              "price": 135000,
+              "oldPrice": 165000
+          }
+      ],
+      "18": [
+          {
+              "shortLabel": "Cuộn 5m × 30cm",
+              "price": 29000,
+              "oldPrice": 29000
+          },
+          {
+              "shortLabel": "Cuộn 10m × 30cm",
+              "price": 52000,
+              "oldPrice": 52000
+          }
+      ],
+      "19": [
+          {
+              "shortLabel": "Lốc 50 cup tiêu chuẩn",
+              "price": 24000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Lốc 100 cup",
+              "price": 44000,
+              "oldPrice": 44000
+          }
+      ],
+      "20": [
+          {
+              "shortLabel": "Bộ 12 đui + khớp nối",
+              "price": 65000,
+              "oldPrice": 79000
+          },
+          {
+              "shortLabel": "Bộ 24 đui chuyên nghiệp",
+              "price": 115000,
+              "oldPrice": 140000
+          }
+      ],
+      "21": [
+          {
+              "shortLabel": "Set 2 hộp (25×25×18cm)",
+              "price": 38000,
+              "oldPrice": 38000
+          },
+          {
+              "shortLabel": "Set 5 hộp tiết kiệm",
+              "price": 88000,
+              "oldPrice": 88000
+          }
+      ],
+      "24": [
+          {
+              "shortLabel": "Hộp 1 Lít",
+              "price": 34000,
+              "oldPrice": 39000
+          },
+          {
+              "shortLabel": "Lốc 4 hộp x 180ml",
+              "price": 32000,
+              "oldPrice": 36000
+          }
+      ],
+      "25": [
+          {
+              "shortLabel": "Gói chiết lẻ 100g",
+              "price": 45000,
+              "oldPrice": 55000
+          },
+          {
+              "shortLabel": "Hộp 1kg (Đóng gói lớn chuyên dụng)",
+              "price": 350000,
+              "oldPrice": 420000
+          }
+      ],
+      "26": [
+          {
+              "shortLabel": "Hộp 226g (8 oz)",
+              "price": 32000,
+              "oldPrice": 38000
+          },
+          {
+              "shortLabel": "Gói lớn 454g",
+              "price": 58000,
+              "oldPrice": 68000
+          }
+      ],
+      "27": [
+          {
+              "shortLabel": "Gói lẻ 10g",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Hộp 5 gói x 10g",
+              "price": 24000,
+              "oldPrice": 30000
+          }
+      ],
+      "28": [
+          {
+              "shortLabel": "Nguyên bộ (Thân máy, 2 que đánh trứng, 2 que nhào bột)",
+              "price": 690000,
+              "oldPrice": 850000
+          }
+      ],
+      "29": [
+          {
+              "shortLabel": "Tô đơn lẻ size 22cm",
+              "price": 35000,
+              "oldPrice": 45000
+          },
+          {
+              "shortLabel": "Set 5 cái (Đường kính 18cm–26cm)",
+              "price": 110000,
+              "oldPrice": 145000
+          }
+      ],
+      "30": [
+          {
+              "shortLabel": "Size 16cm",
+              "price": 28000,
+              "oldPrice": 35000
+          },
+          {
+              "shortLabel": "Size 20cm",
+              "price": 38000,
+              "oldPrice": 46000
+          }
+      ],
+      "31": [
+          {
+              "shortLabel": "Khay 6 lỗ chuẩn (Size vừa)",
+              "price": 85000,
+              "oldPrice": 110000
+          },
+          {
+              "shortLabel": "Khay 12 lỗ lớn (Lò chuyên dụng)",
+              "price": 150000,
+              "oldPrice": 185000
+          }
+      ],
+      "32": [
+          {
+              "shortLabel": "5 ô",
+              "price": 45000,
+              "oldPrice": 58000
+          },
+          {
+              "shortLabel": "12 ô",
+              "price": 70000,
+              "oldPrice": 88000
+          },
+          {
+              "shortLabel": "30 ô",
+              "price": 100000,
+              "oldPrice": 125000
+          }
+      ],
+      "33": [
+          {
+              "shortLabel": "Đường kính 27.5cm",
+              "price": 75000,
+              "oldPrice": 95000
+          },
+          {
+              "shortLabel": "Đường kính 35cm",
+              "price": 120000,
+              "oldPrice": 150000
+          }
+      ],
+      "34": [
+          {
+              "shortLabel": "Hộp 1 bánh",
+              "price": 8000,
+              "oldPrice": 13000
+          },
+          {
+              "shortLabel": "Hộp 4 bánh",
+              "price": 10000,
+              "oldPrice": 15000
+          },
+          {
+              "shortLabel": "Hộp 6 bánh",
+              "price": 12000,
+              "oldPrice": 17000
+          }
+      ],
+      "35": [
+          {
+              "shortLabel": "Size S",
+              "price": 6000,
+              "oldPrice": 8000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 8000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 12000,
+              "oldPrice": 15000
+          },
+          {
+              "shortLabel": "Size XL",
+              "price": 15000,
+              "oldPrice": 19000
+          }
+      ],
+      "36": [
+          {
+              "shortLabel": "Size trung bình đa năng",
+              "price": 3000,
+              "oldPrice": 4000
+          }
+      ],
+      "37": [
+          {
+              "shortLabel": "Đế tròn (Đường kính 20cm)",
+              "price": 4000,
+              "oldPrice": 6000
+          },
+          {
+              "shortLabel": "Đế vuông (Kích thước 20x20cm)",
+              "price": 4000,
+              "oldPrice": 6000
+          }
+      ],
+      "38": [
+          {
+              "shortLabel": "Size S (Nhỏ)",
+              "price": 8000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size M (Trung)",
+              "price": 10000,
+              "oldPrice": 13000
+          },
+          {
+              "shortLabel": "Size L (Lớn)",
+              "price": 12000,
+              "oldPrice": 15000
+          }
+      ],
+      "39": [
+          {
+              "shortLabel": "Khay thành thấp",
+              "price": 65000,
+              "oldPrice": 80000
+          },
+          {
+              "shortLabel": "Khay thành cao",
+              "price": 75000,
+              "oldPrice": 92000
+          }
+      ],
+      "40": [
+          {
+              "shortLabel": "Đế mousse mini tròn 5cm",
+              "price": 2000,
+              "oldPrice": 3000
+          },
+          {
+              "shortLabel": "Đế mousse tròn 8cm",
+              "price": 2500,
+              "oldPrice": 3500
+          },
+          {
+              "shortLabel": "Đế mousse vuông 10cm",
+              "price": 3000,
+              "oldPrice": 4000
+          },
+          {
+              "shortLabel": "Đế mousse bạc 12cm",
+              "price": 3500,
+              "oldPrice": 4500
+          }
+      ],
+      "41": [
+          {
+              "shortLabel": "Nến số 0-9",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Nến xoắn",
+              "price": 7000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Nến dài",
+              "price": 6000,
+              "oldPrice": 9000
+          },
+          {
+              "shortLabel": "Nến ngôi sao",
+              "price": 8000,
+              "oldPrice": 11000
+          },
+          {
+              "shortLabel": "Nến kim tuyến",
+              "price": 9000,
+              "oldPrice": 12000
+          }
+      ],
+      "42": [
+          {
+              "shortLabel": "Topper Happy Birthday",
+              "price": 10000,
+              "oldPrice": 14000
+          },
+          {
+              "shortLabel": "Topper Acrylic",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Topper Trái tim",
+              "price": 10000,
+              "oldPrice": 14000
+          },
+          {
+              "shortLabel": "Topper Công chúa",
+              "price": 15000,
+              "oldPrice": 19000
+          },
+          {
+              "shortLabel": "Topper Hoạt hình",
+              "price": 14000,
+              "oldPrice": 18000
+          }
+      ],
+      "43": [
+          {
+              "shortLabel": "Cuộn tiêu chuẩn",
+              "price": 2000,
+              "oldPrice": 3000
+          }
+      ],
+      "44": [
+          {
+              "shortLabel": "Cuộn 1m",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Cuộn 5m",
+              "price": 18000,
+              "oldPrice": 24000
+          },
+          {
+              "shortLabel": "Ruy băng trang trí hộp bánh",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Ruy băng họa tiết bánh ngọt",
+              "price": 15000,
+              "oldPrice": 20000
+          }
+      ],
+      "45": [
+          {
+              "shortLabel": "Size S",
+              "price": 5000,
+              "oldPrice": 7000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 7000,
+              "oldPrice": 10000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 10000,
+              "oldPrice": 13000
+          }
+      ],
+      "46": [
+          {
+              "shortLabel": "Size S",
+              "price": 12000,
+              "oldPrice": 16000
+          },
+          {
+              "shortLabel": "Size M",
+              "price": 16000,
+              "oldPrice": 21000
+          },
+          {
+              "shortLabel": "Size L",
+              "price": 22000,
+              "oldPrice": 28000
+          }
+      ],
+      "47": [
+          {
+              "shortLabel": "Cái tiêu chuẩn 11cm",
+              "price": 3000,
+              "oldPrice": 5000
+          }
+      ]
+  };
 
   const RECIPE_COMBO_CATALOG = {
       "recipe-bong-lan": {
@@ -1072,7 +1072,7 @@
       time: "Chuẩn vị BakeMate",
       diff: "Dễ",
       servings: "1 công thức",
-      image: "images/about-baking.jpg",
+      image: "images/recipes/banh-pancake-mat-ong.jpg",
       items: []
     };
   }

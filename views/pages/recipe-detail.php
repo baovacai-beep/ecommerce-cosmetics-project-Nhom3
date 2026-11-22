@@ -42,7 +42,13 @@ declare(strict_types=1);
           </div>
         </div>
 
-        <p style="font-size:12.5px;color:#7c5c46;margin-top:0;">Đánh dấu <strong>"Đã có ở bếp"</strong> nếu bạn đã sẵn có nguyên liệu để loại trừ khỏi đơn mua.</p>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;">
+          <p style="font-size:12.5px;color:#7c5c46;margin:0;">Đánh dấu <strong>"Đã có ở bếp"</strong> nếu bạn đã sẵn có nguyên liệu để loại trừ khỏi đơn mua.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" id="btn-select-all-ing" class="btn btn--outline btn--sm" style="padding:4px 10px;font-size:12px;">Chọn tất cả</button>
+            <button type="button" id="btn-unselect-all-ing" class="btn btn--outline btn--sm" style="padding:4px 10px;font-size:12px;">Bỏ chọn tất cả</button>
+          </div>
+        </div>
 
         <div id="recipe-ingredients-list" style="display:grid;gap:10px;margin-bottom:18px;">
           <?php foreach ($recipe['ingredients'] as $ing):
@@ -85,9 +91,11 @@ declare(strict_types=1);
 
         <h3 style="margin:0 0 10px;color:#70452b;font-size:17px;">Dụng cụ đề xuất (chọn món còn thiếu)</h3>
         <div style="display:grid;gap:8px;margin-bottom:18px;">
-          <?php foreach ($recipe['tools'] as $tl): ?>
+          <?php foreach ($recipe['tools'] as $tl):
+            $toolImg = !empty($tl['product']['primary_image']) ? (string) $tl['product']['primary_image'] : (string) $recipe['image_path'];
+          ?>
             <label style="display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #efe3d2;border-radius:10px;padding:10px 12px;">
-              <span style="display:flex;align-items:center;gap:8px;">
+              <span style="display:flex;align-items:center;gap:10px;">
                 <?php if (!empty($tl['purchase_available']) && !empty($tl['variant'])): ?>
                   <input type="checkbox" class="js-combo-tool-check"
                          data-product-id="<?= (int) $tl['product_id'] ?>"
@@ -97,6 +105,7 @@ declare(strict_types=1);
                 <?php else: ?>
                   <input type="checkbox" disabled aria-label="Dụng cụ hiện không khả dụng">
                 <?php endif; ?>
+                <img src="<?= App::e(App::asset($toolImg)) ?>" alt="<?= App::e($tl['name']) ?>" loading="lazy" class="recipe-tool-card__thumb">
                 <span>
                   <strong style="color:#4a2d1b;display:block;font-size:13.5px;"><?= App::e($tl['name']) ?></strong>
                   <span style="font-size:12px;color:#7c5c46;"><?= App::e($tl['description']) ?></span>
@@ -142,7 +151,7 @@ declare(strict_types=1);
 
           <div id="recipe-complete-callout" class="recipe-complete-callout" hidden style="margin-bottom:14px;">
             <div>
-              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh!</strong>
+              <strong>🎉 Chúc mừng bạn đã hoàn thành món bánh <?= App::e($recipe['title']) ?>!</strong>
               <p>Bạn có muốn chia sẻ trải nghiệm làm bánh của mình không?</p>
             </div>
             <button type="button" id="btn-scroll-to-review" class="btn btn--primary btn--sm" style="white-space:nowrap;">
@@ -208,6 +217,26 @@ declare(strict_types=1);
         </div>
       </form>
     </section>
+
+    <?php if (!empty($relatedRecipes)): ?>
+      <section style="margin-top:28px;" aria-label="Công thức gợi ý tiếp theo">
+        <h2 style="margin:0 0 14px;color:#70452b;font-size:21px;">Thêm cảm hứng cho lần vào bếp tiếp theo</h2>
+        <div class="blog-related-grid">
+          <?php foreach ($relatedRecipes as $relRec): ?>
+            <article class="php-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
+              <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relRec['slug']))) ?>">
+                <img src="<?= App::e(App::asset($relRec['image_path'])) ?>" alt="<?= App::e($relRec['title']) ?>" loading="lazy" style="width:100%;height:155px;object-fit:cover;border-radius:10px;">
+              </a>
+              <span class="product-card__category" style="font-size:11.5px;"><?= App::e($relRec['category']) ?> · <?= App::e($relRec['difficulty']) ?></span>
+              <h3 style="margin:0;font-size:16px;line-height:1.4;color:#4a2d1b;">
+                <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relRec['slug']))) ?>" style="color:inherit;"><?= App::e($relRec['title']) ?></a>
+              </h3>
+              <p style="margin:0;font-size:12.5px;color:#7c5c46;"><?= App::e($relRec['time_label']) ?></p>
+            </article>
+          <?php endforeach; ?>
+        </div>
+      </section>
+    <?php endif; ?>
   <?php endif; ?>
 </main>
 
@@ -242,6 +271,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll(".js-combo-ing-check, .js-combo-tool-check").forEach((cb) => {
     cb.addEventListener("change", recalcComboTotal);
+  });
+
+  document.getElementById("btn-select-all-ing")?.addEventListener("click", () => {
+    document.querySelectorAll(".js-combo-ing-check").forEach((cb) => {
+      cb.checked = true;
+    });
+    recalcComboTotal();
+  });
+
+  document.getElementById("btn-unselect-all-ing")?.addEventListener("click", () => {
+    document.querySelectorAll(".js-combo-ing-check").forEach((cb) => {
+      cb.checked = false;
+    });
+    recalcComboTotal();
   });
 
   async function scaleServings(rawValue) {
