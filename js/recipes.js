@@ -75,7 +75,11 @@
         ? window.isRecipeWishlisted(recipe.id)
         : false;
     return `
-      <article class="recipe-poster-card">
+      <article
+        class="recipe-poster-card"
+       data-recipe-id="${escapeHtml(recipe.id)}"
+       style="cursor:pointer;"
+      >
         <img
           src="${escapeHtml(recipe.image || FALLBACK_IMG)}"
           alt="${escapeHtml(recipe.title)}"
@@ -107,7 +111,11 @@
             <span>·</span>
             <span>${escapeHtml(recipe.peopleLabel || "4 người")}</span>
           </div>
-          <a href="recipe-detail.html?id=${encodeURIComponent(recipe.id)}" class="recipe-poster-card__cta">
+          <a
+           href="recipe-detail.html?id=${encodeURIComponent(recipe.id)}"
+          class="recipe-poster-card__cta"
+            style="position:relative; z-index:4; pointer-events:auto;"
+         >
             Xem công thức &rarr;
           </a>
         </div>
@@ -1183,8 +1191,27 @@
     window.addEventListener("bakemate:authChanged", renderRecipeReviews);
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
-    initRecipesIndexPage();
-    initRecipeDetailPage();
+document.addEventListener("DOMContentLoaded", function () {
+  initRecipesIndexPage();
+  initRecipeDetailPage();
+
+  // Bấm vào ảnh hoặc nội dung thẻ công thức để xem chi tiết
+  document.addEventListener("click", function (event) {
+    const card = event.target.closest(".recipe-poster-card");
+
+    if (!card) return;
+
+    // Không ảnh hưởng nút yêu thích và nút Xem công thức
+    if (event.target.closest("a, button, input, select, textarea, label")) {
+      return;
+    }
+
+    const recipeId = card.dataset.recipeId;
+
+    if (!recipeId) return;
+
+    window.location.href =
+      `recipe-detail.html?id=${encodeURIComponent(recipeId)}`;
   });
+});
 })();
