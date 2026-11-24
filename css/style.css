@@ -8744,3 +8744,174 @@ textarea:focus-visible,
     transform: none !important;
   }
 }
+
+
+/* ==========================================================================
+   8.1. ABOUT - CHỈNH RIÊNG KHỐI CÂU CHUYỆN & TẦM NHÌN THEO BỐ CỤC THAM KHẢO
+   - Giữ nguyên màu chủ đề BakeMate
+   - Tách nền phần banner giới thiệu và nền phần nội dung ảnh phía dưới
+   - Chỉ áp dụng cho about.html
+   ========================================================================== */
+
+/* Tách riêng nền của banner giới thiệu phía trên */
+.about-page > .about-difference {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 64px 24px 68px;
+  background: linear-gradient(180deg, #f8efe1 0%, #f6ead8 100%);
+  border-bottom: 1px solid rgba(112, 69, 43, 0.08);
+}
+
+.about-page > .about-difference > * {
+  max-width: 1240px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Tách riêng nền của hai khối ảnh + nội dung phía dưới */
+.about-page .about-story-vision-band {
+  background: #fffaf3;
+  padding: 22px 0 26px;
+}
+
+.about-page .about-feature-row {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(34px, 6vw, 76px);
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 34px 24px;
+  background: transparent;
+}
+
+.about-page .about-feature-row--vision {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+}
+
+.about-page .about-feature-row__visual {
+  width: 100%;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(112, 69, 43, 0.1);
+  background: #fffdf9;
+  box-shadow: 0 10px 30px rgba(112, 69, 43, 0.08);
+}
+
+.about-page .about-feature-row__visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: cover;
+}
+
+.about-page .about-feature-row__content {
+  min-width: 0;
+  max-width: 560px;
+  color: var(--about-muted, #75665b);
+}
+
+.about-page .about-feature-row__title {
+  margin: 0 0 16px;
+  color: var(--about-primary, #70452b);
+  font-size: clamp(23px, 2.3vw, 29px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.about-page .about-feature-row__content p {
+  margin: 0 0 14px;
+  color: var(--about-muted, #75665b);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.about-page .about-feature-row__content p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .about-page .about-feature-row,
+  .about-page .about-feature-row--vision {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 28px 20px;
+  }
+
+  .about-page .about-feature-row__content {
+    max-width: none;
+  }
+
+  .about-page .about-feature-row--vision .about-feature-row__content {
+    order: 1;
+  }
+
+  .about-page .about-feature-row--vision .about-feature-row__visual {
+    order: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-page > .about-difference {
+    padding: 48px 16px 52px;
+  }
+
+  .about-page .about-story-vision-band {
+    padding: 14px 0 22px;
+  }
+
+  .about-page .about-feature-row {
+    padding: 24px 16px;
+  }
+
+  .about-page .about-feature-row__visual {
+    padding: 10px;
+  }
+
+  .about-page .about-feature-row__title {
+    font-size: 22px;
+  }
+}
+
+
+/* FIX: Nút CTA cuối trang About */
+.about-page .about-cta .btn--primary {
+  background: #f59e0b;
+  border: 1.5px solid #f59e0b;
+  color: #4a2d1b;
+  font-weight: 700;
+  box-shadow: 0 5px 14px rgba(245, 158, 11, 0.28);
+}
+
+.about-page .about-cta .btn--primary:hover {
+  background: #fbbf24;
+  border-color: #fbbf24;
+  color: #4a2d1b;
+  transform: translateY(-2px);
+}
+
+.about-page .about-cta .btn--outline {
+  background: #fff8ed;
+  border: 1.5px solid #fff8ed;
+  color: #70452b;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(40, 23, 12, 0.12);
+}
+
+.about-page .about-cta .btn--outline:hover {
+  background: #f2d9a6;
+  border-color: #f2d9a6;
+  color: #5b361f;
+  transform: translateY(-2px);
+}
+
+.about-page .about-cta .btn {
+  min-height: 48px;
+  padding: 12px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
