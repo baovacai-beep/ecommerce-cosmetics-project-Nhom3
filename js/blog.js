@@ -131,7 +131,6 @@
             onerror="this.onerror=null;this.src='${FALLBACK_IMG}';"
           >
           <span class="blog-card__category">${escapeHtml(post.category)}</span>
-          ${post.displayMode ? `<span class="blog-format-badge">${escapeHtml(post.displayMode)}</span>` : ""}
         </a>
         <div class="blog-card__body">
           <div class="blog-card__meta">
@@ -146,17 +145,19 @@
           </div>
           <h2 class="blog-card__title"><a href="${detailHref}">${escapeHtml(post.title)}</a></h2>
           <p class="blog-card__excerpt">${escapeHtml(post.excerpt)}</p>
-          <div class="blog-card__combo-preview">
-            <span>Bộ nguyên liệu (${combo.items.length} món):</span>
-            <strong>${escapeHtml(formatPrice(combo.total))}</strong>
-          </div>
-          <div class="blog-card__actions">
-            <a href="blog-detail.html?id=${encodeURIComponent(post.id)}" class="btn btn--outline-dark">
-              Đọc hướng dẫn
-            </a>
-            <button type="button" class="btn btn--primary js-blog-add-combo" data-recipe-group-id="${escapeHtml(post.recipeGroupId)}">
-              + Thêm combo vào giỏ
-            </button>
+          <div class="blog-card__bottom">
+            <div class="blog-card__combo-preview">
+              <span>Bộ nguyên liệu (${combo.items.length} món):</span>
+              <strong>${escapeHtml(formatPrice(combo.total))}</strong>
+            </div>
+            <div class="blog-card__actions">
+              <a href="blog-detail.html?id=${encodeURIComponent(post.id)}" class="btn btn--outline-dark">
+                Đọc hướng dẫn
+              </a>
+              <button type="button" class="btn btn--primary js-blog-add-combo" data-recipe-group-id="${escapeHtml(post.recipeGroupId)}">
+                + Thêm combo vào giỏ
+              </button>
+            </div>
           </div>
         </div>
       </article>
@@ -677,17 +678,16 @@
           </ul>
 
           <div class="blog-modal__combo-actions">
+            <a href="recipe-detail.html?id=${encodeURIComponent(post.recipeGroupId)}" class="btn btn--outline-dark blog-modal__combo-btn">
+              Điều chỉnh khẩu phần
+            </a>
             <button
               type="button"
-              class="btn btn--primary js-blog-add-combo"
+              class="btn btn--primary js-blog-add-combo blog-modal__combo-btn"
               data-recipe-group-id="${escapeHtml(post.recipeGroupId)}"
             >
-              + Thêm trọn bộ nguyên liệu vào giỏ
+              Thêm combo vào giỏ
             </button>
-            <a href="recipe-detail.html?id=${encodeURIComponent(post.recipeGroupId)}" class="btn btn--outline-dark">
-              Quy đổi khẩu phần trong Công thức &rarr;
-            </a>
-            <a href="cart.html" class="btn btn--outline-dark">Đi tới giỏ hàng</a>
           </div>
         </section>
       </article>
