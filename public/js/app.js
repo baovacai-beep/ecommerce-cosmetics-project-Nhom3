@@ -768,9 +768,9 @@
       });
     }
 
-    // Clickable recipe editorial cards (matches static recipes.js)
+    // Clickable recipe cards (matches static recipes.js)
     document.addEventListener("click", (e) => {
-      const card = e.target.closest(".recipe-editorial-card[data-recipe-url]");
+      const card = e.target.closest(".recipe-poster-card[data-recipe-url], .recipe-editorial-card[data-recipe-url]");
       if (!card || e.target.closest("a, button, input, select, textarea, label")) {
         return;
       }

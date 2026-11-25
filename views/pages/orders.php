@@ -2,57 +2,90 @@
 declare(strict_types=1);
 $stepsMap = ['pending' => 0, 'preparing' => 1, 'shipping' => 2, 'completed' => 3];
 $labelsMap = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn bị', 'shipping' => 'Đang giao hàng', 'completed' => 'Hoàn tất', 'cancelled' => 'Đã hủy'];
+$curStatus = (string) ($statusFilter ?? 'all');
+$curQuery = (string) ($searchQuery ?? '');
 ?>
-<main class="php-page-container">
-  <h1 style="margin:0 0 8px;color:#70452b;">Theo dõi &amp; Lịch sử đơn hàng</h1>
-  <p style="margin:0 0 18px;color:#7c5c46;">Tra cứu bằng mã đơn hàng (#BM-XXXXXXXXXXXX) hoặc xem các đơn hàng gắn với tài khoản của bạn.</p>
+<main class="page-container">
+  <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+    <ul class="breadcrumb__list">
+      <li class="breadcrumb__item"><a href="<?= App::e(App::url('')) ?>">Trang chủ</a></li>
+      <li class="breadcrumb__separator">/</li>
+      <li class="breadcrumb__item active">Theo dõi đơn hàng</li>
+    </ul>
+  </nav>
 
-  <form method="get" action="<?= App::e(App::url('index.php')) ?>" class="php-card" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">
-    <input type="hidden" name="c" value="order">
-    <input type="hidden" name="a" value="orders">
-    <input type="search" name="q" value="<?= App::e($searchQuery ?? '') ?>" class="form-input" style="flex:1;min-width:220px;" placeholder="Nhập mã đơn (#BM-...) hoặc số điện thoại">
-    <select name="status" class="form-input" style="width:auto;">
-      <option value="all">Tất cả trạng thái</option>
-      <?php foreach ($labelsMap as $k => $v): ?>
-        <option value="<?= App::e($k) ?>" <?= ($statusFilter ?? 'all') === $k ? 'selected' : '' ?>><?= App::e($v) ?></option>
+  <div class="cart-page__header">
+    <div>
+      <h1 class="cart-page__title">Theo dõi &amp; Lịch sử đơn hàng</h1>
+      <p class="cart-page__subtitle">Tra cứu nhanh bằng mã đơn hàng (#BM-XXXXXXXXXXXX) hoặc xem toàn bộ đơn gắn với tài khoản của bạn.</p>
+    </div>
+    <span class="cart-page__count-pill"><?= count($orders) ?> đơn hàng</span>
+  </div>
+
+  <div class="blog-toolbar">
+    <div class="blog-filters" role="group" aria-label="Lọc theo trạng thái đơn hàng">
+      <?php
+      $allUrl = '?c=order&a=orders&status=all' . ($curQuery !== '' ? '&q=' . urlencode($curQuery) : '');
+      ?>
+      <a href="<?= App::e(App::url($allUrl)) ?>" class="blog-filter-btn <?= $curStatus === 'all' ? 'active' : '' ?>" style="text-decoration:none;">Tất cả</a>
+      <?php foreach ($labelsMap as $k => $v):
+        $stUrl = '?c=order&a=orders&status=' . urlencode($k) . ($curQuery !== '' ? '&q=' . urlencode($curQuery) : '');
+      ?>
+        <a href="<?= App::e(App::url($stUrl)) ?>" class="blog-filter-btn <?= $curStatus === $k ? 'active' : '' ?>" style="text-decoration:none;"><?= App::e($v) ?></a>
       <?php endforeach; ?>
-    </select>
-    <button type="submit" class="btn btn--primary">Tra cứu</button>
-  </form>
+    </div>
+
+    <div class="blog-search-wrap">
+      <form method="get" action="<?= App::e(App::url('index.php')) ?>" class="blog-search-form">
+        <input type="hidden" name="c" value="order">
+        <input type="hidden" name="a" value="orders">
+        <input type="hidden" name="status" value="<?= App::e($curStatus) ?>">
+        <input type="search" id="orders-search-input" name="q" value="<?= App::e($curQuery) ?>" class="form-input blog-search-input" placeholder="Nhập mã #BM-... hoặc SĐT...">
+        <button type="submit" class="btn btn--primary blog-search-form__btn">Tra cứu</button>
+      </form>
+    </div>
+  </div>
 
   <?php if (empty($orders)): ?>
-    <div class="php-card" style="text-align:center;padding:48px 20px;background:#fff8ed;border:1.5px dashed #c88b52;">
-      <h2 style="color:#70452b;margin-top:0;">Chưa tìm thấy đơn hàng nào</h2>
-      <p style="color:#7c5c46;">Nếu bạn là khách vãng lai, hãy nhập đúng mã đơn #BM-XXXXXXXXXXXX vào ô tìm kiếm ở trên.</p>
-    </div>
+    <section class="cart-empty">
+      <h2 class="cart-empty__title">Chưa tìm thấy đơn hàng nào</h2>
+      <p class="cart-empty__desc">Nếu bạn là khách vãng lai, hãy nhập đúng mã đơn #BM-XXXXXXXXXXXX vào ô tìm kiếm hoặc khám phá nguyên liệu để đặt đơn đầu tiên.</p>
+      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
+        <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Khám phá sản phẩm</a>
+        <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--outline-dark">Chọn combo công thức</a>
+      </div>
+    </section>
   <?php else: ?>
     <div style="display:grid;gap:18px;">
       <?php foreach ($orders as $ord):
         $st = (string) ($ord['status'] ?? 'pending');
         $activeIdx = $stepsMap[$st] ?? 0;
+        $pillStyle = $st === 'cancelled'
+          ? 'background-color:#fee2e2;color:#b91c1c;'
+          : ($st === 'completed' ? 'background-color:#dcfce7;color:#15803d;' : '');
       ?>
-        <article class="php-card">
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #f0e4d3;padding-bottom:12px;margin-bottom:12px;">
+        <article class="order-history-card" style="background:#ffffff;padding:22px;">
+          <div class="order-history-card__top">
             <div>
-              <strong style="font-size:17px;color:#70452b;">Đơn #<?= App::e($ord['order_code']) ?></strong>
-              <span style="font-size:13px;color:#7c5c46;margin-left:10px;"><?= App::e($ord['created_at']) ?></span>
+              <strong class="order-code">#<?= App::e($ord['order_code']) ?></strong>
+              <span class="order-history-card__date"><?= App::e($ord['created_at']) ?></span>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <span style="padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#fff8ed;border:1px solid #e6c9a2;color:#70452b;">
-                <?= App::e($labelsMap[$st] ?? $st) ?>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span class="order-status-pill" style="<?= $pillStyle ?>">
+                <?= App::e($labelsMap[$st] ?? $st) ?> &middot; <?= App::e(strtoupper((string) $ord['payment_method'])) ?>
               </span>
-              <span style="padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:<?= $ord['payment_status'] === 'paid' ? '#ecfdf5' : '#fef3c7' ?>;color:<?= $ord['payment_status'] === 'paid' ? '#166534' : '#92400e' ?>;">
-                <?= $ord['payment_status'] === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán' ?> (<?= App::e(strtoupper((string) $ord['payment_method'])) ?>)
+              <span class="order-status-pill" style="background:<?= $ord['payment_status'] === 'paid' ? '#dcfce7' : '#fef3c7' ?>;color:<?= $ord['payment_status'] === 'paid' ? '#15803d' : '#92400e' ?>;">
+                <?= $ord['payment_status'] === 'paid' ? 'Đã thanh toán' : 'Chưa thanh toán' ?>
               </span>
             </div>
           </div>
 
           <?php if ($st === 'cancelled'): ?>
-            <div style="padding:10px 14px;border-radius:8px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-weight:700;font-size:13px;margin-bottom:12px;">
-              Đơn hàng này đã bị hủy và tồn kho đã được hoàn lại.
+            <div style="padding:10px 14px;border-radius:8px;background-color:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:13px;font-weight:700;margin:12px 0;">
+              Đơn hàng đã được hủy và tồn kho đã được hoàn lại.
             </div>
           <?php else: ?>
-            <div class="order-timeline" style="margin:12px 0;">
+            <div class="order-timeline" aria-label="Tiến trình giao hàng" style="margin:14px 0;">
               <?php foreach (['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn bị', 'shipping' => 'Đang giao hàng', 'completed' => 'Hoàn tất'] as $sk => $sl):
                 $stepNum = $stepsMap[$sk];
                 $done = $stepNum <= $activeIdx;
@@ -65,23 +98,27 @@ $labelsMap = ['pending' => 'Chờ xác nhận', 'preparing' => 'Đang chuẩn b�
             </div>
           <?php endif; ?>
 
-          <div style="display:grid;gap:6px;margin:12px 0;font-size:13.5px;">
-            <?php foreach ($ord['items'] as $it): ?>
-              <div style="display:flex;justify-content:space-between;">
-                <span><?= App::e($it['product_name']) ?> (<?= App::e($it['variant_label']) ?>) &times; <?= (int) $it['quantity'] ?></span>
-                <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
-              </div>
-            <?php endforeach; ?>
-          </div>
+          <p class="order-history-card__customer">
+            <strong>Giao tới:</strong> <?= App::e($ord['street_address'] . ', ' . $ord['district'] . ', ' . $ord['province']) ?>
+          </p>
 
-          <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:12px;flex-wrap:wrap;gap:10px;">
-            <span style="font-size:13.5px;color:#7c5c46;">Giao tới: <?= App::e($ord['street_address'] . ', ' . $ord['district'] . ', ' . $ord['province']) ?></span>
-            <div style="display:flex;align-items:center;gap:12px;">
-              <strong style="font-size:16.5px;color:#70452b;">Tổng cộng: <?= App::e(App::formatCurrency((int) $ord['total_amount'])) ?></strong>
+          <ul style="list-style:none;margin:10px 0 12px;padding:0;font-size:13.5px;">
+            <?php foreach ($ord['items'] as $it): ?>
+              <li style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed #eedfc9;">
+                <span><?= App::e($it['product_name']) ?> (<?= App::e($it['variant_label']) ?>) &times; <strong><?= (int) $it['quantity'] ?></strong></span>
+                <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+
+          <div class="order-history-card__bottom">
+            <span><?= count($ord['items']) ?> dòng sản phẩm</span>
+            <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+              <strong>Tổng thanh toán: <?= App::e(App::formatCurrency((int) $ord['total_amount'])) ?></strong>
               <?php if (in_array($st, ['pending', 'preparing'], true) && empty($ord['cancel_request'])): ?>
-                <button type="button" class="btn btn--outline btn--sm js-req-cancel" data-order-id="<?= (int) $ord['id'] ?>">Yêu cầu hủy đơn</button>
+                <button type="button" class="btn-clear-cart js-req-cancel" data-order-id="<?= (int) $ord['id'] ?>">Yêu cầu hủy đơn</button>
               <?php elseif (!empty($ord['cancel_request'])): ?>
-                <span style="font-size:12px;color:#b45309;font-weight:700;">Yêu cầu hủy: <?= App::e($ord['cancel_request']['status']) ?></span>
+                <span style="font-size:12.5px;color:#b45309;font-weight:700;">Yêu cầu hủy: <?= App::e($ord['cancel_request']['status']) ?></span>
               <?php endif; ?>
             </div>
           </div>
