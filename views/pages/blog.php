@@ -13,9 +13,9 @@ $selCat = (string) ($selectedCategory ?? 'all');
     <input type="hidden" name="c" value="home">
     <input type="hidden" name="a" value="blog">
     <input type="hidden" name="category" value="<?= App::e($selCat) ?>">
-    <div style="display:flex;gap:10px;flex-wrap:wrap;">
-      <input type="search" name="q" value="<?= App::e($searchQuery ?? '') ?>" class="form-input" style="flex:1;min-width:220px;" placeholder="Tìm kiếm bài viết, từ khóa (bột mì, brownie, mousse)...">
-      <button type="submit" class="btn btn--primary">Tìm bài viết</button>
+    <div class="blog-search-form" style="max-width:460px;">
+      <input type="search" name="q" value="<?= App::e($searchQuery ?? '') ?>" class="form-input blog-search-input" placeholder="Tìm bài viết, mẹo làm bánh...">
+      <button type="submit" class="btn btn--primary blog-search-form__btn">Tìm</button>
     </div>
     <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <?php foreach ($cats as $ck => $cl): ?>
@@ -40,19 +40,23 @@ $selCat = (string) ($selectedCategory ?? 'all');
         <article class="blog-card">
           <a href="<?= App::e($postUrl) ?>" class="blog-card__media" aria-label="<?= App::e($post['title']) ?>">
             <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" class="blog-card__img" loading="lazy">
-            <?php if (!empty($post['display_mode'])): ?>
-              <span class="blog-format-badge"><?= App::e($post['display_mode']) ?></span>
-            <?php endif; ?>
+            <span class="blog-card__category"><?= App::e($post['category']) ?></span>
           </a>
           <div class="blog-card__body">
             <div>
-              <span class="product-card__category"><?= App::e($post['category']) ?> · <?= App::e($post['read_time']) ?></span>
+              <div class="blog-card__meta">
+                <span><?= App::e($post['read_time']) ?></span>
+                <?php if (!empty($post['difficulty'])): ?>
+                  <span>·</span>
+                  <span>Độ khó: <?= App::e($post['difficulty']) ?></span>
+                <?php endif; ?>
+              </div>
               <h2 class="blog-card__title">
                 <a href="<?= App::e($postUrl) ?>"><?= App::e($post['title']) ?></a>
               </h2>
               <p class="blog-card__excerpt"><?= App::e($post['excerpt']) ?></p>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:10px;margin-top:auto;font-size:12.5px;color:#7c5c46;">
+            <div class="blog-card__bottom" style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:10px;font-size:12.5px;color:#7c5c46;">
               <span><?= App::e($post['published_at_label']) ?></span>
               <a href="<?= App::e($postUrl) ?>" class="blog-card__readmore">Đọc tiếp <span class="blog-card__arrow" aria-hidden="true">&rarr;</span></a>
             </div>

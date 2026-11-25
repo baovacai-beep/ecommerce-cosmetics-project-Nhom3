@@ -768,6 +768,18 @@
       });
     }
 
+    // Clickable recipe editorial cards (matches static recipes.js)
+    document.addEventListener("click", (e) => {
+      const card = e.target.closest(".recipe-editorial-card[data-recipe-url]");
+      if (!card || e.target.closest("a, button, input, select, textarea, label")) {
+        return;
+      }
+      const targetUrl = card.getAttribute("data-recipe-url");
+      if (targetUrl) {
+        window.location.href = targetUrl;
+      }
+    });
+
     // Global Escape key handler for open modals & drawers
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {

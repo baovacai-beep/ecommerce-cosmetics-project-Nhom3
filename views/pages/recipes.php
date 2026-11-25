@@ -70,7 +70,7 @@ $activeQuery = (string) ($filters['q'] ?? '');
       <?php foreach ($recipes as $r):
         $recUrl = App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']));
       ?>
-        <article class="recipe-editorial-card php-card" style="padding:0;overflow:hidden;display:flex;flex-direction:column;">
+        <article class="recipe-editorial-card php-card" data-recipe-url="<?= App::e($recUrl) ?>" style="cursor:pointer;padding:0;overflow:hidden;display:flex;flex-direction:column;">
           <a href="<?= App::e($recUrl) ?>" class="recipe-editorial-card__media" aria-label="<?= App::e($r['title']) ?>">
             <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" class="recipe-editorial-card__img" loading="lazy">
             <span class="recipe-poster-card__badge-corner" style="top:12px;left:12px;"><?= App::e($r['difficulty']) ?></span>

@@ -17,8 +17,7 @@ declare(strict_types=1);
     <section class="php-card" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:center;margin-bottom:24px;">
       <img src="<?= App::e(App::asset($recipe['image_path'])) ?>" alt="<?= App::e($recipe['title']) ?>" style="width:100%;height:300px;object-fit:cover;border-radius:12px;">
       <div>
-        <span style="font-size:12.5px;font-weight:700;color:#c88b52;"><?= App::e($recipe['code']) ?> · <?= App::e($recipe['category']) ?></span>
-        <h1 style="margin:6px 0 10px;color:#70452b;font-size:28px;"><?= App::e($recipe['title']) ?></h1>
+        <h1 style="margin:0 0 10px;color:#70452b;font-size:28px;"><?= App::e($recipe['title']) ?></h1>
         <p style="color:#4a2d1b;line-height:1.65;margin-bottom:16px;"><?= App::e($recipe['subtitle']) ?></p>
         <div style="display:grid;gap:6px;font-size:13.5px;color:#70452b;background:#fff8ed;padding:12px 14px;border-radius:10px;">
           <div>Thời gian: <strong><?= App::e($recipe['time_label']) ?></strong></div>
