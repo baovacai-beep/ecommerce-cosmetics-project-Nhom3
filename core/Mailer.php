@@ -13,7 +13,7 @@ class Mailer
         $integrations = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'integrations.php';
         $mailCfg = $integrations['mail'];
 
-        $isLocal = strtolower(trim((string) Env::get('APP_ENV', 'production'))) === 'local';
+        $isLocal = strtolower(trim((string) Env::get('APP_ENV', 'local'))) === 'local';
 
         $subject = '[BakeMate] Mã xác thực OTP khôi phục mật khẩu';
         $greeting = $fullName !== '' ? "Xin chào {$fullName}," : 'Xin chào bạn,';

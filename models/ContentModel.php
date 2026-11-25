@@ -113,7 +113,7 @@ class ContentModel extends Model
         if (!is_array($guestIds) || empty($guestIds)) {
             return;
         }
-        $stmt = $this->db->prepare('INSERT IGNORE INTO wishlist_items (user_id, product_id) VALUES (?, ?)');
+        $stmt = $this->db->prepare($this->insertIgnoreVerb() . ' wishlist_items (user_id, product_id) VALUES (?, ?)');
         foreach ($guestIds as $pid) {
             if ((int) $pid > 0) {
                 $stmt->execute([$userId, (int) $pid]);
@@ -129,7 +129,7 @@ class ContentModel extends Model
 
         if ($userId !== null && $userId > 0) {
             if ($added) {
-                $this->db->prepare('INSERT IGNORE INTO wishlist_items (user_id, product_id) VALUES (?, ?)')->execute([$userId, $productId]);
+                $this->db->prepare($this->insertIgnoreVerb() . ' wishlist_items (user_id, product_id) VALUES (?, ?)')->execute([$userId, $productId]);
             } else {
                 $this->db->prepare('DELETE FROM wishlist_items WHERE user_id = ? AND product_id = ?')->execute([$userId, $productId]);
             }
