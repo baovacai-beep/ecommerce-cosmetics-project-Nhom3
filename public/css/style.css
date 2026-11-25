@@ -4119,7 +4119,7 @@ textarea:focus-visible,
   align-items: center;
   gap: 12px;
   flex: 1 1 280px;
-  max-width: 380px;
+  max-width: 460px;
 }
 
 .blog-search-input {
@@ -4224,7 +4224,7 @@ textarea:focus-visible,
   background-color: var(--bg-color);
   border: 1px dashed var(--accent-sub);
   font-size: 13px;
-  margin-bottom: 14px;
+  margin-bottom: 0;
 }
 
 .blog-card__combo-preview strong {
@@ -4232,8 +4232,14 @@ textarea:focus-visible,
   font-size: 14.5px;
 }
 
-.blog-card__actions {
+.blog-card__bottom {
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.blog-card__actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -4445,6 +4451,12 @@ textarea:focus-visible,
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+}
+
+.blog-modal__combo-btn {
+  flex: 1 1 140px;
+  text-align: center;
+  justify-content: center;
 }
 
 @media (max-width: 1024px) {
@@ -6364,13 +6376,16 @@ textarea:focus-visible,
 
 .blog-search-form .blog-search-input {
   flex: 1;
-  border-radius: 999px 0 0 999px;
+  border-radius: 999px 0 0 999px !important;
   border-right: none;
+  min-width: 0;
 }
 
 .blog-search-form__btn {
-  border-radius: 0 999px 999px 0;
+  border-radius: 0 999px 999px 0 !important;
   padding: 0 18px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .blog-search-dropdown {
@@ -9554,3 +9569,490 @@ textarea:focus-visible,
   background-color: #4f2f1c;
   border-color: #4f2f1c;
 }
+
+/* ================= HIỆU ỨNG HOVER & VI TƯƠNG TÁC ĐỒNG BỘ TOÀN BÀI ================= */
+.blog-card {
+  border-radius: 16px;
+  border: 1px solid #eadbc6;
+  box-shadow: 0 6px 20px rgba(74, 46, 25, 0.06);
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.28s ease,
+              border-color 0.25s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-6px);
+  border-color: #c88b52;
+  box-shadow: 0 16px 34px rgba(112, 69, 43, 0.14);
+}
+
+.blog-card__media {
+  display: block;
+}
+
+.blog-card__img {
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.blog-card:hover .blog-card__img {
+  transform: scale(1.06);
+}
+
+.blog-card__title a {
+  transition: color 0.2s ease;
+}
+
+.blog-card:hover .blog-card__title,
+.blog-card:hover .blog-card__title a {
+  color: #b45309;
+}
+
+.blog-card__readmore {
+  font-weight: 700;
+  color: #70452b;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.blog-card__arrow {
+  display: inline-block;
+  transition: transform 0.22s ease;
+}
+
+.blog-card:hover .blog-card__readmore {
+  color: #b45309;
+}
+
+.blog-card:hover .blog-card__arrow {
+  transform: translateX(4px);
+}
+
+/* Thẻ công thức & Thẻ bài viết / công thức liên quan */
+.recipe-editorial-card,
+.related-hover-card {
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.28s ease,
+              border-color 0.25s ease;
+}
+
+.recipe-editorial-card:hover,
+.related-hover-card:hover {
+  transform: translateY(-6px);
+  border-color: #c88b52;
+  box-shadow: 0 16px 32px rgba(112, 69, 43, 0.14);
+}
+
+.recipe-editorial-card__media {
+  position: relative;
+  display: block;
+  height: 200px;
+  overflow: hidden;
+  background-color: #f9ebd4;
+}
+
+.recipe-editorial-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.recipe-editorial-card:hover .recipe-editorial-card__img {
+  transform: scale(1.06);
+}
+
+.recipe-editorial-card:hover .recipe-editorial-card__title {
+  color: #b45309 !important;
+}
+
+.related-hover-card__media {
+  display: block;
+  height: 155px;
+  overflow: hidden;
+  border-radius: 10px;
+  background-color: #f9ebd4;
+}
+
+.related-hover-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.related-hover-card:hover .related-hover-card__img {
+  transform: scale(1.06);
+}
+
+.related-hover-card:hover h3 {
+  color: #b45309 !important;
+}
+
+/* Vi tương tác Header, Pills, Icon & FAQ */
+.site-header__menu-link {
+  position: relative;
+}
+
+.site-header__menu-link::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 2px;
+  height: 2px;
+  border-radius: 999px;
+  background-color: var(--accent-cta);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.site-header__menu-link:hover::after,
+.site-header__menu-link.active::after {
+  transform: scaleX(1);
+}
+
+.site-header__icon-btn,
+.site-header__cart,
+.flipbook-wish-btn,
+.wishlist-heart-btn {
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              color 0.2s ease;
+}
+
+.site-header__icon-btn:hover,
+.site-header__cart:hover,
+.flipbook-wish-btn:hover,
+.wishlist-heart-btn:hover {
+  transform: translateY(-1px) scale(1.06);
+}
+
+.blog-filter-btn,
+.price-preset-btn,
+.flipbook-page-pill,
+.faq-item {
+  transition: transform 0.2s ease,
+              background-color 0.2s ease,
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              color 0.2s ease;
+}
+
+.blog-filter-btn:hover:not(.active),
+.price-preset-btn:hover:not(.is-active),
+.flipbook-page-pill:hover:not(.is-active) {
+  transform: translateY(-1.5px);
+  background-color: #f6e7cf;
+  border-color: #c88b52;
+}
+
+.faq-item:hover {
+  border-color: #c88b52;
+  box-shadow: 0 6px 16px rgba(112, 69, 43, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blog-card,
+  .blog-card__img,
+  .blog-card__arrow,
+  .recipe-editorial-card,
+  .recipe-editorial-card__img,
+  .related-hover-card,
+  .related-hover-card__img,
+  .site-header__menu-link::after,
+  .site-header__icon-btn,
+  .site-header__cart,
+  .flipbook-wish-btn,
+  .wishlist-heart-btn,
+  .blog-filter-btn,
+  .price-preset-btn,
+  .flipbook-page-pill,
+  .faq-item {
+    transition: none !important;
+  }
+
+  .blog-card:hover,
+  .blog-card:hover .blog-card__img,
+  .recipe-editorial-card:hover,
+  .recipe-editorial-card:hover .recipe-editorial-card__img,
+  .related-hover-card:hover,
+  .related-hover-card:hover .related-hover-card__img,
+  .site-header__icon-btn:hover,
+  .site-header__cart:hover,
+  .flipbook-wish-btn:hover,
+  .wishlist-heart-btn:hover {
+    transform: none !important;
+  }
+}
+
+/* ==========================================================================
+   ABOUT - KHỐI CÂU CHUYỆN & TẦM NHÌN + CTA (ĐỒNG BỘ TỪ BẢN TĨNH PR #80)
+   ========================================================================== */
+.about-page > .about-difference {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 64px 24px 68px;
+  background: linear-gradient(180deg, #f8efe1 0%, #f6ead8 100%);
+  border-bottom: 1px solid rgba(112, 69, 43, 0.08);
+}
+
+.about-page > .about-difference > * {
+  max-width: 1240px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.about-page .about-story-vision-band {
+  background: #fffaf3;
+  padding: 22px 0 26px;
+}
+
+.about-page .about-feature-row {
+  display: grid;
+  grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(34px, 6vw, 76px);
+  width: min(100%, 1180px);
+  margin: 0 auto;
+  padding: 34px 24px;
+  background: transparent;
+}
+
+.about-page .about-feature-row--vision {
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+}
+
+.about-page .about-feature-row__visual {
+  width: 100%;
+  margin: 0;
+  padding: 14px;
+  border: 1px solid rgba(112, 69, 43, 0.1);
+  background: #fffdf9;
+  box-shadow: 0 10px 30px rgba(112, 69, 43, 0.08);
+}
+
+.about-page .about-feature-row__visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+  object-fit: cover;
+}
+
+.about-page .about-feature-row__content {
+  min-width: 0;
+  max-width: 560px;
+  color: var(--about-muted, #75665b);
+}
+
+.about-page .about-feature-row__title {
+  margin: 0 0 16px;
+  color: var(--about-primary, #70452b);
+  font-size: clamp(23px, 2.3vw, 29px);
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.about-page .about-feature-row__content p {
+  margin: 0 0 14px;
+  color: var(--about-muted, #75665b);
+  font-size: 14px;
+  line-height: 1.85;
+}
+
+.about-page .about-feature-row__content p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .about-page .about-feature-row,
+  .about-page .about-feature-row--vision {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 28px 20px;
+  }
+
+  .about-page .about-feature-row__content {
+    max-width: none;
+  }
+
+  .about-page .about-feature-row--vision .about-feature-row__content {
+    order: 1;
+  }
+
+  .about-page .about-feature-row--vision .about-feature-row__visual {
+    order: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-page > .about-difference {
+    padding: 48px 16px 52px;
+  }
+
+  .about-page .about-story-vision-band {
+    padding: 14px 0 22px;
+  }
+
+  .about-page .about-feature-row {
+    padding: 24px 16px;
+  }
+
+  .about-page .about-feature-row__visual {
+    padding: 10px;
+  }
+
+  .about-page .about-feature-row__title {
+    font-size: 22px;
+  }
+}
+
+.about-page .about-cta .btn--primary {
+  background: #f59e0b;
+  border: 1.5px solid #f59e0b;
+  color: #4a2d1b;
+  font-weight: 700;
+  box-shadow: 0 5px 14px rgba(245, 158, 11, 0.28);
+}
+
+.about-page .about-cta .btn--primary:hover {
+  background: #fbbf24;
+  border-color: #fbbf24;
+  color: #4a2d1b;
+  transform: translateY(-2px);
+}
+
+.about-page .about-cta .btn--outline {
+  background: #fff8ed;
+  border: 1.5px solid #fff8ed;
+  color: #70452b;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(40, 23, 12, 0.12);
+}
+
+.about-page .about-cta .btn--outline:hover {
+  background: #f2d9a6;
+  border-color: #f2d9a6;
+  color: #5b361f;
+  transform: translateY(-2px);
+}
+
+.about-page .about-cta .btn {
+  min-height: 48px;
+  padding: 12px 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Canh thang hang Gia + Con hang (Kho) + Nut Them vao gio trong the dung cu cong thuc */
+.recipe-tool-card--with-action {
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 0;
+}
+
+.recipe-tool-card--with-action .recipe-tool-card__left {
+  align-items: flex-start;
+  width: 100%;
+  min-width: 0;
+}
+
+.recipe-tool-card__info {
+  min-width: 0;
+  flex: 1;
+}
+
+.recipe-tool-card__name {
+  display: block;
+  font-weight: 700;
+  color: #4a2e19;
+  font-size: 14.5px;
+  line-height: 1.35;
+}
+
+.recipe-tool-card__desc {
+  font-size: 12.5px;
+  color: var(--accent-sub);
+  margin: 3px 0 0;
+  line-height: 1.45;
+}
+
+.recipe-tool-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed #f0e3d0;
+  width: 100%;
+  min-width: 0;
+}
+
+.recipe-tool-card__price-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.recipe-tool-card__price {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--accent-cta);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.recipe-tool-card__stock-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background-color: #ecfdf5;
+  color: #15803d;
+  font-size: 11.5px;
+  font-weight: 700;
+  line-height: 1.15;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.recipe-tool-card__stock-pill.is-out {
+  background-color: #fef2f2;
+  color: #b91c1c;
+}
+
+.recipe-tool-card__add-btn {
+  padding: 6px 12px;
+  font-size: 12.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.order-confirmation__list li > strong {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .recipe-tool-card__footer {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .recipe-tool-card__add-btn {
+    margin-left: auto;
+  }
+}
+

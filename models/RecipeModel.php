@@ -196,6 +196,7 @@ class RecipeModel extends Model
                 'note' => (string) ($ing['note'] ?? ''),
                 'availability_note' => $availabilityNote,
                 'purchase_available' => $purchaseAvailable,
+                'stock_qty' => $variant ? (int) ($variant['stock_qty'] ?? 0) : 0,
                 'in_pantry' => $inPantry,
             ];
         }
@@ -258,6 +259,7 @@ class RecipeModel extends Model
                 'description' => (string) ($tool['description'] ?? ''),
                 'availability_note' => $availabilityNote,
                 'purchase_available' => $purchaseAvailable,
+                'stock_qty' => $variant ? (int) ($variant['stock_qty'] ?? 0) : 0,
             ];
         }
 
@@ -290,7 +292,7 @@ class RecipeModel extends Model
         $cleanKey = substr(trim($ingredientKey), 0, 120);
         if ($userId !== null && $userId > 0) {
             if ($owned) {
-                $stmt = $this->db->prepare('INSERT IGNORE INTO user_pantry (user_id, recipe_id, ingredient_key) VALUES (?, ?, ?)');
+                $stmt = $this->db->prepare($this->insertIgnoreVerb() . ' user_pantry (user_id, recipe_id, ingredient_key) VALUES (?, ?, ?)');
                 $stmt->execute([$userId, $recipeId, $cleanKey]);
             } else {
                 $stmt = $this->db->prepare('DELETE FROM user_pantry WHERE user_id = ? AND recipe_id = ? AND ingredient_key = ?');

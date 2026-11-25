@@ -25,8 +25,8 @@ class OrderModel extends Model
     {
         if ($userId !== null && $userId > 0) {
             $stmt = $this->db->prepare(
-                'SELECT product_id, option_index, quantity, COALESCE(recipe_group_id, "") AS recipe_group_id, is_selected
-                 FROM cart_items WHERE user_id = ? ORDER BY id ASC'
+                "SELECT product_id, option_index, quantity, COALESCE(recipe_group_id, '') AS recipe_group_id, is_selected
+                 FROM cart_items WHERE user_id = ? ORDER BY id ASC"
             );
             $stmt->execute([$userId]);
             return $stmt->fetchAll();
@@ -82,7 +82,7 @@ class OrderModel extends Model
 
         if ($userId !== null && $userId > 0) {
             $curStmt = $this->db->prepare(
-                'SELECT id, quantity FROM cart_items WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, "") = ? LIMIT 1'
+                "SELECT id, quantity FROM cart_items WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, '') = ? LIMIT 1"
             );
             $curStmt->execute([$userId, $productId, $optionIndex, $group]);
             $existing = $curStmt->fetch();
@@ -138,7 +138,7 @@ class OrderModel extends Model
 
         if ($userId !== null && $userId > 0) {
             $this->db->prepare(
-                'UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, "") = ?'
+                "UPDATE cart_items SET quantity = ? WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, '') = ?"
             )->execute([$clamped, $userId, $productId, $optionIndex, $group]);
         } else {
             $items = $this->getRawCart(null);
@@ -160,7 +160,7 @@ class OrderModel extends Model
         $group = $this->normalizeGroup($recipeGroupId);
         if ($userId !== null && $userId > 0) {
             $this->db->prepare(
-                'DELETE FROM cart_items WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, "") = ?'
+                "DELETE FROM cart_items WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, '') = ?"
             )->execute([$userId, $productId, $optionIndex, $group]);
         } else {
             $items = array_values(array_filter(
@@ -179,7 +179,7 @@ class OrderModel extends Model
             return ['ok' => false, 'message' => 'Nhóm công thức không hợp lệ.'];
         }
         if ($userId !== null && $userId > 0) {
-            $this->db->prepare('DELETE FROM cart_items WHERE user_id = ? AND COALESCE(recipe_group_id, "") = ?')->execute([$userId, $group]);
+            $this->db->prepare("DELETE FROM cart_items WHERE user_id = ? AND COALESCE(recipe_group_id, '') = ?")->execute([$userId, $group]);
         } else {
             $items = array_values(array_filter(
                 $this->getRawCart(null),
@@ -198,7 +198,7 @@ class OrderModel extends Model
                 $this->db->prepare('UPDATE cart_items SET is_selected = ? WHERE user_id = ?')->execute([$val, $userId]);
             } else {
                 $stmt = $this->db->prepare(
-                    'UPDATE cart_items SET is_selected = ? WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, "") = ?'
+                    "UPDATE cart_items SET is_selected = ? WHERE user_id = ? AND product_id = ? AND option_index = ? AND COALESCE(recipe_group_id, '') = ?"
                 );
                 foreach ($targets as $t) {
                     $stmt->execute([$val, $userId, (int) ($t['product_id'] ?? 0), (int) ($t['option_index'] ?? 0), $this->normalizeGroup($t['recipe_group_id'] ?? '')]);
@@ -240,10 +240,11 @@ class OrderModel extends Model
         if ($code === '') {
             return ['ok' => false, 'message' => 'Vui lòng nhập mã ưu đãi.'];
         }
+        $now = date('Y-m-d H:i:s');
         $stmt = $this->db->prepare(
-            'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= NOW()) LIMIT 1'
+            'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= ?) LIMIT 1'
         );
-        $stmt->execute([$code]);
+        $stmt->execute([$code, $now]);
         $coupon = $stmt->fetch();
         if (!$coupon) {
             return ['ok' => false, 'message' => "Mã giảm giá \"{$code}\" không tồn tại hoặc đã hết hạn."];
@@ -281,12 +282,10 @@ class OrderModel extends Model
             if (!$code) {
                 continue;
             }
-            $couponSql = 'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= NOW()) LIMIT 1';
-            if ($lockRows) {
-                $couponSql .= ' FOR UPDATE';
-            }
+            $couponSql = 'SELECT * FROM coupons WHERE code = ? AND is_active = 1 AND used_count < usage_limit AND (expired_at IS NULL OR expired_at >= ?) LIMIT 1'
+                . $this->forUpdateSuffix($lockRows);
             $stmt = $this->db->prepare($couponSql);
-            $stmt->execute([$code]);
+            $stmt->execute([$code, date('Y-m-d H:i:s')]);
             $c = $stmt->fetch();
             if (!$c || $subtotal < (int) $c['min_subtotal']) {
                 continue;
@@ -487,7 +486,7 @@ class OrderModel extends Model
                     'SELECT pv.id, pv.price, pv.stock_qty, pv.short_label, p.name, p.is_perishable
                      FROM product_variants pv
                      INNER JOIN products p ON p.id = pv.product_id
-                     WHERE pv.product_id = ? AND pv.option_index = ? FOR UPDATE'
+                     WHERE pv.product_id = ? AND pv.option_index = ?' . $this->forUpdateSuffix()
                 );
                 $vStmt->execute([$pid, $optIdx]);
                 $vRow = $vStmt->fetch();
@@ -769,7 +768,7 @@ class OrderModel extends Model
 
         $this->db->beginTransaction();
         try {
-            $stmt = $this->db->prepare('SELECT * FROM orders WHERE id = ? FOR UPDATE');
+            $stmt = $this->db->prepare('SELECT * FROM orders WHERE id = ?' . $this->forUpdateSuffix());
             $stmt->execute([$orderId]);
             $order = $stmt->fetch();
             if (!$order) {

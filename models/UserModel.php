@@ -22,13 +22,24 @@ class UserModel extends Model
         return $row ?: null;
     }
 
+    private function normalizePhone(string $phone): string
+    {
+        $clean = preg_replace('/[\s.-]/', '', trim($phone)) ?? '';
+        if (str_starts_with($clean, '+84')) {
+            $clean = '0' . substr($clean, 3);
+        } elseif (str_starts_with($clean, '84') && strlen($clean) === 11) {
+            $clean = '0' . substr($clean, 2);
+        }
+        return $clean;
+    }
+
     public function findByEmailOrPhone(string $identifier): ?array
     {
         $raw = trim($identifier);
         $cleanEmail = strtolower($raw);
-        $cleanPhone = preg_replace('/[\s.-]/', '', $raw) ?? '';
+        $cleanPhone = $this->normalizePhone($raw);
         if ($cleanPhone !== '' && preg_match('/^[0-9+]{8,15}$/', $cleanPhone)) {
-            $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone <> "" AND phone = ?) LIMIT 1');
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone <> '' AND phone = ?) LIMIT 1");
             $stmt->execute([$cleanEmail, $cleanPhone]);
         } else {
             $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
@@ -74,7 +85,7 @@ class UserModel extends Model
     public function registerCustomer(string $fullName, string $email, string $phone, string $password): array
     {
         $cleanEmail = strtolower(trim($email));
-        $cleanPhone = preg_replace('/[\s.-]/', '', trim($phone)) ?? '';
+        $cleanPhone = $this->normalizePhone($phone);
         $dbPhone = $cleanPhone !== '' ? $cleanPhone : null;
 
         if ($this->findByEmail($cleanEmail)) {
@@ -139,7 +150,7 @@ class UserModel extends Model
             $upd = $this->db->prepare('UPDATE users SET failed_attempts = ? WHERE id = ?');
             $upd->execute([$attempts, (int) $user['id']]);
             $this->logSecurity((int) $user['id'], $cleanEmail, 'login_failed', "Đăng nhập thất bại lần {$attempts}/{$maxAttempts}.");
-            return ['ok' => false, 'code' => 401, 'message' => 'Email hoặc mật khẩu không chính xác.'];
+            return ['ok' => false, 'code' => 401, 'message' => 'Email/SĐT hoặc mật khẩu không chính xác.'];
         }
 
         $upd = $this->db->prepare('UPDATE users SET failed_attempts = 0, lock_until = NULL WHERE id = ?');
@@ -260,12 +271,23 @@ class UserModel extends Model
         return ['ok' => true, 'message' => 'Đặt lại mật khẩu thành công! Toàn bộ phiên cũ đã được đăng xuất để bảo vệ tài khoản.'];
     }
 
-    public function updateProfile(int $userId, string $fullName, string $phone): bool
+    public function updateProfile(int $userId, string $fullName, string $phone): array
     {
         $cleanName = trim($fullName);
-        $cleanPhone = preg_replace('/[\s.-]/', '', trim($phone)) ?? '';
+        $cleanPhone = $this->normalizePhone($phone);
+        $dbPhone = $cleanPhone !== '' ? $cleanPhone : null;
+
+        if ($dbPhone !== null) {
+            $pCheck = $this->db->prepare('SELECT id FROM users WHERE phone = ? AND id <> ? LIMIT 1');
+            $pCheck->execute([$dbPhone, $userId]);
+            if ($pCheck->fetch()) {
+                return ['ok' => false, 'message' => 'Số điện thoại này đã được sử dụng bởi tài khoản khác.'];
+            }
+        }
+
         $stmt = $this->db->prepare('UPDATE users SET full_name = ?, phone = ? WHERE id = ?');
-        return $stmt->execute([$cleanName, $cleanPhone, $userId]);
+        $stmt->execute([$cleanName, $dbPhone, $userId]);
+        return ['ok' => true, 'message' => 'Đã cập nhật thông tin cá nhân thành công!'];
     }
 
     public function changePassword(int $userId, string $currentPassword, string $newPassword): array
@@ -365,8 +387,18 @@ class UserModel extends Model
     public function createPrivilegedAccount(string $fullName, string $email, string $phone, string $password, string $role): array
     {
         $cleanEmail = strtolower(trim($email));
+        $cleanPhone = $this->normalizePhone($phone);
+        $dbPhone = $cleanPhone !== '' ? $cleanPhone : null;
+
         if ($this->findByEmail($cleanEmail)) {
             return ['ok' => false, 'message' => 'Email này đã tồn tại trên hệ thống.'];
+        }
+        if ($dbPhone !== null) {
+            $pCheck = $this->db->prepare('SELECT id FROM users WHERE phone = ? LIMIT 1');
+            $pCheck->execute([$dbPhone]);
+            if ($pCheck->fetch()) {
+                return ['ok' => false, 'message' => 'Số điện thoại này đã tồn tại trên hệ thống.'];
+            }
         }
         if (!in_array($role, ['staff', 'admin'], true)) {
             return ['ok' => false, 'message' => 'Vai trò chỉ có thể là Staff hoặc Admin.'];
@@ -375,7 +407,7 @@ class UserModel extends Model
         $stmt = $this->db->prepare(
             'INSERT INTO users (full_name, email, phone, password_hash, role, is_super_admin, token_version) VALUES (?, ?, ?, ?, ?, 0, 1)'
         );
-        $stmt->execute([trim($fullName), $cleanEmail, trim($phone), $hash, $role]);
+        $stmt->execute([trim($fullName), $cleanEmail, $dbPhone, $hash, $role]);
         $id = (int) $this->db->lastInsertId();
         $this->logSecurity($id, $cleanEmail, 'create_privileged', "Super Admin đã tạo tài khoản {$role}: {$cleanEmail}");
         return ['ok' => true, 'user' => $this->findById($id), 'message' => 'Đã tạo tài khoản ' . strtoupper($role) . ' thành công!'];

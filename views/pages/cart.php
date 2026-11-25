@@ -3,178 +3,286 @@ declare(strict_types=1);
 $items = $summary['items'] ?? [];
 $retailItems = $summary['retail_items'] ?? [];
 $comboGroups = $summary['combo_groups'] ?? [];
+$totalQtyCount = 0;
+foreach ($items as $itRow) {
+    $totalQtyCount += (int) ($itRow['quantity'] ?? 0);
+}
 ?>
-<main class="php-page-container">
-  <h1 style="margin:0 0 18px;color:#70452b;">Giỏ hàng BakeMate của bạn</h1>
+<main class="page-container cart-page">
+  <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+    <ul class="breadcrumb__list">
+      <li class="breadcrumb__item"><a href="<?= App::e(App::url('')) ?>">Trang chủ</a></li>
+      <li class="breadcrumb__separator">/</li>
+      <li class="breadcrumb__item active">Giỏ hàng</li>
+    </ul>
+  </nav>
+
+  <div class="cart-page__header">
+    <div>
+      <h1 class="cart-page__title">Giỏ hàng BakeMate của bạn</h1>
+      <p class="cart-page__subtitle">Tick chọn các nguyên liệu lẻ hoặc combo Recipe-to-Cart bạn muốn đặt hàng trong lần này.</p>
+    </div>
+    <span class="cart-page__count-pill">
+      <?= $totalQtyCount ?> sản phẩm · Đã chọn <?= (int) $summary['selected_count'] ?>
+    </span>
+  </div>
 
   <div id="cart-root">
     <?php if (empty($items)): ?>
-      <div class="php-card" style="text-align:center;padding:52px 20px;background:#fff8ed;border:1.5px dashed #c88b52;">
-        <h2 style="color:#70452b;margin-top:0;">Giỏ hàng đang trống</h2>
-        <p style="color:#7c5c46;margin-bottom:20px;">Hãy chọn nguyên liệu lẻ hoặc thêm trọn bộ combo công thức để bắt đầu làm bánh.</p>
+      <section class="cart-empty">
+        <span class="cart-empty__icon" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/>
+            <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/>
+          </svg>
+        </span>
+        <h2 class="cart-empty__title">Giỏ hàng BakeMate đang trống</h2>
+        <p class="cart-empty__desc">Hãy khám phá nguyên liệu, dụng cụ làm bánh chất lượng hoặc chọn nhanh trọn bộ combo từ Thư viện công thức.</p>
         <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
           <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--primary">Mua nguyên liệu</a>
           <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--outline-dark">Chọn theo công thức</a>
         </div>
-      </div>
+      </section>
     <?php else: ?>
-      <div class="php-grid-main-aside">
-        <section style="display:grid;gap:18px;">
-          <div class="php-card" style="padding:12px 18px;display:flex;justify-content:space-between;align-items:center;">
-            <label style="display:flex;align-items:center;gap:8px;font-weight:700;color:#70452b;cursor:pointer;">
+      <div class="cart-layout">
+        <section class="cart-items-panel">
+          <div class="cart-panel__head">
+            <h2 class="cart-panel__title">Danh sách sản phẩm</h2>
+            <span class="cart-page__count-pill">Đã chọn <?= (int) $summary['selected_count'] ?> sản phẩm</span>
+          </div>
+
+          <div class="cart-select-toolbar">
+            <label style="display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--primary-color);cursor:pointer;">
               <input type="checkbox" id="cart-select-all" <?= !empty($summary['all_selected']) ? 'checked' : '' ?>>
               <span>Chọn tất cả sản phẩm (<?= count($items) ?> dòng)</span>
             </label>
-            <span style="font-size:13px;color:#7c5c46;">Đã chọn <?= (int) $summary['selected_count'] ?> sản phẩm</span>
+            <span style="font-size:13px;color:var(--accent-sub);">Chọn riêng từng món hoặc theo nhóm công thức</span>
           </div>
 
-          <?php if (!empty($retailItems)): ?>
-            <div class="php-card" style="display:grid;gap:12px;">
-              <h2 style="margin:0 0 4px;font-size:17px;color:#70452b;">Sản phẩm mua lẻ</h2>
-              <?php foreach ($retailItems as $it): ?>
-                <div class="cart-item-row" style="display:grid;grid-template-columns:auto 72px 1fr auto auto;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid #f2e5d5;">
-                  <input type="checkbox" class="js-cart-item-check"
-                         data-product-id="<?= (int) $it['product_id'] ?>"
-                         data-option-index="<?= (int) $it['option_index'] ?>"
-                         data-group=""
-                         <?= !empty($it['is_selected']) ? 'checked' : '' ?>>
-                  <img src="<?= App::e(App::asset($it['image'])) ?>" alt="" style="width:72px;height:72px;object-fit:cover;border-radius:10px;">
-                  <div>
-                    <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" style="font-weight:700;color:#70452b;text-decoration:none;"><?= App::e($it['name']) ?></a>
-                    <div style="font-size:12.5px;color:#7c5c46;">Quy cách: <?= App::e($it['variant_label']) ?><?= !empty($it['is_perishable']) ? ' · Tươi lạnh' : '' ?></div>
-                    <div style="font-size:13.5px;font-weight:700;color:#c88b52;margin-top:4px;"><?= App::e(App::formatCurrency((int) $it['unit_price'])) ?></div>
-                  </div>
-                  <div style="display:inline-flex;align-items:center;border:1px solid #d6bea1;border-radius:8px;">
-                    <button type="button" class="btn btn--outline btn--sm js-cart-qty-minus" style="border:none;"
-                            data-product-id="<?= (int) $it['product_id'] ?>"
-                            data-option-index="<?= (int) $it['option_index'] ?>"
-                            data-group=""
-                            data-qty="<?= (int) $it['quantity'] ?>">−</button>
-                    <input type="number" min="0" max="99" value="<?= (int) $it['quantity'] ?>"
-                           class="js-cart-qty-input"
-                           data-product-id="<?= (int) $it['product_id'] ?>"
-                           data-option-index="<?= (int) $it['option_index'] ?>"
-                           data-group=""
-                           style="width:46px;text-align:center;border:none;font-weight:700;">
-                    <button type="button" class="btn btn--outline btn--sm js-cart-qty-plus" style="border:none;"
-                            data-product-id="<?= (int) $it['product_id'] ?>"
-                            data-option-index="<?= (int) $it['option_index'] ?>"
-                            data-group=""
-                            data-qty="<?= (int) $it['quantity'] ?>">+</button>
-                  </div>
-                  <div style="text-align:right;">
-                    <div style="font-weight:800;color:#70452b;"><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></div>
-                    <button type="button" class="btn btn--outline btn--sm js-cart-remove" style="margin-top:6px;font-size:11.5px;"
-                            data-product-id="<?= (int) $it['product_id'] ?>"
-                            data-option-index="<?= (int) $it['option_index'] ?>"
-                            data-group="">Xóa</button>
-                  </div>
-                </div>
-              <?php endforeach; ?>
-            </div>
-          <?php endif; ?>
+          <div class="cart-grid-head" aria-hidden="true">
+            <span>Sản phẩm</span>
+            <span>Đơn giá</span>
+            <span>Số lượng</span>
+            <span>Thành tiền</span>
+            <span>Thao tác</span>
+          </div>
 
-          <?php foreach ($comboGroups as $grp): ?>
-            <div style="background:#fff8ed;border:2px dashed #c88b52;border-radius:14px;padding:18px;display:grid;gap:12px;">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-bottom:1px solid #ebd5b7;padding-bottom:10px;">
-                <div>
-                  <span style="font-size:11.5px;font-weight:700;color:#c88b52;text-transform:uppercase;">Combo công thức Recipe-to-Cart</span>
-                  <h2 style="margin:2px 0 0;font-size:17.5px;color:#70452b;"><?= App::e($grp['title']) ?></h2>
+          <div class="cart-groups-list">
+            <?php if (!empty($retailItems)): ?>
+              <div class="cart-group--standalone">
+                <div class="cart-group__header">
+                  <div class="cart-group__title-wrap">
+                    <span class="cart-group__badge">Mua lẻ</span>
+                    <h3 class="cart-group__title">Nguyên liệu &amp; Dụng cụ chọn lẻ</h3>
+                  </div>
+                  <span class="cart-group__subtotal"><?= count($retailItems) ?> món</span>
                 </div>
-                <button type="button" class="btn btn--outline btn--sm js-remove-combo" data-group="<?= App::e($grp['recipe_group_id']) ?>">Xóa cả combo</button>
+                <div class="cart-group__items">
+                  <?php foreach ($retailItems as $it): ?>
+                    <div class="cart-item">
+                      <div class="cart-item__cell cart-item__product">
+                        <input type="checkbox" class="js-cart-item-check"
+                               aria-label="Chọn <?= App::e($it['name']) ?>"
+                               data-product-id="<?= (int) $it['product_id'] ?>"
+                               data-option-index="<?= (int) $it['option_index'] ?>"
+                               data-group=""
+                               <?= !empty($it['is_selected']) ? 'checked' : '' ?>>
+                        <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" class="cart-item__thumb-link">
+                          <img src="<?= App::e(App::asset($it['image'])) ?>" alt="<?= App::e($it['name']) ?>" class="cart-item__img">
+                        </a>
+                        <div class="cart-item__meta">
+                          <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" class="cart-item__name"><?= App::e($it['name']) ?></a>
+                          <span class="cart-item__category">
+                            Quy cách: <?= App::e($it['variant_label']) ?><?= !empty($it['is_perishable']) ? ' · Tươi lạnh (Nội thành HCM)' : '' ?>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="cart-item__cell cart-item__price">
+                        <?= App::e(App::formatCurrency((int) $it['unit_price'])) ?>
+                      </div>
+                      <div class="cart-item__cell cart-item__qty-cell">
+                        <div class="cart-qty-control">
+                          <button type="button" class="qty-btn js-cart-qty-minus"
+                                  aria-label="Giảm số lượng"
+                                  data-product-id="<?= (int) $it['product_id'] ?>"
+                                  data-option-index="<?= (int) $it['option_index'] ?>"
+                                  data-group=""
+                                  data-qty="<?= (int) $it['quantity'] ?>">&minus;</button>
+                          <input type="number" min="0" max="99" value="<?= (int) $it['quantity'] ?>"
+                                 class="qty-input js-cart-qty-input"
+                                 aria-label="Số lượng <?= App::e($it['name']) ?>"
+                                 data-product-id="<?= (int) $it['product_id'] ?>"
+                                 data-option-index="<?= (int) $it['option_index'] ?>"
+                                 data-group="">
+                          <button type="button" class="qty-btn js-cart-qty-plus"
+                                  aria-label="Tăng số lượng"
+                                  data-product-id="<?= (int) $it['product_id'] ?>"
+                                  data-option-index="<?= (int) $it['option_index'] ?>"
+                                  data-group=""
+                                  data-qty="<?= (int) $it['quantity'] ?>">+</button>
+                        </div>
+                      </div>
+                      <div class="cart-item__cell cart-item__subtotal">
+                        <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
+                      </div>
+                      <div class="cart-item__cell">
+                        <button type="button" class="btn-remove-item js-cart-remove"
+                                data-product-id="<?= (int) $it['product_id'] ?>"
+                                data-option-index="<?= (int) $it['option_index'] ?>"
+                                data-group="">Xóa</button>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
               </div>
-              <?php foreach ($grp['items'] as $it): ?>
-                <div style="display:grid;grid-template-columns:auto 64px 1fr auto auto;gap:12px;align-items:center;">
-                  <input type="checkbox" class="js-cart-item-check"
-                         data-product-id="<?= (int) $it['product_id'] ?>"
-                         data-option-index="<?= (int) $it['option_index'] ?>"
-                         data-group="<?= App::e($grp['recipe_group_id']) ?>"
-                         <?= !empty($it['is_selected']) ? 'checked' : '' ?>>
-                  <img src="<?= App::e(App::asset($it['image'])) ?>" alt="" style="width:64px;height:64px;object-fit:cover;border-radius:8px;">
-                  <div>
-                    <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" style="font-weight:700;color:#70452b;text-decoration:none;"><?= App::e($it['name']) ?></a>
-                    <div style="font-size:12.5px;color:#7c5c46;"><?= App::e($it['variant_label']) ?> · <?= App::e(App::formatCurrency((int) $it['unit_price'])) ?></div>
+            <?php endif; ?>
+
+            <?php foreach ($comboGroups as $grp):
+              $grpSubtotal = 0;
+              foreach (($grp['items'] ?? []) as $git) {
+                  $grpSubtotal += (int) ($git['line_total'] ?? 0);
+              }
+            ?>
+              <div class="cart-group--recipe">
+                <div class="cart-group__header">
+                  <div class="cart-group__title-wrap">
+                    <span class="cart-group__badge">Recipe-to-Cart</span>
+                    <h3 class="cart-group__title"><?= App::e($grp['title']) ?></h3>
                   </div>
-                  <div style="display:inline-flex;align-items:center;border:1px solid #d6bea1;border-radius:8px;background:#fff;">
-                    <button type="button" class="btn btn--outline btn--sm js-cart-qty-minus" style="border:none;"
-                            data-product-id="<?= (int) $it['product_id'] ?>"
-                            data-option-index="<?= (int) $it['option_index'] ?>"
-                            data-group="<?= App::e($grp['recipe_group_id']) ?>"
-                            data-qty="<?= (int) $it['quantity'] ?>">−</button>
-                    <input type="number" min="0" max="99" value="<?= (int) $it['quantity'] ?>"
-                           class="js-cart-qty-input"
-                           data-product-id="<?= (int) $it['product_id'] ?>"
-                           data-option-index="<?= (int) $it['option_index'] ?>"
-                           data-group="<?= App::e($grp['recipe_group_id']) ?>"
-                           style="width:44px;text-align:center;border:none;font-weight:700;">
-                    <button type="button" class="btn btn--outline btn--sm js-cart-qty-plus" style="border:none;"
-                            data-product-id="<?= (int) $it['product_id'] ?>"
-                            data-option-index="<?= (int) $it['option_index'] ?>"
-                            data-group="<?= App::e($grp['recipe_group_id']) ?>"
-                            data-qty="<?= (int) $it['quantity'] ?>">+</button>
+                  <div class="cart-group__meta">
+                    <span class="cart-group__subtotal">Tổng combo: <strong><?= App::e(App::formatCurrency($grpSubtotal)) ?></strong></span>
+                    <button type="button" class="btn-remove-combo js-remove-combo" data-group="<?= App::e($grp['recipe_group_id']) ?>">Xóa cả combo</button>
                   </div>
-                  <strong style="color:#70452b;"><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
                 </div>
-              <?php endforeach; ?>
-            </div>
-          <?php endforeach; ?>
+                <div class="cart-group__items">
+                  <?php foreach ($grp['items'] as $it): ?>
+                    <div class="cart-item">
+                      <div class="cart-item__cell cart-item__product">
+                        <input type="checkbox" class="js-cart-item-check"
+                               aria-label="Chọn <?= App::e($it['name']) ?>"
+                               data-product-id="<?= (int) $it['product_id'] ?>"
+                               data-option-index="<?= (int) $it['option_index'] ?>"
+                               data-group="<?= App::e($grp['recipe_group_id']) ?>"
+                               <?= !empty($it['is_selected']) ? 'checked' : '' ?>>
+                        <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" class="cart-item__thumb-link">
+                          <img src="<?= App::e(App::asset($it['image'])) ?>" alt="<?= App::e($it['name']) ?>" class="cart-item__img">
+                        </a>
+                        <div class="cart-item__meta">
+                          <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $it['product_id'])) ?>" class="cart-item__name"><?= App::e($it['name']) ?></a>
+                          <span class="cart-item__category">
+                            Quy cách: <?= App::e($it['variant_label']) ?><?= !empty($it['is_perishable']) ? ' · Tươi lạnh' : '' ?>
+                          </span>
+                        </div>
+                      </div>
+                      <div class="cart-item__cell cart-item__price">
+                        <?= App::e(App::formatCurrency((int) $it['unit_price'])) ?>
+                      </div>
+                      <div class="cart-item__cell cart-item__qty-cell">
+                        <div class="cart-qty-control">
+                          <button type="button" class="qty-btn js-cart-qty-minus"
+                                  aria-label="Giảm số lượng"
+                                  data-product-id="<?= (int) $it['product_id'] ?>"
+                                  data-option-index="<?= (int) $it['option_index'] ?>"
+                                  data-group="<?= App::e($grp['recipe_group_id']) ?>"
+                                  data-qty="<?= (int) $it['quantity'] ?>">&minus;</button>
+                          <input type="number" min="0" max="99" value="<?= (int) $it['quantity'] ?>"
+                                 class="qty-input js-cart-qty-input"
+                                 aria-label="Số lượng <?= App::e($it['name']) ?>"
+                                 data-product-id="<?= (int) $it['product_id'] ?>"
+                                 data-option-index="<?= (int) $it['option_index'] ?>"
+                                 data-group="<?= App::e($grp['recipe_group_id']) ?>">
+                          <button type="button" class="qty-btn js-cart-qty-plus"
+                                  aria-label="Tăng số lượng"
+                                  data-product-id="<?= (int) $it['product_id'] ?>"
+                                  data-option-index="<?= (int) $it['option_index'] ?>"
+                                  data-group="<?= App::e($grp['recipe_group_id']) ?>"
+                                  data-qty="<?= (int) $it['quantity'] ?>">+</button>
+                        </div>
+                      </div>
+                      <div class="cart-item__cell cart-item__subtotal">
+                        <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
+                      </div>
+                      <div class="cart-item__cell">
+                        <button type="button" class="btn-remove-item js-cart-remove"
+                                data-product-id="<?= (int) $it['product_id'] ?>"
+                                data-option-index="<?= (int) $it['option_index'] ?>"
+                                data-group="<?= App::e($grp['recipe_group_id']) ?>">Xóa</button>
+                      </div>
+                    </div>
+                  <?php endforeach; ?>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+
+          <div class="cart-panel__footer">
+            <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline-dark">&larr; Mua thêm nguyên liệu</a>
+            <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--outline-dark">Xem thêm công thức</a>
+          </div>
         </section>
 
         <!-- Cột phải: Mã giảm giá (Cộng dồn 2 mã) & Tóm tắt đơn -->
-        <aside class="php-card" style="position:sticky;top:20px;">
-          <h2 style="margin:0 0 14px;color:#70452b;font-size:19px;">Tóm tắt đơn hàng</h2>
+        <aside class="cart-summary-panel">
+          <div class="cart-summary-card" style="position:sticky;top:24px;">
+            <h2 class="cart-summary-card__title">Tóm tắt đơn hàng</h2>
 
-          <form id="cart-coupon-form" style="display:flex;gap:8px;margin-bottom:10px;">
-            <input type="text" id="cart-coupon-input" class="form-input" placeholder="Nhập mã (CHAOBANMOI, FREESHIP20)">
-            <button type="submit" class="btn btn--primary btn--sm">Áp dụng</button>
-          </form>
-          <p id="cart-coupon-msg" style="font-size:12.5px;margin:0 0 12px;color:#7c5c46;">Hỗ trợ cộng dồn 1 mã giảm tiền hàng + 1 mã Freeship.</p>
+            <div class="cart-coupon">
+              <label for="cart-coupon-input" class="cart-coupon__label">Mã ưu đãi BakeMate (cộng dồn 2 mã)</label>
+              <form id="cart-coupon-form" class="cart-coupon__row">
+                <input type="text" id="cart-coupon-input" class="form-input cart-coupon__input" placeholder="Nhập CHAOBANMOI hoặc FREESHIP20">
+                <button type="submit" class="btn btn--primary cart-coupon__btn">Áp dụng</button>
+              </form>
+              <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;">
+                <button type="button" class="price-preset-btn js-cart-quick-voucher" data-code="CHAOBANMOI" style="font-size:11.5px;padding:4px 10px;">+ CHAOBANMOI</button>
+                <button type="button" class="price-preset-btn js-cart-quick-voucher" data-code="FREESHIP20" style="font-size:11.5px;padding:4px 10px;">+ FREESHIP20</button>
+              </div>
+              <p id="cart-coupon-msg" style="font-size:12.5px;margin:8px 0 0;color:var(--accent-sub);">Hỗ trợ cộng dồn 1 mã giảm tiền hàng + 1 mã Freeship.</p>
 
-          <?php if (!empty($summary['coupon_details'])): ?>
-            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;">
-              <?php foreach ($summary['coupon_details'] as $scope => $cInfo): ?>
-                <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:12px;font-weight:700;">
-                  <?= App::e($cInfo['code']) ?>
-                  <button type="button" class="js-remove-coupon" data-scope="<?= App::e($scope) ?>" style="border:none;background:none;color:#b91c1c;cursor:pointer;font-weight:800;">&times;</button>
-                </span>
-              <?php endforeach; ?>
+              <?php if (!empty($summary['coupon_details'])): ?>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+                  <?php foreach ($summary['coupon_details'] as $scope => $cInfo): ?>
+                    <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:700;">
+                      <?= App::e($cInfo['code']) ?>
+                      <button type="button" class="js-remove-coupon" data-scope="<?= App::e($scope) ?>" style="border:none;background:none;color:#b91c1c;cursor:pointer;font-weight:800;line-height:1;">&times;</button>
+                    </span>
+                  <?php endforeach; ?>
+                </div>
+              <?php endif; ?>
             </div>
-          <?php endif; ?>
 
-          <div style="display:grid;gap:8px;font-size:14px;color:#4a2d1b;border-top:1px solid #f0e4d3;padding-top:12px;">
-            <div style="display:flex;justify-content:space-between;">
+            <div class="cart-summary-row">
               <span>Tạm tính (món đã chọn)</span>
               <strong><?= App::e(App::formatCurrency((int) $summary['selected_subtotal'])) ?></strong>
             </div>
-            <div style="display:flex;justify-content:space-between;">
+            <div class="cart-summary-row">
               <span>Phí vận chuyển tạm tính</span>
               <strong><?= App::e(App::formatCurrency((int) $summary['shipping_fee'])) ?></strong>
             </div>
             <?php if ((int) $summary['discount_product'] > 0): ?>
-              <div style="display:flex;justify-content:space-between;color:#166534;">
+              <div class="cart-summary-row cart-summary-row--discount">
                 <span>Giảm giá đơn hàng</span>
-                <strong>−<?= App::e(App::formatCurrency((int) $summary['discount_product'])) ?></strong>
+                <strong>&minus;<?= App::e(App::formatCurrency((int) $summary['discount_product'])) ?></strong>
               </div>
             <?php endif; ?>
             <?php if ((int) $summary['discount_shipping'] > 0): ?>
-              <div style="display:flex;justify-content:space-between;color:#166534;">
+              <div class="cart-summary-row cart-summary-row--discount">
                 <span>Giảm phí vận chuyển</span>
-                <strong>−<?= App::e(App::formatCurrency((int) $summary['discount_shipping'])) ?></strong>
+                <strong>&minus;<?= App::e(App::formatCurrency((int) $summary['discount_shipping'])) ?></strong>
               </div>
             <?php endif; ?>
-            <div style="display:flex;justify-content:space-between;border-top:1px solid #ebd9c3;padding-top:10px;font-size:18px;color:#70452b;">
-              <strong>Tổng dự kiến</strong>
+            <div class="cart-summary-row cart-summary-row--total">
+              <span>Tổng dự kiến</span>
               <strong><?= App::e(App::formatCurrency((int) $summary['total_amount'])) ?></strong>
             </div>
-          </div>
 
-          <div style="margin-top:18px;display:grid;gap:10px;">
-            <?php if ((int) $summary['selected_count'] > 0): ?>
-              <a href="<?= App::e(App::url('?c=order&a=checkout')) ?>" class="btn btn--primary btn--full">Tiến hành thanh toán (<?= (int) $summary['selected_count'] ?> món)</a>
-            <?php else: ?>
-              <button type="button" class="btn btn--primary btn--full" disabled>Tick chọn ít nhất 1 món để thanh toán</button>
-            <?php endif; ?>
-            <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline btn--full">Tiếp tục mua sắm</a>
+            <div style="margin-top:16px;display:grid;gap:10px;">
+              <?php if ((int) $summary['selected_count'] > 0): ?>
+                <a href="<?= App::e(App::url('?c=order&a=checkout')) ?>" class="btn btn--primary btn--checkout btn--full">Tiến hành thanh toán (<?= (int) $summary['selected_count'] ?> món)</a>
+              <?php else: ?>
+                <button type="button" class="btn btn--primary btn--checkout btn--full" disabled>Tick chọn ít nhất 1 món để thanh toán</button>
+              <?php endif; ?>
+              <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline-dark btn--full">Tiếp tục mua sắm</a>
+            </div>
           </div>
         </aside>
       </div>
@@ -244,20 +352,30 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   const cForm = document.getElementById("cart-coupon-form");
+  const cInput = document.getElementById("cart-coupon-input");
+  const msgEl = document.getElementById("cart-coupon-msg");
+  async function applyCouponCode(code) {
+    try {
+      const res = await window.BakeApp.postJson("order", "ajaxApplyCoupon", { code });
+      window.BakeApp.showToast(res.message, "success");
+      window.location.reload();
+    } catch (err) {
+      if (msgEl) { msgEl.textContent = err.message; msgEl.style.color = "#b91c1c"; }
+    }
+  }
   if (cForm) {
     cForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const code = document.getElementById("cart-coupon-input").value.trim();
-      const msgEl = document.getElementById("cart-coupon-msg");
-      try {
-        const res = await window.BakeApp.postJson("order", "ajaxApplyCoupon", { code });
-        window.BakeApp.showToast(res.message, "success");
-        window.location.reload();
-      } catch (err) {
-        if (msgEl) { msgEl.textContent = err.message; msgEl.style.color = "#b91c1c"; }
-      }
+      await applyCouponCode((cInput ? cInput.value : "").trim());
     });
   }
+  document.querySelectorAll(".js-cart-quick-voucher").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const code = btn.dataset.code || "";
+      if (cInput) cInput.value = code;
+      await applyCouponCode(code);
+    });
+  });
 
   document.querySelectorAll(".js-remove-coupon").forEach((b) => {
     b.addEventListener("click", async () => {

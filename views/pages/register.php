@@ -1,5 +1,9 @@
 <?php
 declare(strict_types=1);
+$integrationsCfg = require dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'integrations.php';
+$turnstileSiteKey = trim((string) ($integrationsCfg['turnstile']['site_key'] ?? ''));
+$turnstileSecretKey = trim((string) ($integrationsCfg['turnstile']['secret_key'] ?? ''));
+$showTurnstile = $turnstileSiteKey !== '' && $turnstileSecretKey !== '';
 ?>
 <main class="auth-main">
   <section class="auth-card" aria-labelledby="reg-heading">
@@ -43,6 +47,12 @@ declare(strict_types=1);
           </button>
         </div>
       </div>
+      <?php if ($showTurnstile): ?>
+        <div class="form-group">
+          <div class="cf-turnstile" data-sitekey="<?= App::e($turnstileSiteKey) ?>"></div>
+        </div>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+      <?php endif; ?>
       <button type="submit" class="auth-btn-primary">Đăng ký tài khoản</button>
     </form>
 
@@ -79,16 +89,57 @@ document.getElementById("reg-pass")?.addEventListener("input", function () {
 document.getElementById("register-form")?.addEventListener("submit", async function (e) {
   e.preventDefault();
   const fb = document.getElementById("reg-feedback");
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const showErr = (msg) => {
+    if (!fb) return;
+    fb.hidden = false;
+    fb.style.background = "#fef2f2";
+    fb.style.color = "#b91c1c";
+    fb.textContent = msg;
+  };
+  if (fb) fb.hidden = true;
+
+  const payload = Object.fromEntries(new FormData(this).entries());
+  const nameVal = String(payload.full_name || "").trim();
+  const emailVal = String(payload.email || "").trim();
+  const passVal = String(payload.password || "");
+  const confVal = String(payload.confirm_password || "");
+  const turnstileInput = this.querySelector('input[name="cf-turnstile-response"]');
+  if (turnstileInput && turnstileInput.value) {
+    payload.cf_turnstile_response = turnstileInput.value;
+  }
+
+  if (nameVal.length < 2) {
+    showErr("Họ và tên phải có ít nhất 2 ký tự.");
+    return;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+    showErr("Địa chỉ email không hợp lệ.");
+    return;
+  }
+  if (passVal.length < 8) {
+    showErr("Mật khẩu phải có ít nhất 8 ký tự.");
+    return;
+  }
+  if (passVal !== confVal) {
+    showErr("Mật khẩu xác nhận không khớp.");
+    return;
+  }
+
+  const origLabel = submitBtn ? submitBtn.textContent : "Đăng ký tài khoản";
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Đang tạo tài khoản...";
+  }
   try {
-    const res = await window.BakeApp.postJson("auth", "ajaxRegister", Object.fromEntries(new FormData(this).entries()));
+    const res = await window.BakeApp.postJson("auth", "ajaxRegister", payload);
     window.BakeApp.showToast(res.message, "success");
     window.location.href = res.data.redirect_url || window.BAKEMATE_PHP.baseUrl;
   } catch (err) {
-    if (fb) {
-      fb.hidden = false;
-      fb.style.background = "#fef2f2";
-      fb.style.color = "#b91c1c";
-      fb.textContent = err.message;
+    showErr(err.message);
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = origLabel;
     }
   }
 });
