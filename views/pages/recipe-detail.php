@@ -190,7 +190,7 @@ declare(strict_types=1);
           $toolStockQty = (int) ($tl['stock_qty'] ?? 0);
           $toolInStock = !empty($tl['purchase_available']) && !empty($tl['variant']) && $toolStockQty > 0;
         ?>
-          <div class="recipe-tool-card">
+          <div class="recipe-tool-card recipe-tool-card--with-action">
             <div class="recipe-tool-card__left">
               <?php if ($toolInStock): ?>
                 <input type="checkbox"
@@ -206,34 +206,36 @@ declare(strict_types=1);
                 <input type="checkbox" disabled aria-label="Dụng cụ hiện hết hàng" style="width:17px;height:17px;flex-shrink:0;">
               <?php endif; ?>
               <img src="<?= App::e(App::asset($toolImg)) ?>" alt="<?= App::e($tl['name']) ?>" loading="lazy" class="recipe-tool-card__thumb">
-              <div>
+              <div class="recipe-tool-card__info">
                 <?php if (!empty($tl['product_id'])): ?>
-                  <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $tl['product_id'])) ?>" style="font-weight:700;color:#4a2e19;font-size:14.5px;"><?= App::e($tl['name']) ?></a>
+                  <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $tl['product_id'])) ?>" class="recipe-tool-card__name"><?= App::e($tl['name']) ?></a>
                 <?php else: ?>
-                  <strong style="display:block;font-weight:700;color:#4a2e19;font-size:14.5px;"><?= App::e($tl['name']) ?></strong>
+                  <strong class="recipe-tool-card__name"><?= App::e($tl['name']) ?></strong>
                 <?php endif; ?>
-                <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 6px;"><?= App::e($tl['description']) ?></p>
-                <?php if ($toolInStock): ?>
-                  <strong style="font-size:14px;color:var(--accent-cta);"><?= App::e(App::formatCurrency((int) $tl['variant']['price'])) ?></strong>
-                  <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#ecfdf5;color:#15803d;font-size:11.5px;font-weight:700;">Còn hàng (Kho: <?= $toolStockQty ?>)</span>
-                <?php else: ?>
-                  <span style="display:inline-block;padding:2px 8px;border-radius:999px;background:#fef2f2;color:#b91c1c;font-size:11.5px;font-weight:700;"><?= App::e($tl['availability_note'] ?: 'Hết hàng') ?></span>
-                <?php endif; ?>
+                <p class="recipe-tool-card__desc"><?= App::e($tl['description']) ?></p>
               </div>
             </div>
-            <?php if ($toolInStock): ?>
-              <button
-                type="button"
-                class="btn btn--outline-dark js-add-single-tool"
-                data-product-id="<?= (int) $tl['product_id'] ?>"
-                data-option-index="<?= (int) $tl['option_index'] ?>"
-                style="padding:7px 12px;font-size:12.5px;white-space:nowrap;flex-shrink:0;"
-              >
-                + Thêm vào giỏ
-              </button>
-            <?php else: ?>
-              <span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">Hết hàng</span>
-            <?php endif; ?>
+            <div class="recipe-tool-card__footer">
+              <?php if ($toolInStock): ?>
+                <div class="recipe-tool-card__price-row">
+                  <strong class="recipe-tool-card__price"><?= App::e(App::formatCurrency((int) $tl['variant']['price'])) ?></strong>
+                  <span class="recipe-tool-card__stock-pill">Còn hàng (Kho: <?= $toolStockQty ?>)</span>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn--outline-dark js-add-single-tool recipe-tool-card__add-btn"
+                  data-product-id="<?= (int) $tl['product_id'] ?>"
+                  data-option-index="<?= (int) $tl['option_index'] ?>"
+                >
+                  + Thêm vào giỏ
+                </button>
+              <?php else: ?>
+                <div class="recipe-tool-card__price-row">
+                  <span class="recipe-tool-card__stock-pill is-out"><?= App::e($tl['availability_note'] ?: 'Hết hàng') ?></span>
+                </div>
+                <span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">Hết hàng</span>
+              <?php endif; ?>
+            </div>
           </div>
         <?php endforeach; ?>
       </div>
