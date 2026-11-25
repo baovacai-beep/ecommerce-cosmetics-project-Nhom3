@@ -38,8 +38,13 @@ class Rbac
 
     public static function normalizeIp(?string $ip): string
     {
-        $raw = trim((string) $ip);
-        if ($raw === '' || $raw === '::1') {
+        $raw = strtolower(trim((string) $ip));
+        if (
+            $raw === ''
+            || $raw === '::1'
+            || $raw === '0:0:0:0:0:0:0:1'
+            || $raw === '::ffff:127.0.0.1'
+        ) {
             return '127.0.0.1';
         }
         return $raw;

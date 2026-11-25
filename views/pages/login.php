@@ -88,16 +88,36 @@ document.querySelectorAll(".js-social-login").forEach((btn) => {
 document.getElementById("login-form")?.addEventListener("submit", async function (e) {
   e.preventDefault();
   const fb = document.getElementById("auth-feedback");
+  const submitBtn = this.querySelector('button[type="submit"]');
+  const showErr = (msg) => {
+    if (!fb) return;
+    fb.hidden = false;
+    fb.style.background = "#fef2f2";
+    fb.style.color = "#b91c1c";
+    fb.textContent = msg;
+  };
+  if (fb) fb.hidden = true;
+
+  const payload = Object.fromEntries(new FormData(this).entries());
+  if (!String(payload.identifier || "").trim() || !String(payload.password || "")) {
+    showErr("Vui lòng nhập đầy đủ Email/Số điện thoại và mật khẩu.");
+    return;
+  }
+
+  const origLabel = submitBtn ? submitBtn.textContent : "Đăng nhập";
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Đang đăng nhập...";
+  }
   try {
-    const res = await window.BakeApp.postJson("auth", "ajaxLogin", Object.fromEntries(new FormData(this).entries()));
+    const res = await window.BakeApp.postJson("auth", "ajaxLogin", payload);
     window.BakeApp.showToast(res.message, "success");
     window.location.href = res.data.redirect_url || window.BAKEMATE_PHP.baseUrl;
   } catch (err) {
-    if (fb) {
-      fb.hidden = false;
-      fb.style.background = "#fef2f2";
-      fb.style.color = "#b91c1c";
-      fb.textContent = err.message;
+    showErr(err.message);
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = origLabel;
     }
   }
 });

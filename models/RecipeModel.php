@@ -196,6 +196,7 @@ class RecipeModel extends Model
                 'note' => (string) ($ing['note'] ?? ''),
                 'availability_note' => $availabilityNote,
                 'purchase_available' => $purchaseAvailable,
+                'stock_qty' => $variant ? (int) ($variant['stock_qty'] ?? 0) : 0,
                 'in_pantry' => $inPantry,
             ];
         }
@@ -258,6 +259,7 @@ class RecipeModel extends Model
                 'description' => (string) ($tool['description'] ?? ''),
                 'availability_note' => $availabilityNote,
                 'purchase_available' => $purchaseAvailable,
+                'stock_qty' => $variant ? (int) ($variant['stock_qty'] ?? 0) : 0,
             ];
         }
 

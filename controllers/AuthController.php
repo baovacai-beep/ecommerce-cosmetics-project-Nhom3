@@ -51,6 +51,28 @@ private function sanitizeRedirect(string $redirect): string
         return '';
     }
 
+    // Không chuyển hướng vòng lặp về các trang đăng nhập/đăng ký/đăng xuất.
+    $lower = strtolower($clean);
+    if (
+        str_ends_with($lower, '/login')
+        || str_ends_with($lower, '/register')
+        || str_ends_with($lower, '/logout')
+        || preg_match('/[?&]c=auth&a=(?:login|register|logout)(?:&|$)/i', $lower)
+    ) {
+        return '';
+    }
+
+    return $clean;
+}
+
+private function normalizeVnPhone(string $raw): string
+{
+    $clean = preg_replace('/[\s.-]/', '', trim($raw)) ?? '';
+    if (str_starts_with($clean, '+84')) {
+        $clean = '0' . substr($clean, 3);
+    } elseif (str_starts_with($clean, '84') && strlen($clean) === 11) {
+        $clean = '0' . substr($clean, 2);
+    }
     return $clean;
 }
 
@@ -141,10 +163,14 @@ private function sanitizeRedirect(string $redirect): string
         Rbac::loginUser($user);
 
         // Đồng bộ giỏ hàng & yêu thích từ Guest Session sang DB tài khoản
-        $orderModel = $this->model('OrderModel');
-        $contentModel = $this->model('ContentModel');
-        $orderModel->mergeGuestCartToDb((int) $user['id']);
-        $contentModel->mergeGuestWishlistToDb((int) $user['id']);
+        try {
+            $orderModel = $this->model('OrderModel');
+            $contentModel = $this->model('ContentModel');
+            $orderModel->mergeGuestCartToDb((int) $user['id']);
+            $contentModel->mergeGuestWishlistToDb((int) $user['id']);
+        } catch (Throwable $e) {
+            // Giữ đăng nhập thành công ngay cả khi giỏ tạm không có dữ liệu hợp lệ
+        }
 
         $defaultRedirect = match ($user['role']) {
             'admin' => App::url('?c=admin&a=index'),
@@ -179,7 +205,7 @@ private function sanitizeRedirect(string $redirect): string
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->jsonResponse('error', 422, [], 'Địa chỉ email không hợp lệ.');
         }
-        $cleanPhone = preg_replace('/[\s.-]/', '', $phone) ?? '';
+        $cleanPhone = $this->normalizeVnPhone($phone);
         if ($cleanPhone !== '' && !preg_match('/^(0[35789])[0-9]{8}$/', $cleanPhone)) {
             $this->jsonResponse('error', 422, [], 'Số điện thoại Việt Nam phải gồm 10 chữ số.');
         }
@@ -198,8 +224,12 @@ private function sanitizeRedirect(string $redirect): string
 
         $user = $res['user'];
         Rbac::loginUser($user);
-        $this->model('OrderModel')->mergeGuestCartToDb((int) $user['id']);
-        $this->model('ContentModel')->mergeGuestWishlistToDb((int) $user['id']);
+        try {
+            $this->model('OrderModel')->mergeGuestCartToDb((int) $user['id']);
+            $this->model('ContentModel')->mergeGuestWishlistToDb((int) $user['id']);
+        } catch (Throwable $e) {
+            // Không chặn kết quả đăng ký mới
+        }
 
         $this->jsonResponse('success', 200, ['redirect_url' => App::url('')], $res['message']);
     }
@@ -260,7 +290,7 @@ private function sanitizeRedirect(string $redirect): string
         $this->requirePostJson();
         $in = $this->jsonInput();
         $fullName = trim((string) ($in['full_name'] ?? ''));
-        $phone = preg_replace('/[\s.-]/', '', trim((string) ($in['phone'] ?? ''))) ?? '';
+        $phone = $this->normalizeVnPhone((string) ($in['phone'] ?? ''));
 
         if (mb_strlen($fullName, 'UTF-8') < 2) {
             $this->jsonResponse('error', 422, [], 'Họ và tên phải có ít nhất 2 ký tự.');
@@ -269,8 +299,11 @@ private function sanitizeRedirect(string $redirect): string
             $this->jsonResponse('error', 422, [], 'Số điện thoại không đúng định dạng Việt Nam.');
         }
 
-        $this->model('UserModel')->updateProfile((int) $user['id'], $fullName, $phone);
-        $this->jsonResponse('success', 200, [], 'Đã cập nhật thông tin cá nhân thành công!');
+        $res = $this->model('UserModel')->updateProfile((int) $user['id'], $fullName, $phone);
+        if (!$res['ok']) {
+            $this->jsonResponse('error', 409, [], $res['message']);
+        }
+        $this->jsonResponse('success', 200, [], $res['message']);
     }
 
     public function ajaxChangePassword(): void

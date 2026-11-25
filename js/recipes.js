@@ -526,7 +526,16 @@
                   : null;
               const price = opt ? opt.price : prod ? prod.price : 0;
               const toolImg = prod && prod.image ? prod.image : recipe.image || FALLBACK_IMG;
-              const canBuyTool = Boolean(prod && prod.stock > 0 && String(prod.stockStatus || "") !== "out_of_stock");
+              const stockState = prod ? String(prod.stockStatus || "in_stock") : "out_of_stock";
+              const hasExplicitStock = Boolean(prod && prod.stock !== undefined && prod.stock !== null && prod.stock !== "");
+              const canBuyTool = Boolean(prod && stockState === "in_stock" && (!hasExplicitStock || Number(prod.stock) > 0));
+              const stockLabel = !prod
+                ? ""
+                : canBuyTool
+                  ? `<span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#ecfdf5;color:#15803d;font-size:11.5px;font-weight:700;">Còn hàng</span>`
+                  : stockState === "coming_soon"
+                    ? "Sắp mở bán"
+                    : "Hết hàng";
               return `
                 <div class="recipe-tool-card">
                   <div class="recipe-tool-card__left">
@@ -546,7 +555,7 @@
                       <p style="font-size:12.5px;color:var(--accent-sub);margin:2px 0 4px;">${escapeHtml(tool.desc || "")}</p>
                       ${
                         prod
-                          ? `<strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>`
+                          ? `<strong style="font-size:14px;color:var(--accent-cta);">${formatPrice(price)}</strong>${canBuyTool ? stockLabel : ""}`
                           : `<span style="font-size:12.5px;color:#7c5c46;">Chuẩn bị sẵn tại bếp</span>`
                       }
                     </div>
@@ -563,7 +572,7 @@
                           + Thêm vào giỏ
                         </button>`
                       : prod
-                        ? `<span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">Hết hàng</span>`
+                        ? `<span style="font-size:12px;color:#8b1e24;font-weight:600;white-space:nowrap;">${stockLabel}</span>`
                         : ""
                   }
                 </div>
