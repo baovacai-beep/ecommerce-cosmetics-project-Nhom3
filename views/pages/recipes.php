@@ -24,7 +24,9 @@ $activeQuery = (string) ($filters['q'] ?? '');
   </section>
 
   <div class="recipes-filter-bar" role="group" aria-label="Lọc công thức theo nhóm bánh">
-    <?php foreach ($tagsList as $tag): ?>
+    <?php foreach ($tagsList as $tag):
+      $labelTag = $tag === 'Tất cả' ? 'Tất cả (8)' : $tag;
+    ?>
       <a href="<?= App::e(App::url('?' . http_build_query([
           'c' => 'recipe',
           'a' => 'index',
@@ -33,7 +35,7 @@ $activeQuery = (string) ($filters['q'] ?? '');
           'difficulty' => $activeDiff,
           'max_minutes' => $activeTime,
       ]))) ?>"
-         class="blog-filter-btn <?= $activeTag === $tag ? 'active' : '' ?>"><?= App::e($tag) ?></a>
+         class="blog-filter-btn <?= $activeTag === $tag ? 'active' : '' ?>"><?= App::e($labelTag) ?></a>
     <?php endforeach; ?>
   </div>
 
@@ -43,56 +45,60 @@ $activeQuery = (string) ($filters['q'] ?? '');
     <input type="hidden" name="tag" value="<?= App::e($activeTag) ?>">
 
     <div class="recipes-controls-panel__right" style="width:100%;justify-content:flex-start;">
-      <select id="recipe-filter-diff" name="difficulty" class="form-input" style="width:auto;min-width:150px;" aria-label="Độ khó">
+      <select id="recipe-filter-diff" name="difficulty" class="form-input" style="width:auto;min-width:155px;" aria-label="Lọc theo độ khó" onchange="this.form.submit()">
         <option value="Tất cả">Độ khó</option>
         <option value="Dễ" <?= $activeDiff === 'Dễ' ? 'selected' : '' ?>>Dễ</option>
         <option value="Trung bình" <?= $activeDiff === 'Trung bình' ? 'selected' : '' ?>>Trung bình</option>
         <option value="Khó" <?= $activeDiff === 'Khó' ? 'selected' : '' ?>>Khó</option>
       </select>
-      <select id="recipe-filter-time" name="max_minutes" class="form-input" style="width:auto;min-width:165px;" aria-label="Thời gian">
+      <select id="recipe-filter-time" name="max_minutes" class="form-input" style="width:auto;min-width:170px;" aria-label="Lọc theo thời gian" onchange="this.form.submit()">
         <option value="0">Thời gian</option>
         <option value="30" <?= $activeTime === 30 ? 'selected' : '' ?>>Nhanh (&le; 35 phút)</option>
-        <option value="60" <?= $activeTime === 60 ? 'selected' : '' ?>>Vừa (36 – 65 phút)</option>
-        <option value="61" <?= $activeTime === 61 ? 'selected' : '' ?>>Công phu (&gt; 65 phút)</option>
+        <option value="60" <?= $activeTime === 60 ? 'selected' : '' ?>>Vừa (36 – 60 phút)</option>
+        <option value="61" <?= $activeTime === 61 ? 'selected' : '' ?>>Công phu (&gt; 60 phút)</option>
       </select>
-      <button type="submit" class="btn btn--primary btn--sm">Lọc</button>
-      <span class="blog-count-pill"><?= count($recipes) ?> công thức</span>
+      <span class="blog-count-pill" id="recipe-count-pill" aria-live="polite" style="align-self:center;"><?= count($recipes) ?> công thức</span>
     </div>
   </form>
 
   <?php if (empty($recipes)): ?>
-    <div class="php-card" style="text-align:center;padding:42px 20px;background:#fff8ed;border:1.5px dashed #c88b52;">
-      <h2 style="color:#70452b;margin-top:0;">Không tìm thấy công thức phù hợp</h2>
-      <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--primary">Xem toàn bộ công thức</a>
+    <div class="no-products-message">
+      <strong>Không tìm thấy công thức phù hợp với bộ lọc hiện tại</strong>
+      <p>Hãy thử đổi nhóm bánh, độ khó hoặc đặt lại bộ lọc để xem toàn bộ 8 công thức BakeMate.</p>
+      <a href="<?= App::e(App::url('?c=recipe&a=index')) ?>" class="btn btn--primary" style="margin-top:12px;">Xem tất cả công thức</a>
     </div>
   <?php else: ?>
-    <div class="recipes-editorial-grid">
-      <?php foreach ($recipes as $r):
-        $recUrl = App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']));
-      ?>
-        <article class="recipe-editorial-card php-card" data-recipe-url="<?= App::e($recUrl) ?>" style="cursor:pointer;padding:0;overflow:hidden;display:flex;flex-direction:column;">
-          <a href="<?= App::e($recUrl) ?>" class="recipe-editorial-card__media" aria-label="<?= App::e($r['title']) ?>">
-            <img src="<?= App::e(App::asset($r['image_path'])) ?>" alt="<?= App::e($r['title']) ?>" class="recipe-editorial-card__img" loading="lazy">
-            <span class="recipe-poster-card__badge-corner" style="top:12px;left:12px;"><?= App::e($r['difficulty']) ?></span>
-          </a>
-          <div style="padding:18px;flex:1;display:flex;flex-direction:column;justify-content:space-between;">
-            <div>
-              <div style="display:flex;justify-content:space-between;font-size:12px;color:#c88b52;font-weight:700;">
-                <span><?= App::e($r['code']) ?> · <?= App::e($r['category']) ?></span>
-                <span>&#9733; <?= App::e($r['rating_avg']) ?></span>
+    <section aria-label="Danh sách công thức BakeMate">
+      <div class="recipes-editorial-grid" id="recipes-grid">
+        <?php foreach ($recipes as $r):
+          $recUrl = App::url('?c=recipe&a=detail&id=' . urlencode($r['slug']));
+        ?>
+          <article class="recipe-poster-card" data-recipe-url="<?= App::e($recUrl) ?>" style="cursor:pointer;">
+            <img
+              src="<?= App::e(App::asset($r['image_path'])) ?>"
+              alt="<?= App::e($r['title']) ?>"
+              class="recipe-poster-card__img"
+              loading="lazy"
+            >
+            <div class="recipe-poster-card__scrim" aria-hidden="true"></div>
+            <span class="recipe-poster-card__badge-corner"><?= App::e($r['difficulty']) ?></span>
+            <div class="recipe-poster-card__body">
+              <span class="recipe-poster-card__code"><?= App::e($r['code'] ?: 'BAKING RECIPE') ?></span>
+              <h2 class="recipe-poster-card__title"><?= App::e($r['title']) ?></h2>
+              <div class="recipe-poster-card__meta">
+                <span>&#9733; <?= App::e($r['rating_avg'] ?? '4.8') ?></span>
+                <span>&middot;</span>
+                <span><?= App::e($r['time_label']) ?></span>
+                <span>&middot;</span>
+                <span><?= App::e($r['people_label'] ?? '4 người') ?></span>
               </div>
-              <h2 class="recipe-editorial-card__title" style="margin:8px 0;font-size:18px;color:#70452b;">
-                <a href="<?= App::e($recUrl) ?>" style="color:inherit;text-decoration:none;"><?= App::e($r['title']) ?></a>
-              </h2>
-              <p style="font-size:13.5px;color:#6e4b34;margin:0 0 12px;line-height:1.55;"><?= App::e($r['subtitle']) ?></p>
-              <div style="font-size:12.5px;color:#7c5c46;margin-bottom:14px;">
-                Thời gian: <strong><?= App::e($r['time_label']) ?></strong> · <strong><?= App::e($r['people_label'] ?? '4 người') ?></strong>
-              </div>
+              <a href="<?= App::e($recUrl) ?>" class="recipe-poster-card__cta" style="position:relative;z-index:4;">
+                Xem công thức &rarr;
+              </a>
             </div>
-            <a href="<?= App::e($recUrl) ?>" class="btn btn--primary btn--full">Mở công thức &amp; Chọn combo</a>
-          </div>
-        </article>
-      <?php endforeach; ?>
-    </div>
+          </article>
+        <?php endforeach; ?>
+      </div>
+    </section>
   <?php endif; ?>
 </main>

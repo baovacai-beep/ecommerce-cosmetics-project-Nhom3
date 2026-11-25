@@ -1,45 +1,48 @@
 <?php
 declare(strict_types=1);
 ?>
-<main class="php-page-container">
+<main class="page-container blog-page">
   <?php if (!$post): ?>
-    <div class="php-card" style="text-align:center;padding:48px 20px;">
-      <h1 style="color:#70452b;margin-top:0;">Bài viết không tồn tại</h1>
-      <a href="<?= App::e(App::url('?c=home&a=blog')) ?>" class="btn btn--primary">Quay lại trang Blog</a>
+    <div class="no-products-message">
+      <strong>Không tìm thấy bài viết bạn yêu cầu</strong>
+      <p>Bài viết có thể đã được cập nhật hoặc đường dẫn chưa chính xác.</p>
+      <a href="<?= App::e(App::url('?c=home&a=blog')) ?>" class="btn btn--primary" style="margin-top:12px;">Quay lại trang Blog</a>
     </div>
   <?php else: ?>
-    <nav style="font-size:13.5px;color:#7c5c46;margin-bottom:16px;">
-      <a href="<?= App::e(App::url('')) ?>">Trang chủ</a> &rsaquo;
-      <a href="<?= App::e(App::url('?c=home&a=blog')) ?>">Blog</a> &rsaquo;
-      <span><?= App::e($post['title']) ?></span>
+    <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+      <ul class="breadcrumb__list">
+        <li class="breadcrumb__item"><a href="<?= App::e(App::url('')) ?>">Trang chủ</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item"><a href="<?= App::e(App::url('?c=home&a=blog')) ?>">Blog</a></li>
+        <li class="breadcrumb__separator">/</li>
+        <li class="breadcrumb__item active"><?= App::e($post['title']) ?></li>
+      </ul>
     </nav>
 
-    <article class="php-card" style="max-width:860px;margin:0 auto;">
-      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px;">
-        <span class="product-card__category"><?= App::e($post['category']) ?> · <?= App::e($post['read_time']) ?></span>
-        <?php if (!empty($post['display_mode'])): ?>
-          <span class="blog-format-badge" style="position:static;"><?= App::e($post['display_mode']) ?></span>
-        <?php endif; ?>
-        <?php if (!empty($post['difficulty'])): ?>
-          <span class="blog-format-badge" style="position:static;background:#f4eadb;color:#70452b;">Độ khó: <?= App::e($post['difficulty']) ?></span>
+    <article class="blog-detail-article" style="max-width:860px;margin:0 auto;background:#ffffff;border:1px solid #eadbc6;border-radius:18px;padding:28px;box-shadow:0 8px 26px rgba(74,46,25,0.06);">
+      <div class="blog-modal__hero">
+        <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" class="blog-modal__img">
+        <?php if (!empty($post['content']['hero_caption'])): ?>
+          <p class="blog-figcaption"><?= App::e($post['content']['hero_caption']) ?></p>
         <?php endif; ?>
       </div>
-      <h1 style="margin:8px 0 10px;color:#70452b;font-size:28px;"><?= App::e($post['title']) ?></h1>
-      <p style="font-size:13.5px;color:#7c5c46;margin:0 0 18px;">
-        Tác giả: <strong><?= App::e($post['author']) ?></strong> · Ngày đăng: <?= App::e($post['published_at_label']) ?>
-        <?php if (!empty($post['content']['yield_note'])): ?>
-          · Khẩu phần: <strong><?= App::e($post['content']['yield_note']) ?></strong>
-        <?php endif; ?>
-      </p>
 
-      <img src="<?= App::e(App::asset($post['image_path'])) ?>" alt="<?= App::e($post['title']) ?>" style="width:100%;max-height:380px;object-fit:cover;border-radius:12px;margin-bottom:<?= !empty($post['content']['hero_caption']) ? '6px' : '18px' ?>;">
-      <?php if (!empty($post['content']['hero_caption'])): ?>
-        <p class="blog-figcaption"><?= App::e($post['content']['hero_caption']) ?></p>
-      <?php endif; ?>
+      <div class="blog-modal__header">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;">
+          <span class="blog-modal__badge"><?= App::e($post['category']) ?></span>
+          <?php if (!empty($post['display_mode'])): ?>
+            <span class="blog-format-badge" style="position:static;"><?= App::e($post['display_mode']) ?></span>
+          <?php endif; ?>
+        </div>
+        <h1 class="blog-modal__title"><?= App::e($post['title']) ?></h1>
+        <p class="blog-modal__meta">
+          <?= App::e($post['author']) ?> &middot; <?= App::e($post['published_at_label']) ?> &middot; <?= App::e($post['read_time']) ?>
+          <?php if (!empty($post['difficulty'])): ?> &middot; Độ khó: <?= App::e($post['difficulty']) ?><?php endif; ?>
+          <?php if (!empty($post['content']['yield_note'])): ?> &middot; Khẩu phần: <?= App::e($post['content']['yield_note']) ?><?php endif; ?>
+        </p>
+      </div>
 
-      <p style="font-size:16px;font-weight:600;color:#4a2d1b;line-height:1.7;background:#fff8ed;padding:14px 16px;border-left:4px solid #c88b52;border-radius:8px;margin-bottom:18px;">
-        <?= App::e($post['excerpt']) ?>
-      </p>
+      <p class="blog-modal__lead"><?= App::e($post['excerpt']) ?></p>
 
       <?php if (!empty($post['video_url'])): ?>
         <section class="blog-video-box" aria-label="Video hướng dẫn thực hành">
@@ -56,11 +59,11 @@ declare(strict_types=1);
             ></iframe>
           </div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;align-items:center;">
-            <a href="<?= App::e(str_replace('/embed/', '/watch?v=', (string) $post['video_url'])) ?>" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark btn--sm">
+            <a href="<?= App::e(str_replace('/embed/', '/watch?v=', (string) $post['video_url'])) ?>" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark">
               Mở video trên YouTube (King Arthur Baking) &nearr;
             </a>
             <?php if ($post['slug'] === 'post-banh-quy-bo'): ?>
-              <a href="<?= App::e(App::url('?c=product&a=detail&id=7')) ?>" class="btn btn--primary btn--sm">
+              <a href="<?= App::e(App::url('?c=product&a=detail&id=7')) ?>" class="btn btn--primary">
                 Xem Cân điện tử nhà bếp tại Shop &rarr;
               </a>
             <?php endif; ?>
@@ -145,7 +148,7 @@ declare(strict_types=1);
                 <?php endforeach; ?>
                 <?php if (!empty($blk['video_article_url'])): ?>
                   <p style="margin:8px 0 0;">
-                    <a href="<?= App::e($blk['video_article_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark btn--sm">
+                    <a href="<?= App::e($blk['video_article_url']) ?>" target="_blank" rel="noopener noreferrer" class="btn btn--outline-dark">
                       🎬 <?= App::e($blk['video_label'] ?? 'Xem video hướng dẫn thực hành') ?> &nearr;
                     </a>
                   </p>
@@ -192,16 +195,18 @@ declare(strict_types=1);
           </section>
         <?php endif; ?>
       <?php else: ?>
-        <h2 style="color:#70452b;font-size:20px;">Các bước thực hiện &amp; Lưu ý quan trọng</h2>
-        <ol style="padding-left:20px;line-height:1.75;color:#4a2d1b;font-size:15px;">
-          <?php foreach ($post['steps'] as $st): ?>
-            <li style="margin-bottom:10px;"><?= App::e($st) ?></li>
-          <?php endforeach; ?>
-        </ol>
+        <div class="blog-modal__section">
+          <h3>Các bước thực hiện &amp; Lưu ý quan trọng</h3>
+          <ol class="blog-modal__steps">
+            <?php foreach ($post['steps'] as $st): ?>
+              <li><?= App::e($st) ?></li>
+            <?php endforeach; ?>
+          </ol>
+        </div>
 
         <?php if (count($post['gallery'] ?? []) > 1): ?>
           <section style="margin-top:18px;">
-            <h2 style="color:#70452b;font-size:18px;margin-bottom:8px;">Hình ảnh minh họa thực tế</h2>
+            <h3 style="color:#70452b;font-size:18px;margin-bottom:8px;">Hình ảnh minh họa thực tế</h3>
             <div class="blog-gallery-grid">
               <?php foreach ($post['gallery'] as $gImg): ?>
                 <img src="<?= App::e(App::asset($gImg)) ?>" alt="<?= App::e($post['title']) ?>" loading="lazy">
@@ -211,36 +216,116 @@ declare(strict_types=1);
         <?php endif; ?>
       <?php endif; ?>
 
-      <?php if (!empty($relatedRecipe)): ?>
-        <div style="margin-top:24px;padding:18px;border:2px dashed #c88b52;border-radius:12px;background:#fff8ed;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;">
-          <div>
-            <span style="font-size:12px;font-weight:700;color:#c88b52;text-transform:uppercase;">Chuẩn bị nguyên liệu cùng BakeMate</span>
-            <h3 style="margin:4px 0;color:#70452b;"><?= App::e($relatedRecipe['title']) ?></h3>
-            <p style="margin:0;font-size:13.5px;color:#7c5c46;">Giá nguyên liệu: <strong><?= App::e(App::formatCurrency((int) $relatedRecipe['estimated_ingredients_cost'])) ?></strong></p>
+      <?php if (!empty($relatedRecipe)):
+        $comboItemsPayload = [];
+        foreach (($relatedRecipe['ingredients'] ?? []) as $ing) {
+            if (!empty($ing['purchase_available']) && !empty($ing['product_id']) && !empty($ing['variant'])) {
+                $comboItemsPayload[] = [
+                    'product_id' => (int) $ing['product_id'],
+                    'option_index' => (int) ($ing['option_index'] ?? 0),
+                    'quantity' => max(1, (int) ($ing['packs_needed'] ?? 1)),
+                ];
+            }
+        }
+      ?>
+        <section class="blog-modal__combo-box" aria-label="Combo nguyên liệu Recipe-to-Cart">
+          <div class="blog-modal__combo-head">
+            <div>
+              <span class="sub-badge">Chuẩn bị nguyên liệu cùng BakeMate</span>
+              <h3><?= App::e($relatedRecipe['title']) ?></h3>
+              <p>Khẩu phần gợi ý: <?= App::e($relatedRecipe['yield_label'] ?? ((int) $relatedRecipe['default_servings'] . ' ' . $relatedRecipe['servings_unit'])) ?></p>
+            </div>
+            <div class="blog-modal__combo-total">
+              <span>Trọn bộ chỉ</span>
+              <strong><?= App::e(App::formatCurrency((int) $relatedRecipe['estimated_ingredients_cost'])) ?></strong>
+            </div>
           </div>
-          <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relatedRecipe['slug']))) ?>" class="btn btn--primary">Mở công thức &amp; Chọn mua combo</a>
-        </div>
+
+          <ul class="blog-modal__ingredient-list">
+            <?php foreach (($relatedRecipe['ingredients'] ?? []) as $ing):
+              if (empty($ing['purchase_available']) || empty($ing['product']) || empty($ing['variant'])) continue;
+              $linePrice = (int) $ing['variant']['price'] * max(1, (int) $ing['packs_needed']);
+            ?>
+              <li>
+                <div>
+                  <a href="<?= App::e(App::url('?c=product&a=detail&id=' . (int) $ing['product_id'])) ?>"><?= App::e($ing['product']['name']) ?></a>
+                  <span class="ingredient-opt">(<?= (int) $ing['packs_needed'] ?> &times; <?= App::e($ing['variant']['short_label']) ?>)</span>
+                  <small>Dùng cho công thức: <?= App::e($ing['scaled_amount']) ?> <?= App::e($ing['unit']) ?> <?= App::e($ing['name']) ?></small>
+                </div>
+                <strong><?= App::e(App::formatCurrency($linePrice)) ?></strong>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+
+          <div class="blog-modal__combo-actions">
+            <a href="<?= App::e(App::url('?c=recipe&a=detail&id=' . urlencode($relatedRecipe['slug']))) ?>" class="btn btn--outline-dark blog-modal__combo-btn">
+              Điều chỉnh khẩu phần
+            </a>
+            <?php if (!empty($comboItemsPayload)): ?>
+              <button type="button" id="btn-blog-add-combo" class="btn btn--primary blog-modal__combo-btn">
+                Thêm combo vào giỏ
+              </button>
+            <?php endif; ?>
+          </div>
+        </section>
+
+        <?php if (!empty($comboItemsPayload)): ?>
+          <script>
+          document.getElementById("btn-blog-add-combo")?.addEventListener("click", async function () {
+            this.disabled = true;
+            try {
+              const res = await window.BakeApp.postJson("recipe", "ajaxAddComboToCart", {
+                recipe_group_id: <?= json_encode((string) $relatedRecipe['slug']) ?>,
+                items: <?= json_encode($comboItemsPayload) ?>
+              });
+              window.BakeApp.updateBadges(res.data.cart_count);
+              window.BakeApp.showToast(res.message || "Đã thêm combo nguyên liệu vào giỏ hàng!", "success");
+            } catch (err) {
+              window.BakeApp.showToast(err.message, "error");
+            } finally {
+              this.disabled = false;
+            }
+          });
+          </script>
+        <?php endif; ?>
       <?php endif; ?>
     </article>
 
     <?php if (!empty($otherPosts)): ?>
-      <section style="max-width:860px;margin:28px auto 0;">
-        <h2 style="color:#70452b;font-size:21px;margin:0 0 14px;">Bài viết liên quan</h2>
-        <div class="blog-related-grid">
-          <?php foreach ($otherPosts as $op): ?>
-            <article class="php-card related-hover-card" style="padding:14px;display:flex;flex-direction:column;gap:8px;">
-              <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($op['slug']))) ?>" class="related-hover-card__media">
-                <img src="<?= App::e(App::asset($op['image_path'])) ?>" alt="<?= App::e($op['title']) ?>" loading="lazy" class="related-hover-card__img">
+      <section class="related-products-section" style="margin-top:40px;">
+        <h2 class="section-heading">Bài viết liên quan</h2>
+        <div class="blog-grid">
+          <?php foreach ($otherPosts as $op):
+            $opUrl = App::url('?c=home&a=blogDetail&id=' . urlencode($op['slug']));
+          ?>
+            <article class="blog-card">
+              <a href="<?= App::e($opUrl) ?>" class="blog-card__media" aria-label="<?= App::e($op['title']) ?>">
+                <img src="<?= App::e(App::asset($op['image_path'])) ?>" alt="<?= App::e($op['title']) ?>" class="blog-card__img" loading="lazy">
+                <span class="blog-card__category"><?= App::e($op['category']) ?></span>
               </a>
-              <span class="product-card__category" style="font-size:11.5px;"><?= App::e($op['category']) ?></span>
-              <h3 style="margin:0;font-size:15.5px;line-height:1.4;color:#4a2d1b;">
-                <a href="<?= App::e(App::url('?c=home&a=blogDetail&id=' . urlencode($op['slug']))) ?>" style="color:inherit;"><?= App::e($op['title']) ?></a>
-              </h3>
-              <p style="margin:0;font-size:12.5px;color:#7c5c46;"><?= App::e($op['read_time']) ?></p>
+              <div class="blog-card__body">
+                <div>
+                  <div class="blog-card__meta">
+                    <span><?= App::e($op['read_time']) ?></span>
+                  </div>
+                  <h3 class="blog-card__title">
+                    <a href="<?= App::e($opUrl) ?>"><?= App::e($op['title']) ?></a>
+                  </h3>
+                  <p class="blog-card__excerpt"><?= App::e($op['excerpt']) ?></p>
+                </div>
+                <div class="blog-card__bottom" style="display:flex;flex-direction:row;justify-content:space-between;align-items:center;border-top:1px solid #f0e4d3;padding-top:10px;font-size:12.5px;color:#7c5c46;">
+                  <span><?= App::e($op['published_at_label']) ?></span>
+                  <a href="<?= App::e($opUrl) ?>" class="blog-card__readmore">Đọc tiếp <span class="blog-card__arrow" aria-hidden="true">&rarr;</span></a>
+                </div>
+              </div>
             </article>
           <?php endforeach; ?>
         </div>
       </section>
     <?php endif; ?>
+
+    <div class="back-navigation" style="margin-top:28px;">
+      <a href="<?= App::e(App::url('?c=home&a=blog')) ?>" class="btn btn--outline-dark">&larr; Quay lại danh sách Blog</a>
+    </div>
   <?php endif; ?>
 </main>

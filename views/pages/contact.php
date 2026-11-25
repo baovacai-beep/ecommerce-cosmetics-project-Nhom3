@@ -78,7 +78,7 @@ $faqs = [
 
     <div class="contact-form-card">
       <h2 class="section-heading" style="text-align:left;font-size:21px;margin-bottom:6px;">Gửi lời nhắn cho BakeMate</h2>
-      <p style="font-size:14px;color:var(--accent-sub);margin-bottom:18px;">Điền thông tin bên dưới — tin nhắn sẽ được lưu vào MySQL và chuyển đến bộ phận chăm sóc khách hàng.</p>
+      <p style="font-size:14px;color:var(--accent-sub);margin-bottom:18px;">Điền thông tin bên dưới — tin nhắn sẽ được lưu lại trên hệ thống và chuyển đến bộ phận chăm sóc khách hàng.</p>
 
       <div id="contact-feedback" hidden style="padding:12px 14px;border-radius:8px;font-size:14px;font-weight:600;margin-bottom:14px;"></div>
 

@@ -1,74 +1,114 @@
 <?php
 declare(strict_types=1);
 ?>
-<main class="php-page-container" id="order-success-root">
-  <div class="checkout-progress" role="list" style="margin-bottom:22px;">
-    <div class="checkout-progress__step is-done">1. Giỏ hàng</div>
-    <div class="checkout-progress__step is-done">2. Thông tin &amp; Thanh toán</div>
-    <div class="checkout-progress__step is-active is-done">3. Hoàn tất</div>
-  </div>
+<main class="page-container" id="order-success-root">
+  <nav class="breadcrumb" aria-label="Đường dẫn điều hướng">
+    <ul class="breadcrumb__list">
+      <li class="breadcrumb__item"><a href="<?= App::e(App::url('')) ?>">Trang chủ</a></li>
+      <li class="breadcrumb__separator">/</li>
+      <li class="breadcrumb__item"><a href="<?= App::e(App::url('?c=order&a=cart')) ?>">Giỏ hàng</a></li>
+      <li class="breadcrumb__separator">/</li>
+      <li class="breadcrumb__item active">Hoàn tất đơn hàng</li>
+    </ul>
+  </nav>
+
+  <nav class="checkout-progress" aria-label="Tiến trình đặt hàng">
+    <div class="checkout-progress__step is-done">
+      <span class="checkout-progress__num">1</span>
+      <span>Giỏ hàng</span>
+    </div>
+    <div class="checkout-progress__step is-done">
+      <span class="checkout-progress__num">2</span>
+      <span>Thông tin &amp; Thanh toán</span>
+    </div>
+    <div class="checkout-progress__step is-done" aria-current="step">
+      <span class="checkout-progress__num">3</span>
+      <span>Hoàn tất đơn hàng</span>
+    </div>
+  </nav>
 
   <?php if (!$order): ?>
-    <div class="php-card" style="text-align:center;padding:48px 20px;">
-      <h1 style="color:#70452b;margin-top:0;">Không tìm thấy hóa đơn đơn hàng</h1>
-      <a href="<?= App::e(App::url('?c=order&a=orders')) ?>" class="btn btn--primary">Tra cứu đơn hàng</a>
+    <div class="order-success-card" style="text-align:center;">
+      <h1 class="cart-page__title" style="margin-bottom:10px;">Không tìm thấy hóa đơn đơn hàng</h1>
+      <p class="cart-empty__desc">Mã đơn không tồn tại hoặc bạn không có quyền xem hóa đơn này.</p>
+      <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:12px;">
+        <a href="<?= App::e(App::url('?c=order&a=orders')) ?>" class="btn btn--primary">Tra cứu đơn hàng</a>
+        <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline-dark">Khám phá sản phẩm</a>
+      </div>
     </div>
   <?php else: ?>
-    <div class="order-success-card php-card" style="max-width:860px;margin:0 auto;">
-      <div style="text-align:center;margin-bottom:24px;">
-        <span style="display:inline-block;padding:6px 14px;border-radius:999px;background:#ecfdf5;color:#166534;font-weight:700;font-size:13px;">ĐẶT HÀNG THÀNH CÔNG</span>
-        <h1 style="margin:10px 0 6px;color:#70452b;">Cảm ơn <?= App::e($order['customer_name']) ?>!</h1>
-        <p style="margin:0;color:#7c5c46;">Mã đơn hàng của bạn là <strong style="color:#70452b;font-size:18px;">#<?= App::e($order['order_code']) ?></strong></p>
-      </div>
+    <div class="order-success-card">
+      <span class="order-success-card__badge">Đặt hàng thành công</span>
+      <h1 class="cart-page__title" style="margin-bottom:6px;">Cảm ơn <?= App::e($order['customer_name']) ?> đã đặt hàng tại BakeMate!</h1>
+      <p style="font-size:14.5px;color:#5c402d;line-height:1.6;">
+        Mã đơn hàng của bạn là <strong class="order-code">#<?= App::e($order['order_code']) ?></strong>
+        <?php if (!empty($order['created_at'])): ?> &middot; Đặt lúc <strong><?= App::e($order['created_at']) ?></strong><?php endif; ?>.
+      </p>
 
       <?php if ($vietQr): ?>
-        <div class="php-vietqr-box">
-          <img src="<?= App::e($vietQr['qr_image_url']) ?>" alt="Mã VietQR thanh toán" style="width:180px;border-radius:10px;background:#fff;">
-          <div>
-            <h3 style="margin:0 0 8px;color:#70452b;">Quét mã VietQR để hoàn tất thanh toán</h3>
-            <p style="margin:4px 0;font-size:13.5px;">Ngân hàng: <strong><?= App::e($vietQr['bank_id']) ?></strong> · STK: <strong><?= App::e($vietQr['account_no']) ?></strong></p>
-            <p style="margin:4px 0;font-size:13.5px;">Chủ TK: <strong><?= App::e($vietQr['account_name']) ?></strong> · Số tiền: <strong><?= App::e(App::formatCurrency((int) $vietQr['amount'])) ?></strong></p>
-            <p style="margin:4px 0 12px;font-size:13.5px;">Nội dung CK: <strong><?= App::e($vietQr['transfer_memo']) ?></strong></p>
-            <span id="qr-pay-status" style="display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;background:#fef3c7;color:#92400e;">
-              Trạng thái: <?= $order['payment_status'] === 'paid' ? 'Đã thanh toán' : 'Chờ xác nhận' ?>
-            </span>
-            <?php if ($order['payment_status'] !== 'paid'): ?>
-              <button type="button" class="btn btn--primary btn--sm" id="btn-verify-vietqr" data-code="<?= App::e($order['order_code']) ?>" style="margin-left:8px;">Xác nhận đã chuyển khoản</button>
-            <?php endif; ?>
+        <div class="payment-extra-box" style="margin-top:16px;">
+          <div class="vietqr-box">
+            <img src="<?= App::e($vietQr['qr_image_url']) ?>" alt="Mã VietQR thanh toán" style="width:168px;border-radius:10px;background:#fff;border:1px solid #eedfc9;">
+            <div style="flex:1;min-width:220px;">
+              <strong style="display:block;font-size:15px;color:var(--primary-color);margin-bottom:6px;">Quét mã VietQR để hoàn tất chuyển khoản</strong>
+              <p style="font-size:13.5px;color:#5c402d;margin:3px 0;">Ngân hàng: <strong><?= App::e($vietQr['bank_id']) ?></strong> &middot; STK: <strong><?= App::e($vietQr['account_no']) ?></strong></p>
+              <p style="font-size:13.5px;color:#5c402d;margin:3px 0;">Chủ TK: <strong><?= App::e($vietQr['account_name']) ?></strong> &middot; Số tiền: <strong style="color:#b45309;"><?= App::e(App::formatCurrency((int) $vietQr['amount'])) ?></strong></p>
+              <p style="font-size:13.5px;color:#5c402d;margin:3px 0 10px;">Nội dung CK: <strong><?= App::e($vietQr['transfer_memo']) ?></strong></p>
+              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span id="qr-pay-status" class="order-status-pill" style="background:<?= $order['payment_status'] === 'paid' ? '#dcfce7' : '#fef3c7' ?>;color:<?= $order['payment_status'] === 'paid' ? '#15803d' : '#92400e' ?>;">
+                  Trạng thái: <?= $order['payment_status'] === 'paid' ? 'Đã thanh toán' : 'Chờ xác nhận' ?>
+                </span>
+                <?php if ($order['payment_status'] !== 'paid'): ?>
+                  <button type="button" class="btn btn--primary btn--sm" id="btn-verify-vietqr" data-code="<?= App::e($order['order_code']) ?>">Xác nhận đã chuyển khoản</button>
+                <?php endif; ?>
+              </div>
+            </div>
           </div>
         </div>
       <?php endif; ?>
 
-      <div class="order-success-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:20px;font-size:14px;">
-        <div style="background:#fffdf9;border:1px solid #efe3d2;border-radius:10px;padding:14px;">
-          <h3 style="margin:0 0 8px;color:#70452b;font-size:15px;">Thông tin giao nhận</h3>
-          <p style="margin:4px 0;">Người nhận: <strong><?= App::e($order['customer_name']) ?></strong> (<?= App::e($order['customer_phone']) ?>)</p>
-          <p style="margin:4px 0;">Địa chỉ: <?= App::e($order['street_address'] . ', ' . $order['ward'] . ', ' . $order['district'] . ', ' . $order['province']) ?></p>
-          <p style="margin:4px 0;">Vận chuyển: <strong><?= App::e($order['shipping_method_label']) ?></strong></p>
-          <p style="margin:4px 0;">Thanh toán: <strong><?= App::e(strtoupper((string) $order['payment_method'])) ?></strong></p>
+      <div class="order-success-grid">
+        <div class="order-success-panel">
+          <h2 style="font-size:16px;font-weight:800;color:var(--primary-color);margin-bottom:10px;">Thông tin nhận hàng &amp; giao vận</h2>
+          <p><strong>Người nhận:</strong> <?= App::e($order['customer_name']) ?> (<?= App::e($order['customer_phone']) ?>)</p>
+          <p><strong>Địa chỉ:</strong> <?= App::e($order['street_address'] . ', ' . $order['ward'] . ', ' . $order['district'] . ', ' . $order['province']) ?></p>
+          <p><strong>Vận chuyển:</strong> <?= App::e($order['shipping_method_label']) ?></p>
+          <p><strong>Thanh toán:</strong> <?= App::e(strtoupper((string) $order['payment_method'])) ?></p>
+          <?php if (!empty($order['note'])): ?>
+            <p><strong>Lời nhắn cho Shop:</strong> <?= App::e($order['note']) ?></p>
+          <?php endif; ?>
         </div>
-        <div style="background:#fffdf9;border:1px solid #efe3d2;border-radius:10px;padding:14px;">
-          <h3 style="margin:0 0 8px;color:#70452b;font-size:15px;">Tổng hợp thanh toán</h3>
-          <p style="margin:4px 0;display:flex;justify-content:space-between;"><span>Tạm tính:</span><strong><?= App::e(App::formatCurrency((int) $order['subtotal'])) ?></strong></p>
-          <p style="margin:4px 0;display:flex;justify-content:space-between;"><span>Phí giao hàng:</span><strong><?= App::e(App::formatCurrency((int) $order['shipping_fee'])) ?></strong></p>
-          <p style="margin:4px 0;display:flex;justify-content:space-between;color:#166534;"><span>Giảm giá:</span><strong>−<?= App::e(App::formatCurrency((int) $order['discount_product'] + (int) $order['discount_shipping'])) ?></strong></p>
-          <p style="margin:8px 0 0;padding-top:8px;border-top:1px solid #ebd9c3;display:flex;justify-content:space-between;font-size:17px;color:#70452b;"><span>Tổng cộng:</span><strong><?= App::e(App::formatCurrency((int) $order['total_amount'])) ?></strong></p>
-        </div>
-      </div>
 
-      <h3 style="margin:0 0 10px;color:#70452b;font-size:16px;">Sản phẩm đã đặt</h3>
-      <div style="display:grid;gap:8px;margin-bottom:22px;">
-        <?php foreach ($order['items'] as $it): ?>
-          <div style="display:flex;justify-content:space-between;padding:8px 12px;border:1px solid #f0e4d3;border-radius:8px;font-size:13.5px;">
-            <span><strong><?= App::e($it['product_name']) ?></strong> (<?= App::e($it['variant_label']) ?>) &times; <?= (int) $it['quantity'] ?></span>
-            <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
+        <div class="order-success-panel">
+          <h2 style="font-size:16px;font-weight:800;color:var(--primary-color);margin-bottom:10px;">Chi tiết đơn hàng (<?= count($order['items']) ?> dòng)</h2>
+          <ul class="order-confirmation__list" style="margin-bottom:10px;">
+            <?php foreach ($order['items'] as $it): ?>
+              <li>
+                <span><?= App::e($it['product_name']) ?> (<?= App::e($it['variant_label']) ?>) &times; <?= (int) $it['quantity'] ?></span>
+                <strong><?= App::e(App::formatCurrency((int) $it['line_total'])) ?></strong>
+              </li>
+            <?php endforeach; ?>
+          </ul>
+          <p style="display:flex;justify-content:space-between;margin:4px 0;">
+            <span>Tạm tính:</span><strong><?= App::e(App::formatCurrency((int) $order['subtotal'])) ?></strong>
+          </p>
+          <p style="display:flex;justify-content:space-between;margin:4px 0;">
+            <span>Phí giao hàng:</span><strong><?= App::e(App::formatCurrency((int) $order['shipping_fee'])) ?></strong>
+          </p>
+          <p style="display:flex;justify-content:space-between;margin:4px 0;color:#15803d;">
+            <span>Giảm giá:</span><strong>&minus;<?= App::e(App::formatCurrency((int) $order['discount_product'] + (int) $order['discount_shipping'])) ?></strong>
+          </p>
+          <div class="order-confirmation__total" style="margin-top:10px;padding-top:10px;border-top:1px dashed #dfd0bc;">
+            <span>Tổng thanh toán:</span>
+            <strong><?= App::e(App::formatCurrency((int) $order['total_amount'])) ?></strong>
           </div>
-        <?php endforeach; ?>
+        </div>
       </div>
 
-      <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;">
-        <a href="<?= App::e(App::url('?c=order&a=orders')) ?>" class="btn btn--primary">Theo dõi đơn hàng</a>
-        <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline">Tiếp tục mua sắm</a>
+      <div class="order-confirmation__actions">
+        <a href="<?= App::e(App::url('?c=order&a=orders')) ?>" class="btn btn--primary">Theo dõi đơn hàng &rarr;</a>
+        <a href="<?= App::e(App::url('?c=product&a=catalog')) ?>" class="btn btn--outline-dark">Tiếp tục mua sắm</a>
+        <a href="<?= App::e(App::url('')) ?>" class="btn btn--outline-dark">Về trang chủ</a>
       </div>
     </div>
   <?php endif; ?>
@@ -81,8 +121,8 @@ document.getElementById("btn-verify-vietqr")?.addEventListener("click", async fu
     const badge = document.getElementById("qr-pay-status");
     if (badge) {
       badge.textContent = "Trạng thái: Đã thanh toán";
-      badge.style.background = "#ecfdf5";
-      badge.style.color = "#166534";
+      badge.style.background = "#dcfce7";
+      badge.style.color = "#15803d";
     }
     this.remove();
     window.BakeApp.showToast(res.message, "success");
