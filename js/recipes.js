@@ -410,7 +410,7 @@
       <!-- 1. Hero Công thức -->
       <section class="recipe-detail-hero">
         <div>
-          <p class="recipe-detail-hero__eyebrow">BAKING JOURNAL / ${escapeHtml(recipe.code || "RECIPE")}</p>
+
           <h1 class="recipe-detail-hero__title">${escapeHtml(recipe.title)}</h1>
           <p class="recipe-detail-hero__desc">${escapeHtml(recipe.subtitle)}</p>
           <div class="recipe-detail-meta-stack" style="font-size:13.5px;color:#7c5c46;margin-bottom:18px;display:grid;gap:6px;line-height:1.5;">
