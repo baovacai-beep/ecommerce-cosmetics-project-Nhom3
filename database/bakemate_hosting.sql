@@ -385,6 +385,7 @@ CREATE TABLE blog_posts (
     author VARCHAR(120) NOT NULL,
     published_at_label VARCHAR(40) NOT NULL,
     image_path VARCHAR(255) NOT NULL,
+    gallery_json LONGTEXT NULL,
     keywords_text VARCHAR(255) NULL,
     excerpt TEXT NOT NULL,
     steps_json LONGTEXT NOT NULL,

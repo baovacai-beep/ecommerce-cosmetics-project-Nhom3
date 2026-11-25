@@ -49,6 +49,33 @@ declare(strict_types=1);
           </div>
         </div>
 
+        <!-- Bảng tổng hợp số tiền đã chọn ở trên -->
+        <div id="recipe-top-summary-card" style="padding:14px 16px;margin-bottom:16px;border-radius:14px;background:#fff8ed;border:1.5px solid #e4d1ba;display:grid;gap:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#5c402d;">
+            <span>Khẩu phần đang quy đổi:</span>
+            <strong id="recipe-top-servings" style="color:#4a2d1b;"><?= (int) $recipe['current_servings'] ?> <?= App::e($recipe['servings_unit']) ?></strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#5c402d;">
+            <span>Số món đã chọn:</span>
+            <strong id="recipe-top-count" style="color:#4a2d1b;">0 món</strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#5c402d;">
+            <span>Tiền nguyên liệu:</span>
+            <strong id="recipe-top-ing-cost" style="color:#4a2d1b;"><?= App::e(App::formatCurrency((int) $recipe['estimated_ingredients_cost'])) ?></strong>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#5c402d;">
+            <span>Tiền dụng cụ còn thiếu:</span>
+            <strong id="recipe-top-tool-cost" style="color:#4a2d1b;"><?= App::e(App::formatCurrency((int) $recipe['estimated_tools_cost'])) ?></strong>
+          </div>
+          <div style="border-top:1px dashed #d9c2a6;padding-top:10px;margin-top:2px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-weight:800;font-size:15px;color:#70452b;">Tổng số tiền:</span>
+            <strong id="recipe-top-total" style="font-size:21px;color:#70452b;"><?= App::e(App::formatCurrency((int) $recipe['estimated_ingredients_cost'] + (int) $recipe['estimated_tools_cost'])) ?></strong>
+          </div>
+          <button type="button" id="btn-add-recipe-combo-top" class="btn btn--primary btn--full js-add-recipe-combo-trigger">
+            Thêm nguyên liệu &amp; dụng cụ đã chọn vào giỏ
+          </button>
+        </div>
+
         <div id="recipe-ingredients-list" style="display:grid;gap:10px;margin-bottom:18px;">
           <?php foreach ($recipe['ingredients'] as $ing):
             $hasProduct = !empty($ing['purchase_available']) && !empty($ing['product_id']) && !empty($ing['product']) && !empty($ing['variant']);
@@ -80,6 +107,7 @@ declare(strict_types=1);
                   Đề xuất mua: <strong><?= (int) $ing['packs_needed'] ?> &times; <?= App::e($ing['variant']['short_label']) ?></strong>
                   (<?= App::e(App::formatCurrency((int) $ing['variant']['price'] * (int) $ing['packs_needed'])) ?>)
                   <?php if ($ing['surplus'] > 0): ?> · Dư dự kiến <?= App::e($ing['surplus']) ?> <?= App::e($ing['unit']) ?><?php endif; ?>
+                  <span style="display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#ecfdf5;color:#15803d;font-size:11px;font-weight:700;">Còn hàng (Kho: <?= (int) ($ing['stock_qty'] ?? 0) ?>)</span>
                 </div>
               <?php elseif (!empty($ing['availability_note']) || !empty($ing['note'])): ?>
                 <div style="font-size:12px;color:#9c7c65;margin-top:4px;"><?= App::e($ing['availability_note'] ?: $ing['note']) ?></div>
@@ -88,14 +116,22 @@ declare(strict_types=1);
           <?php endforeach; ?>
         </div>
 
-        <h3 style="margin:0 0 10px;color:#70452b;font-size:17px;">Dụng cụ đề xuất (chọn món còn thiếu)</h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px;">
+          <h3 style="margin:0;color:#70452b;font-size:17px;">Dụng cụ đề xuất (tích chọn món còn thiếu)</h3>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button type="button" id="btn-select-all-tools" class="btn btn--outline btn--sm" style="padding:4px 10px;font-size:12px;">Chọn tất cả</button>
+            <button type="button" id="btn-unselect-all-tools" class="btn btn--outline btn--sm" style="padding:4px 10px;font-size:12px;">Bỏ chọn tất cả</button>
+          </div>
+        </div>
         <div style="display:grid;gap:8px;margin-bottom:18px;">
           <?php foreach ($recipe['tools'] as $tl):
             $toolImg = !empty($tl['product']['primary_image']) ? (string) $tl['product']['primary_image'] : (string) $recipe['image_path'];
+            $toolStockQty = (int) ($tl['stock_qty'] ?? 0);
+            $toolInStock = !empty($tl['purchase_available']) && !empty($tl['variant']) && $toolStockQty > 0;
           ?>
-            <label style="display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #efe3d2;border-radius:10px;padding:10px 12px;">
+            <label style="display:flex;justify-content:space-between;align-items:center;gap:12px;border:1px solid #efe3d2;border-radius:10px;padding:10px 12px;background:#fffdf9;cursor:<?= $toolInStock ? 'pointer' : 'default' ?>;">
               <span style="display:flex;align-items:center;gap:10px;">
-                <?php if (!empty($tl['purchase_available']) && !empty($tl['variant'])): ?>
+                <?php if ($toolInStock): ?>
                   <input type="checkbox" class="js-combo-tool-check"
                          data-product-id="<?= (int) $tl['product_id'] ?>"
                          data-option-index="<?= (int) $tl['option_index'] ?>"
@@ -107,29 +143,30 @@ declare(strict_types=1);
                 <img src="<?= App::e(App::asset($toolImg)) ?>" alt="<?= App::e($tl['name']) ?>" loading="lazy" class="recipe-tool-card__thumb">
                 <span>
                   <strong style="color:#4a2d1b;display:block;font-size:13.5px;"><?= App::e($tl['name']) ?></strong>
-                  <span style="font-size:12px;color:#7c5c46;"><?= App::e($tl['description']) ?></span>
-                  <?php if (empty($tl['purchase_available'])): ?>
-                    <span style="font-size:12px;color:#9c604d;display:block;"><?= App::e($tl['availability_note'] ?: 'Dụng cụ hiện không thể mua.') ?></span>
+                  <span style="font-size:12px;color:#7c5c46;display:block;"><?= App::e($tl['description']) ?></span>
+                  <?php if (!$toolInStock): ?>
+                    <span style="display:inline-block;margin-top:4px;padding:2px 8px;border-radius:999px;background:#fef2f2;color:#b91c1c;font-size:11.5px;font-weight:700;"><?= App::e($tl['availability_note'] ?: 'Hết hàng') ?></span>
                   <?php else: ?>
-                    <span style="font-size:12px;color:#7c5c46;display:block;">Quy cách: <?= App::e($tl['variant']['short_label']) ?></span>
+                    <span style="font-size:12px;color:#7c5c46;display:inline-block;margin-top:2px;">Quy cách: <?= App::e($tl['variant']['short_label']) ?></span>
+                    <span style="display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#ecfdf5;color:#15803d;font-size:11.5px;font-weight:700;">Còn hàng (Kho: <?= $toolStockQty ?>)</span>
                   <?php endif; ?>
                 </span>
               </span>
-              <?php if (!empty($tl['purchase_available']) && !empty($tl['variant'])): ?>
+              <?php if ($toolInStock): ?>
                 <strong style="color:#70452b;font-size:13.5px;white-space:nowrap;"><?= App::e(App::formatCurrency((int) $tl['variant']['price'])) ?></strong>
               <?php else: ?>
-                <strong style="color:#9c604d;font-size:12px;white-space:nowrap;">Không khả dụng</strong>
+                <strong style="color:#b91c1c;font-size:12px;white-space:nowrap;">Hết hàng</strong>
               <?php endif; ?>
             </label>
           <?php endforeach; ?>
         </div>
 
         <div style="padding:14px;background:#fff8ed;border-radius:10px;display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
-          <span style="font-weight:700;color:#70452b;">Giá:</span>
+          <span style="font-weight:700;color:#70452b;">Tổng cộng:</span>
           <strong id="recipe-combo-total" style="font-size:20px;color:#70452b;"><?= App::e(App::formatCurrency((int) $recipe['estimated_ingredients_cost'] + (int) $recipe['estimated_tools_cost'])) ?></strong>
         </div>
 
-        <button type="button" id="btn-add-recipe-combo" class="btn btn--primary btn--full" data-recipe-slug="<?= App::e($recipe['slug']) ?>">
+        <button type="button" id="btn-add-recipe-combo" class="btn btn--primary btn--full js-add-recipe-combo-trigger" data-recipe-slug="<?= App::e($recipe['slug']) ?>">
           Thêm nguyên liệu &amp; dụng cụ đã chọn vào giỏ
         </button>
         <a href="<?= App::e(App::url('?c=order&a=cart')) ?>" style="display:block;text-align:center;margin-top:12px;font-size:16px;font-weight:800;color:#70452b;text-decoration:underline;">
@@ -244,28 +281,51 @@ declare(strict_types=1);
 document.addEventListener("DOMContentLoaded", function () {
   const recipeSlug = <?= json_encode((string) $recipe['slug']) ?>;
   const recipeId = <?= (int) $recipe['id'] ?>;
+  const servingsUnit = <?= json_encode((string) $recipe['servings_unit']) ?>;
   const servInput = document.getElementById("recipe-servings-input");
   const totalEl = document.getElementById("recipe-combo-total");
+  const topServingsEl = document.getElementById("recipe-top-servings");
+  const topCountEl = document.getElementById("recipe-top-count");
+  const topIngCostEl = document.getElementById("recipe-top-ing-cost");
+  const topToolCostEl = document.getElementById("recipe-top-tool-cost");
+  const topTotalEl = document.getElementById("recipe-top-total");
   const ingredientsList = document.getElementById("recipe-ingredients-list");
-  const addComboBtn = document.getElementById("btn-add-recipe-combo");
+  const addComboBtns = Array.from(document.querySelectorAll(".js-add-recipe-combo-trigger"));
   let lastValidServings = Number(servInput?.value) || 1;
   let latestScaleRequest = 0;
 
   function recalcComboTotal() {
-    let sum = 0;
-    document.querySelectorAll(".js-combo-ing-check:checked, .js-combo-tool-check:checked").forEach((cb) => {
+    let ingSum = 0;
+    let toolSum = 0;
+    let selectedCount = 0;
+    document.querySelectorAll(".js-combo-ing-check:checked").forEach((cb) => {
       const qty = Number(cb.getAttribute("data-qty") || 1);
       const price = Number(cb.getAttribute("data-price") || 0);
-      sum += qty * price;
+      ingSum += qty * price;
+      selectedCount++;
     });
-    if (totalEl) totalEl.textContent = window.BakeApp.formatPrice(sum);
+    document.querySelectorAll(".js-combo-tool-check:checked").forEach((cb) => {
+      const qty = Number(cb.getAttribute("data-qty") || 1);
+      const price = Number(cb.getAttribute("data-price") || 0);
+      toolSum += qty * price;
+      selectedCount++;
+    });
+    const sum = ingSum + toolSum;
+    const fmt = window.BakeApp.formatPrice;
+    if (totalEl) totalEl.textContent = fmt(sum);
+    if (topTotalEl) topTotalEl.textContent = fmt(sum);
+    if (topIngCostEl) topIngCostEl.textContent = fmt(ingSum);
+    if (topToolCostEl) topToolCostEl.textContent = fmt(toolSum);
+    if (topCountEl) topCountEl.textContent = selectedCount + " món";
+    if (topServingsEl && servInput) topServingsEl.textContent = servInput.value + " " + servingsUnit;
     updateAddButtonState();
   }
 
   function updateAddButtonState() {
-    if (!addComboBtn) return;
     const hasSelection = Boolean(document.querySelector(".js-combo-ing-check:checked, .js-combo-tool-check:checked"));
-    addComboBtn.disabled = !hasSelection;
+    addComboBtns.forEach((btn) => {
+      btn.disabled = !hasSelection;
+    });
   }
 
   document.querySelectorAll(".js-combo-ing-check, .js-combo-tool-check").forEach((cb) => {
@@ -281,6 +341,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("btn-unselect-all-ing")?.addEventListener("click", () => {
     document.querySelectorAll(".js-combo-ing-check").forEach((cb) => {
+      cb.checked = false;
+    });
+    recalcComboTotal();
+  });
+
+  document.getElementById("btn-select-all-tools")?.addEventListener("click", () => {
+    document.querySelectorAll(".js-combo-tool-check").forEach((cb) => {
+      cb.checked = true;
+    });
+    recalcComboTotal();
+  });
+
+  document.getElementById("btn-unselect-all-tools")?.addEventListener("click", () => {
+    document.querySelectorAll(".js-combo-tool-check").forEach((cb) => {
       cb.checked = false;
     });
     recalcComboTotal();
@@ -339,7 +413,7 @@ document.addEventListener("DOMContentLoaded", function () {
                   <span>Đã có ở bếp</span>
                 </label>
               </div>
-              ${hasProd ? `<div style="font-size:12.5px;color:#7c5c46;margin-top:4px;padding-left:24px;">Đề xuất mua: <strong>${ing.packs_needed} &times; ${esc(ing.variant.short_label)}</strong> (${fmt(ing.variant.price * ing.packs_needed)})${ing.surplus > 0 ? ` · Dư dự kiến ${esc(ing.surplus)} ${esc(ing.unit)}` : ""}</div>` : (unavailableNote ? `<div style="font-size:12px;color:#9c7c65;margin-top:4px;">${esc(unavailableNote)}</div>` : "")}
+              ${hasProd ? `<div style="font-size:12.5px;color:#7c5c46;margin-top:4px;padding-left:24px;">Đề xuất mua: <strong>${ing.packs_needed} &times; ${esc(ing.variant.short_label)}</strong> (${fmt(ing.variant.price * ing.packs_needed)})${ing.surplus > 0 ? ` · Dư dự kiến ${esc(ing.surplus)} ${esc(ing.unit)}` : ""} <span style="display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:#ecfdf5;color:#15803d;font-size:11px;font-weight:700;">Còn hàng (Kho: ${Number(ing.stock_qty || ing.variant.stock_qty || 0)})</span></div>` : (unavailableNote ? `<div style="font-size:12px;color:#9c7c65;margin-top:4px;">${esc(unavailableNote)}</div>` : "")}
             </div>
           `;
         }).join("");
@@ -398,8 +472,8 @@ document.addEventListener("DOMContentLoaded", function () {
   if (btnPls) btnPls.addEventListener("click", () => scaleServings(Number(servInput?.value || lastValidServings) + 1));
   if (servInput) servInput.addEventListener("change", () => scaleServings(servInput.value));
 
-  if (addComboBtn) {
-    addComboBtn.addEventListener("click", async () => {
+  addComboBtns.forEach((btn) => {
+    btn.addEventListener("click", async () => {
       const items = [];
       document.querySelectorAll(".js-combo-ing-check:checked, .js-combo-tool-check:checked").forEach((cb) => {
         items.push({
@@ -413,7 +487,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      addComboBtn.disabled = true;
+      addComboBtns.forEach((b) => { b.disabled = true; });
       try {
         const res = await window.BakeApp.postJson("recipe", "ajaxAddComboToCart", {
           recipe_group_id: recipeSlug,
@@ -429,7 +503,7 @@ document.addEventListener("DOMContentLoaded", function () {
         updateAddButtonState();
       }
     });
-  }
+  });
 
   // Step Progress Bar + Celebratory 100% Callout
   const progressCard = document.getElementById("recipe-progress-card");

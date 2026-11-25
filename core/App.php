@@ -52,10 +52,25 @@ class App
             return;
         }
 
+        $savePath = (string) ini_get('session.save_path');
+        if ($savePath === '' || (!str_contains($savePath, ';') && (!is_dir($savePath) || !is_writable($savePath)))) {
+            $fallbackDir = sys_get_temp_dir();
+            if ($fallbackDir !== '' && is_dir($fallbackDir) && is_writable($fallbackDir)) {
+                @session_save_path($fallbackDir);
+            }
+        }
+
+        $base = self::basePath();
+        $cookiePath = '/';
+        if ($base !== '') {
+            $encodedSegs = array_map('rawurlencode', explode('/', trim($base, '/')));
+            $cookiePath = '/' . implode('/', $encodedSegs) . '/';
+        }
+
         $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
         session_set_cookie_params([
             'lifetime' => 0,
-            'path' => self::basePath() === '' ? '/' : self::basePath() . '/',
+            'path' => $cookiePath,
             'domain' => '',
             'secure' => $isHttps,
             'httponly' => true,
