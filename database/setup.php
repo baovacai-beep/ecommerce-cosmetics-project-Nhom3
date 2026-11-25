@@ -24,28 +24,33 @@ $args = $argv ?? [];
 $forceReset = in_array('--reset', $args, true);
 
 try {
-    $srv = DatabaseBootstrap::connectServer($cfg);
-    $dbName = (string) ($cfg['dbname'] ?? 'db_bakemate');
+    require_once $rootDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Database.php';
 
     if ($forceReset) {
-        echo "[RESET] Dang nap lai toan bo database/bakemate_schema.sql vao `{$dbName}`...\n";
-        DatabaseBootstrap::importSchema($srv, $dbName);
-    } else {
-        $safeDb = preg_replace('/[^a-zA-Z0-9_]/', '', $dbName) ?: 'db_bakemate';
-        $srv->exec("CREATE DATABASE IF NOT EXISTS `{$safeDb}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-        $srv->exec("USE `{$safeDb}`");
+        try {
+            $srv = DatabaseBootstrap::connectServer($cfg);
+            $dbName = (string) ($cfg['dbname'] ?? 'db_bakemate');
+            echo "[RESET] Dang nap lai toan bo database/bakemate_schema.sql vao MySQL `{$dbName}`...\n";
+            DatabaseBootstrap::importSchema($srv, $dbName);
+        } catch (Throwable $mysqlErr) {
+            $sqlitePath = DatabaseBootstrap::sqlitePath();
+            if (is_file($sqlitePath)) {
+                @unlink($sqlitePath);
+            }
+            echo "[RESET] MySQL chua bat, dang nap lai SQLite `bakemate_local.sqlite`...\n";
+        }
     }
 
-    require_once $rootDir . DIRECTORY_SEPARATOR . 'core' . DIRECTORY_SEPARATOR . 'Database.php';
     $pdo = Database::getInstance();
     $actions = DatabaseBootstrap::ensureLocalIntegrity($pdo, $cfg, true);
+    $info = Database::getSafeInfo();
 
-    echo "[OK] Da dong bo CSDL `{$dbName}` tren {$cfg['host']}:{$cfg['port']}.\n";
+    echo "[OK] Da dong bo CSDL ({$info['driver']}: {$info['dbname']}).\n";
     if (!empty($actions)) {
         echo "[ACTIONS] " . implode(', ', $actions) . "\n";
     }
 
-    $rows = $pdo->query("SELECT id, email, role, is_super_admin, failed_attempts, lock_until, CHAR_LENGTH(password_hash) AS hash_len FROM users WHERE email IN ('superadmin@bakemate.vn','admin@bakemate.vn','staff@bakemate.vn','khachhang@bakemate.vn') ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
+    $rows = $pdo->query("SELECT id, email, role, is_super_admin, failed_attempts, lock_until, LENGTH(password_hash) AS hash_len FROM users WHERE email IN ('superadmin@bakemate.vn','admin@bakemate.vn','staff@bakemate.vn','khachhang@bakemate.vn') ORDER BY id")->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $r) {
         $sa = !empty($r['is_super_admin']) ? ' (Super Admin)' : '';
         echo sprintf(

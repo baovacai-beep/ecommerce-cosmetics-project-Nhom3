@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * DatabaseBootstrap
- * Tự động khởi tạo CSDL local từ database/bakemate_schema.sql nếu chưa tồn tại
+ * Tự động khởi tạo CSDL local từ database/bakemate_schema.sql (cho cả MySQL và SQLite fallback)
  * và tự phục hồi 4 tài khoản mẫu khi hash Bcrypt bị lỗi định dạng hoặc từ bản SQL cũ.
  * Không lưu mật khẩu plaintext trong mã nguồn PHP (lấy hash chuẩn từ file SQL).
  */
@@ -19,6 +19,11 @@ class DatabaseBootstrap
     public static function schemaPath(): string
     {
         return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'bakemate_schema.sql';
+    }
+
+    public static function sqlitePath(): string
+    {
+        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'database' . DIRECTORY_SEPARATOR . 'bakemate_local.sqlite';
     }
 
     /**
@@ -63,7 +68,7 @@ class DatabaseBootstrap
     }
 
     /**
-     * Tạo mới đối tượng PDO kết nối MySQL ở mức Server (không chọn sẵn dbname) để phục vụ bootstrap.
+     * Tạo kết nối PDO MySQL ở mức Server (không chọn sẵn dbname) để phục vụ bootstrap.
      */
     public static function connectServer(array $cfg): PDO
     {
@@ -86,6 +91,7 @@ class DatabaseBootstrap
                 return new PDO($dsn, (string) $cfg['username'], (string) $cfg['password'], [
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_TIMEOUT => 2,
                     PDO::ATTR_EMULATE_PREPARES => true,
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci",
                 ]);
@@ -97,7 +103,7 @@ class DatabaseBootstrap
     }
 
     /**
-     * Thực thi file SQL chứa cả DELIMITER // (Stored Procedures) và dữ liệu seed.
+     * Nạp file SQL MySQL (hỗ trợ DELIMITER // cho Stored Procedures).
      */
     public static function importSchema(PDO $pdo, string $targetDbName): void
     {
@@ -114,7 +120,6 @@ class DatabaseBootstrap
         $pdo->exec("CREATE DATABASE IF NOT EXISTS `{$safeDb}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
         $pdo->exec("USE `{$safeDb}`");
 
-        // Điều chỉnh câu lệnh USE nếu người dùng cấu hình DB_NAME khác mặc định trong .env
         $normalized = str_replace(["\r\n", "\r"], "\n", $raw);
         $lines = explode("\n", $normalized);
         $delimiter = ';';
@@ -151,24 +156,175 @@ class DatabaseBootstrap
     }
 
     /**
-     * Kiểm tra schema + sửa hash hỏng/cũ của 4 tài khoản mẫu trên môi trường local.
+     * Chuyển đổi các chuỗi escape kiểu MySQL (\', \", \/, \\, \n, \r, \t) bên trong '...' sang chuẩn SQLite.
+     */
+    private static function convertMysqlStringsToSqlite(string $sql): string
+    {
+        $len = strlen($sql);
+        $out = '';
+        $inStr = false;
+        for ($i = 0; $i < $len; $i++) {
+            $ch = $sql[$i];
+            if (!$inStr) {
+                $out .= $ch;
+                if ($ch === "'") {
+                    $inStr = true;
+                }
+                continue;
+            }
+            if ($ch === '\\' && $i + 1 < $len) {
+                $next = $sql[$i + 1];
+                $i++;
+                $out .= match ($next) {
+                    "'" => "''",
+                    '"' => '"',
+                    '/' => '/',
+                    '\\' => '\\',
+                    'n' => "\n",
+                    'r' => "\r",
+                    't' => "\t",
+                    '0' => "\0",
+                    default => '\\' . $next,
+                };
+                continue;
+            }
+            if ($ch === "'" && $i + 1 < $len && $sql[$i + 1] === "'") {
+                $out .= "''";
+                $i++;
+                continue;
+            }
+            $out .= $ch;
+            if ($ch === "'") {
+                $inStr = false;
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Chuyển đổi một câu DDL MySQL sang cú pháp SQLite hợp lệ.
+     */
+    private static function convertDdlToSqlite(string $stmt): string
+    {
+        $sql = preg_replace('/\b(?:BIGINT|INT|SMALLINT|TINYINT)(?:\(\d+\))?\s+UNSIGNED\s+AUTO_INCREMENT\s+PRIMARY\s+KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $stmt) ?? $stmt;
+        $sql = preg_replace('/\b(?:BIGINT|INT|SMALLINT|TINYINT)(?:\(\d+\))?\s+AUTO_INCREMENT\s+PRIMARY\s+KEY/i', 'INTEGER PRIMARY KEY AUTOINCREMENT', $sql) ?? $sql;
+        $sql = preg_replace('/\bON\s+UPDATE\s+CURRENT_TIMESTAMP\b/i', '', $sql) ?? $sql;
+        $sql = preg_replace('/\bENUM\s*\([^)]+\)/i', 'TEXT', $sql) ?? $sql;
+        $sql = preg_replace('/\b(?:BIGINT|MEDIUMINT|INT|SMALLINT|TINYINT)(?:\(\d+\))?\s+UNSIGNED\b/i', 'INTEGER', $sql) ?? $sql;
+        $sql = preg_replace('/\b(?:BIGINT|MEDIUMINT|INT|SMALLINT|TINYINT)\(\d+\)/i', 'INTEGER', $sql) ?? $sql;
+        $sql = preg_replace('/\bUNSIGNED\b/i', '', $sql) ?? $sql;
+        $sql = preg_replace('/\bDECIMAL\s*\([^)]+\)/i', 'REAL', $sql) ?? $sql;
+        $sql = preg_replace('/\bLONGTEXT\b/i', 'TEXT', $sql) ?? $sql;
+        $sql = preg_replace('/\b(?:DATETIME|TIMESTAMP)\b/i', 'TEXT', $sql) ?? $sql;
+        $sql = preg_replace('/\bUNIQUE\s+KEY\s+\w+\s*\(/i', 'UNIQUE (', $sql) ?? $sql;
+        $sql = preg_replace('/,\s*\r?\n\s*(?:KEY|INDEX)\s+\w+\s*\([^)]+\)/i', '', $sql) ?? $sql;
+        $sql = preg_replace('/\)\s*ENGINE\s*=\s*InnoDB[^;]*/i', ')', $sql) ?? $sql;
+        return trim($sql);
+    }
+
+    /**
+     * Nạp toàn bộ schema + dữ liệu mẫu từ bakemate_schema.sql vào file SQLite nội bộ (không cần XAMPP/MySQL).
+     */
+    public static function importSqliteSchema(PDO $sqlitePdo): void
+    {
+        $path = self::schemaPath();
+        if (!is_file($path) || !is_readable($path)) {
+            throw new RuntimeException('Không tìm thấy database/bakemate_schema.sql để khởi tạo SQLite.');
+        }
+        $raw = file_get_contents($path);
+        if (!is_string($raw) || $raw === '') {
+            throw new RuntimeException('Tệp database/bakemate_schema.sql rỗng.');
+        }
+
+        $normalized = str_replace(["\r\n", "\r"], "\n", $raw);
+        $lines = explode("\n", $normalized);
+        $delimiter = ';';
+        $buffer = '';
+
+        $sqlitePdo->exec('PRAGMA foreign_keys = OFF');
+        $sqlitePdo->beginTransaction();
+
+        try {
+            foreach ($lines as $line) {
+                $trimmed = trim($line);
+                if ($trimmed === '' || str_starts_with($trimmed, '--')) {
+                    continue;
+                }
+                if (preg_match('/^DELIMITER\s+(\S+)$/i', $trimmed, $dm)) {
+                    $delimiter = $dm[1];
+                    continue;
+                }
+                if ($delimiter !== ';') {
+                    // Bỏ qua block Stored Procedure dành riêng cho MySQL
+                    continue;
+                }
+                if (
+                    preg_match('/^CREATE\s+DATABASE\b/i', $trimmed)
+                    || preg_match('/^USE\s+/i', $trimmed)
+                    || preg_match('/^SET\s+/i', $trimmed)
+                    || preg_match('/^DROP\s+PROCEDURE\b/i', $trimmed)
+                ) {
+                    continue;
+                }
+
+                $buffer .= $line . "\n";
+                $check = rtrim($buffer);
+                if (str_ends_with($check, ';')) {
+                    $stmtSql = trim(substr($check, 0, -1));
+                    $buffer = '';
+                    if ($stmtSql === '') {
+                        continue;
+                    }
+                    if (preg_match('/^(?:CREATE|DROP)\s+TABLE\b/i', $stmtSql)) {
+                        $stmtSql = self::convertDdlToSqlite($stmtSql);
+                    } elseif (preg_match('/^INSERT\s+/i', $stmtSql)) {
+                        $stmtSql = self::convertMysqlStringsToSqlite($stmtSql);
+                    }
+                    $sqlitePdo->exec($stmtSql);
+                }
+            }
+
+            $sqlitePdo->exec('CREATE INDEX IF NOT EXISTS idx_otp_email ON otp_tokens(email)');
+            $sqlitePdo->commit();
+        } catch (Throwable $e) {
+            if ($sqlitePdo->inTransaction()) {
+                $sqlitePdo->rollBack();
+            }
+            throw $e;
+        } finally {
+            $sqlitePdo->exec('PRAGMA foreign_keys = ON');
+        }
+    }
+
+    /**
+     * Kiểm tra schema + sửa hash hỏng/cũ của 4 tài khoản mẫu trên môi trường local (MySQL hoặc SQLite).
      */
     public static function ensureLocalIntegrity(PDO $pdo, array $cfg, bool $forceRepair = false): array
     {
         $actions = [];
+        $driver = strtolower((string) $pdo->getAttribute(PDO::ATTR_DRIVER_NAME));
 
         $hasUsersTable = false;
         try {
-            $chk = $pdo->query("SHOW TABLES LIKE 'users'");
+            if ($driver === 'sqlite') {
+                $chk = $pdo->query("SELECT name FROM sqlite_master WHERE type='table' AND name='users'");
+            } else {
+                $chk = $pdo->query("SHOW TABLES LIKE 'users'");
+            }
             $hasUsersTable = (bool) ($chk && $chk->fetchColumn());
         } catch (Throwable $e) {
             $hasUsersTable = false;
         }
 
         if (!$hasUsersTable) {
-            $srv = self::connectServer($cfg);
-            self::importSchema($srv, (string) ($cfg['dbname'] ?? 'db_bakemate'));
-            $actions[] = 'imported_full_schema';
+            if ($driver === 'sqlite') {
+                self::importSqliteSchema($pdo);
+                $actions[] = 'imported_sqlite_schema';
+            } else {
+                $srv = self::connectServer($cfg);
+                self::importSchema($srv, (string) ($cfg['dbname'] ?? 'db_bakemate'));
+                $actions[] = 'imported_full_schema';
+            }
         }
 
         $seedUsers = self::extractSeedUsers();

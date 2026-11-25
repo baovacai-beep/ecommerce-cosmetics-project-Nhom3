@@ -55,14 +55,11 @@ class ProductModel extends Model
                    v.old_price AS default_old_price,
                    v.stock_qty AS default_stock_qty,
                    v.short_label AS default_variant_label,
-                   (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.sort_order ASC LIMIT 1) AS primary_image,
-                   GROUP_CONCAT(DISTINCT s.name ORDER BY s.sort_order SEPARATOR '|') AS sub_names
+                   (SELECT pi.image_path FROM product_images pi WHERE pi.product_id = p.id ORDER BY pi.sort_order ASC LIMIT 1) AS primary_image
             FROM products p
             INNER JOIN categories c ON c.id = p.category_id
             INNER JOIN brands b ON b.id = p.brand_id
             LEFT JOIN product_variants v ON v.product_id = p.id AND v.option_index = 0
-            LEFT JOIN product_subcategories ps ON ps.product_id = p.id
-            LEFT JOIN subcategories s ON s.id = ps.subcategory_id
             WHERE 1=1
         ";
         $params = [];
@@ -107,8 +104,6 @@ class ProductModel extends Model
             }
         }
 
-        $sql .= ' GROUP BY p.id';
-
         $sort = (string) ($filters['sort'] ?? 'featured');
         $orderBy = match ($sort) {
             'price-asc' => ' ORDER BY default_price ASC, p.id ASC',
@@ -124,6 +119,17 @@ class ProductModel extends Model
         $stmt->execute($params);
         $rows = $stmt->fetchAll();
 
+        $subRows = $this->db->query(
+            'SELECT ps.product_id, s.name
+             FROM product_subcategories ps
+             INNER JOIN subcategories s ON s.id = ps.subcategory_id
+             ORDER BY s.sort_order ASC'
+        )->fetchAll();
+        $subMap = [];
+        foreach ($subRows as $sr) {
+            $subMap[(int) $sr['product_id']][] = (string) $sr['name'];
+        }
+
         // Lọc từ khóa không phân biệt dấu & subcategory chính xác
         $qNorm = self::normalizeSearch((string) ($filters['q'] ?? ''));
         $subFilter = !empty($filters['sub'])
@@ -132,7 +138,7 @@ class ProductModel extends Model
 
         $result = [];
         foreach ($rows as $row) {
-            $subs = $row['sub_names'] !== null && $row['sub_names'] !== '' ? explode('|', (string) $row['sub_names']) : [];
+            $subs = $subMap[(int) $row['id']] ?? [];
             $row['subCategories'] = $subs;
             $row['primary_image'] = $row['primary_image'] ?: 'images/logo.jpg';
 

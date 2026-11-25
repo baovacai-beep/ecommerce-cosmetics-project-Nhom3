@@ -39,7 +39,7 @@ class UserModel extends Model
         $cleanEmail = strtolower($raw);
         $cleanPhone = $this->normalizePhone($raw);
         if ($cleanPhone !== '' && preg_match('/^[0-9+]{8,15}$/', $cleanPhone)) {
-            $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone <> "" AND phone = ?) LIMIT 1');
+            $stmt = $this->db->prepare("SELECT * FROM users WHERE email = ? OR (phone IS NOT NULL AND phone <> '' AND phone = ?) LIMIT 1");
             $stmt->execute([$cleanEmail, $cleanPhone]);
         } else {
             $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
