@@ -524,51 +524,117 @@
       .join("");
   }
 
-  function initAddressCascade() {
+    // =========================================================================
+  // TÍCH HỢP PROVINCES OPEN API V2 CHO MODAL THÊM ĐỊA CHỈ
+  // =========================================================================
+  async function initAddressCascade() {
     const citySelect = document.getElementById("addr-city");
-    const distSelect = document.getElementById("addr-district");
     const wardSelect = document.getElementById("addr-ward");
     const zoneSelect = document.getElementById("addr-zone");
     const areaInput = document.getElementById("addr-area");
-    if (!citySelect || !distSelect || !wardSelect) return;
 
-    const cities = Object.keys(VN_LOCATIONS);
-    citySelect.innerHTML = cities.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+    if (!citySelect || !wardSelect) return;
 
-    function syncAreaOutput() {
-      const c = citySelect.value;
-      const d = distSelect.value;
-      const w = wardSelect.value;
-      const dMeta = VN_LOCATIONS[c] && VN_LOCATIONS[c][d];
-      if (zoneSelect && dMeta) {
-        zoneSelect.value = dMeta.zone;
+    const API_V2_URL = "https://provinces.open-api.vn/api/v2";
+
+    // Cache tạm trong phiên duyệt web để tránh gọi lại API liên tục
+    if (!window._provincesV2Cache) {
+      window._provincesV2Cache = { provinces: null, wardsByProvince: {} };
+    }
+
+    // 1. Hàm cập nhật chuỗi khu vực và khu vực tính phí giao hàng
+    function syncAreaAndZone() {
+      const cityOpt = citySelect.options[citySelect.selectedIndex];
+      const wardOpt = wardSelect.options[wardSelect.selectedIndex];
+
+      const cityName = (citySelect.value && cityOpt) ? cityOpt.text : "";
+      const wardName = (wardSelect.value && wardOpt) ? wardOpt.text : "";
+
+      if (areaInput) {
+        areaInput.value = [wardName, cityName].filter(Boolean).join(", ");
       }
-      if (areaInput && c && d && w) {
-        areaInput.value = `${w}, ${d}, ${c}`;
+
+      // Tự động gán zone tính phí ship cho hệ thống BakeMate
+      if (zoneSelect && cityName) {
+        const lower = cityName.toLowerCase();
+        if (lower.includes("hồ chí minh") || lower.includes("hcm")) {
+          zoneSelect.value = "hcm";
+        } else {
+          zoneSelect.value = "province";
+        }
       }
     }
 
-    function populateWards() {
-      const c = citySelect.value;
-      const d = distSelect.value;
-      const dMeta = VN_LOCATIONS[c] && VN_LOCATIONS[c][d];
-      const wards = dMeta ? dMeta.wards : [];
-      wardSelect.innerHTML = wards.map((w) => `<option value="${escapeHtml(w)}">${escapeHtml(w)}</option>`).join("");
-      syncAreaOutput();
+    // 2. Hàm tải danh sách Phường / Xã khi chọn Tỉnh
+    async function loadWards(provinceCode) {
+      wardSelect.innerHTML = '<option value="">-- Đang tải Phường / Xã... --</option>';
+      wardSelect.disabled = true;
+
+      if (!provinceCode) {
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>';
+        syncAreaAndZone();
+        return;
+      }
+
+      try {
+        let wards = window._provincesV2Cache.wardsByProvince[provinceCode];
+        if (!wards) {
+          const res = await fetch(`${API_V2_URL}/p/${provinceCode}?depth=2`);
+          if (!res.ok) throw new Error("Không thể tải danh sách phường/xã");
+          const data = await res.json();
+          wards = data.wards || [];
+          window._provincesV2Cache.wardsByProvince[provinceCode] = wards;
+        }
+
+        wardSelect.innerHTML = '<option value="">-- Chọn Phường / Xã --</option>' +
+          wards.map(w => `<option value="${w.code}">${escapeHtml(w.name)}</option>`).join("");
+        wardSelect.disabled = false;
+      } catch (err) {
+        console.warn("Lỗi tải Phường/Xã từ API v2, sử dụng fallback:", err);
+        wardSelect.innerHTML = '<option value="">-- Không thể tải danh sách --</option>';
+      }
+      syncAreaAndZone();
     }
 
-    function populateDistricts() {
-      const c = citySelect.value;
-      const distMap = VN_LOCATIONS[c] || {};
-      const dists = Object.keys(distMap);
-      distSelect.innerHTML = dists.map((d) => `<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join("");
-      populateWards();
+    // 3. Tải danh sách Tỉnh / Thành phố
+    try {
+      citySelect.innerHTML = '<option value="">-- Đang tải Tỉnh / Thành phố... --</option>';
+
+      let provinces = window._provincesV2Cache.provinces;
+      if (!provinces) {
+        const res = await fetch(`${API_V2_URL}/?depth=1`);
+        if (!res.ok) throw new Error("Không thể tải danh sách tỉnh/thành");
+        provinces = await res.json();
+        window._provincesV2Cache.provinces = provinces;
+      }
+
+      citySelect.innerHTML = '<option value="">-- Chọn Tỉnh / Thành phố --</option>' +
+        provinces.map(p => `<option value="${p.code}">${escapeHtml(p.name)}</option>`).join("");
+
+      // Mặc định ưu tiên chọn TP. Hồ Chí Minh nếu có trong danh sách
+      const hcm = provinces.find(p => p.name.includes("Hồ Chí Minh"));
+      if (hcm) {
+        citySelect.value = hcm.code;
+        await loadWards(hcm.code);
+      }
+    } catch (err) {
+      console.warn("Không kết nối được Provinces API v2, kích hoạt fallback nội bộ:", err);
+      // Fallback về dữ liệu VN_LOCATIONS tĩnh có sẵn của dự án
+      const cities = Object.keys(VN_LOCATIONS);
+      citySelect.innerHTML = cities.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+      wardSelect.disabled = false;
+      wardSelect.innerHTML = '<option value="Phường Bến Nghé">Phường Bến Nghé</option>';
+      syncAreaAndZone();
     }
 
-    citySelect.addEventListener("change", populateDistricts);
-    distSelect.addEventListener("change", populateWards);
-    wardSelect.addEventListener("change", syncAreaOutput);
-    populateDistricts();
+    // 4. Lắng nghe sự kiện thay đổi
+    if (!citySelect.dataset.boundApi) {
+      citySelect.addEventListener("change", function () {
+        loadWards(this.value);
+      });
+      wardSelect.addEventListener("change", syncAreaAndZone);
+      citySelect.dataset.boundApi = "1";
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
