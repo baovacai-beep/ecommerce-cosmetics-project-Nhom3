@@ -22,15 +22,7 @@ $showTurnstile = $turnstileSiteKey !== '' && $turnstileSecretKey !== '';
       </div>
       <div class="form-group">
         <label for="reg-email" class="form-label">Email <span class="required-mark">*</span></label>
-        <div style="display:flex;gap:8px;">
-          <input id="reg-email" name="email" type="email" class="auth-input" placeholder="an@example.com" required style="flex:1;">
-          <button type="button" id="btn-send-reg-otp" class="btn" style="white-space:nowrap;background:#70452b;color:#fff;font-size:13px;font-weight:600;padding:0 14px;border-radius:8px;border:none;cursor:pointer;">Nhận mã OTP</button>
-        </div>
-      </div>
-      <div class="form-group" id="reg-otp-group">
-        <label for="reg-otp" class="form-label">Mã OTP xác thực email <span class="required-mark">*</span></label>
-        <input id="reg-otp" name="otp_code" type="text" class="auth-input" placeholder="Nhập 6 chữ số từ email" maxlength="6" inputmode="numeric" required>
-        <small style="display:block;font-size:12px;color:#7c5c46;margin-top:4px;">Nhấn "Nhận mã OTP" để hệ thống gửi mã xác minh 6 số về email của bạn (hiệu lực 5 phút).</small>
+        <input id="reg-email" name="email" type="email" class="auth-input" placeholder="an@example.com" required>
       </div>
       <div class="form-group">
         <label for="reg-phone" class="form-label">Số điện thoại</label>
@@ -93,65 +85,6 @@ document.getElementById("reg-pass")?.addEventListener("input", function () {
   else if (score === 2) { el.textContent = "Độ mạnh: Trung bình"; el.style.color = "#b45309"; }
   else { el.textContent = "Độ mạnh: Mạnh"; el.style.color = "#15803d"; }
 });
-
-// Xử lý gửi mã OTP đăng ký (gắn ngoài sự kiện submit để click hoạt động ngay)
-const btnSendOtp = document.getElementById("btn-send-reg-otp");
-if (btnSendOtp) {
-  btnSendOtp.addEventListener("click", async function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    const fb = document.getElementById("reg-feedback");
-    const emailInput = document.getElementById("reg-email");
-    const nameInput = document.getElementById("reg-name");
-    const emailVal = (emailInput?.value || "").trim();
-    const nameVal = (nameInput?.value || "").trim();
-
-    const showMsg = (msg, isErr = true) => {
-      if (!fb) return;
-      fb.hidden = false;
-      fb.style.background = isErr ? "#fef2f2" : "#f0fdf4";
-      fb.style.color = isErr ? "#b91c1c" : "#15803d";
-      fb.textContent = msg;
-    };
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
-      showMsg("Vui lòng nhập địa chỉ email hợp lệ trước khi nhận mã OTP.");
-      emailInput?.focus();
-      return;
-    }
-
-    const origText = btnSendOtp.textContent;
-    btnSendOtp.disabled = true;
-    btnSendOtp.textContent = "Đang gửi OTP...";
-    if (fb) fb.hidden = true;
-
-    try {
-      const res = await window.BakeApp.postJson("auth", "ajaxSendRegisterOtp", {
-        email: emailVal,
-        full_name: nameVal
-      });
-      window.BakeApp.showToast(res.message, "success");
-      showMsg(res.message, false);
-
-      let countdown = 60;
-      const timer = setInterval(() => {
-        countdown--;
-        if (countdown <= 0) {
-          clearInterval(timer);
-          btnSendOtp.disabled = false;
-          btnSendOtp.textContent = "Gửi lại OTP";
-        } else {
-          btnSendOtp.textContent = `Gửi lại (${countdown}s)`;
-        }
-      }, 1000);
-
-    } catch (err) {
-      showMsg(err.message || "Không thể gửi OTP lúc này.");
-      btnSendOtp.disabled = false;
-      btnSendOtp.textContent = origText;
-    }
-  });
-}
 
 document.getElementById("register-form")?.addEventListener("submit", async function (e) {
   e.preventDefault();

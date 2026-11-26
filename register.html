@@ -157,18 +157,8 @@
 
         <div class="form-group">
           <label for="reg-email" class="form-label">Email <span class="required-mark">*</span></label>
-          <div style="display:flex;gap:8px;">
-            <input type="email" id="reg-email" name="email" class="auth-input" placeholder="baongoc@gmail.com" autocomplete="email" required style="flex:1;">
-            <button type="button" id="btn-send-reg-otp" class="btn" style="white-space:nowrap;background:#70452b;color:#fff;font-size:13px;font-weight:600;padding:0 14px;border-radius:8px;border:none;cursor:pointer;">Nhận mã OTP</button>
-          </div>
+          <input type="email" id="reg-email" name="email" class="auth-input" placeholder="baongoc@gmail.com" autocomplete="email" required>
           <span class="form-error" id="err-reg-email"></span>
-        </div>
-
-        <div class="form-group">
-          <label for="reg-otp" class="form-label">Mã OTP xác thực email <span class="required-mark">*</span></label>
-          <input type="text" id="reg-otp" name="otp_code" class="auth-input" placeholder="Nhập 6 chữ số từ email" maxlength="6" inputmode="numeric" required>
-          <small style="display:block;font-size:12px;color:#7c5c46;margin-top:4px;">Nhấn "Nhận mã OTP" để nhận mã xác minh 6 chữ số (có hiệu lực trong 5 phút).</small>
-          <span class="form-error" id="err-reg-otp"></span>
         </div>
 
         <div class="form-group">

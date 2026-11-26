@@ -184,46 +184,6 @@ private function normalizeVnPhone(string $raw): string
         ], 'Đăng nhập thành công! Chào mừng ' . $user['full_name']);
     }
 
-    public function ajaxSendRegisterOtp(): void
-    {
-        $this->requirePostJson();
-        $in = $this->jsonInput();
-        $email = strtolower(trim((string) ($in['email'] ?? '')));
-        $fullName = trim((string) ($in['full_name'] ?? ''));
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->jsonResponse('error', 422, [], 'Vui lòng nhập địa chỉ email hợp lệ.');
-        }
-
-        $userModel = $this->model('UserModel');
-        if ($userModel->findByEmail($email)) {
-            $this->jsonResponse('error', 409, [], 'Email này đã có tài khoản trên hệ thống. Vui lòng đăng nhập.');
-        }
-
-        $db = Database::getInstance();
-        $lastOtp = $db->prepare('SELECT cooldown_until FROM otp_tokens WHERE email = ? AND purpose = "register" ORDER BY id DESC LIMIT 1');
-        $lastOtp->execute([$email]);
-        $row = $lastOtp->fetch();
-        if ($row && !empty($row['cooldown_until']) && strtotime((string) $row['cooldown_until']) > time()) {
-            $rem = strtotime((string) $row['cooldown_until']) - time();
-            $this->jsonResponse('error', 429, [], "Vui lòng đợi {$rem} giây trước khi yêu cầu mã OTP mới.");
-        }
-
-        $otpCode = (string) random_int(100000, 999999);
-        $otpHash = password_hash($otpCode, PASSWORD_DEFAULT);
-        $expiresAt = date('Y-m-d H:i:s', time() + 300); // 5 phút
-        $cooldownUntil = date('Y-m-d H:i:s', time() + 60); // 60 giây
-
-        $stmt = $db->prepare('INSERT INTO otp_tokens (email, otp_hash, purpose, expires_at, cooldown_until) VALUES (?, ?, "register", ?, ?)');
-        $stmt->execute([$email, $otpHash, $expiresAt, $cooldownUntil]);
-
-        $mailRes = Mailer::sendOtp($email, $otpCode, $fullName, 'register');
-
-        $this->jsonResponse('success', 200, [
-            'dev_otp_preview' => $mailRes['dev_otp_preview'] ?? ''
-        ], $mailRes['message']);
-    }
-
     public function ajaxRegister(): void
     {
         $this->requirePostJson();
@@ -234,11 +194,10 @@ private function normalizeVnPhone(string $raw): string
         }
 
         $fullName = trim((string) ($in['full_name'] ?? ''));
-        $email = strtolower(trim((string) ($in['email'] ?? '')));
+        $email = trim((string) ($in['email'] ?? ''));
         $phone = trim((string) ($in['phone'] ?? ''));
         $password = (string) ($in['password'] ?? '');
         $confirm = (string) ($in['confirm_password'] ?? '');
-        $otpCode = trim((string) ($in['otp_code'] ?? ''));
 
         if (mb_strlen($fullName, 'UTF-8') < 2) {
             $this->jsonResponse('error', 422, [], 'Họ và tên phải có ít nhất 2 ký tự.');
@@ -246,34 +205,6 @@ private function normalizeVnPhone(string $raw): string
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->jsonResponse('error', 422, [], 'Địa chỉ email không hợp lệ.');
         }
-        if ($otpCode === '') {
-            $this->jsonResponse('error', 422, [], 'Vui lòng nhập mã OTP đã gửi qua email.');
-        }
-
-        // Xác thực mã OTP đăng ký từ bảng otp_tokens
-        $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT * FROM otp_tokens WHERE email = ? AND purpose = "register" AND is_used = 0 ORDER BY id DESC LIMIT 1');
-        $stmt->execute([$email]);
-        $tokenRow = $stmt->fetch();
-
-        if (!$tokenRow) {
-            $this->jsonResponse('error', 422, [], 'Chưa có yêu cầu gửi mã OTP cho email này. Vui lòng bấm "Nhận mã OTP".');
-        }
-        if (strtotime((string) $tokenRow['expires_at']) < time()) {
-            $this->jsonResponse('error', 422, [], 'Mã OTP đã hết hạn (5 phút). Vui lòng nhấn nhận mã mới.');
-        }
-        if ((int) ($tokenRow['attempts'] ?? 0) >= 5) {
-            $this->jsonResponse('error', 429, [], 'Bạn đã nhập sai OTP quá 5 lần. Vui lòng yêu cầu mã mới.');
-        }
-
-        if (!password_verify($otpCode, (string) $tokenRow['otp_hash'])) {
-            $db->prepare('UPDATE otp_tokens SET attempts = attempts + 1 WHERE id = ?')->execute([(int) $tokenRow['id']]);
-            $this->jsonResponse('error', 422, [], 'Mã OTP không chính xác. Vui lòng kiểm tra lại email.');
-        }
-
-        // Đánh dấu mã OTP đã sử dụng
-        $db->prepare('UPDATE otp_tokens SET is_used = 1 WHERE id = ?')->execute([(int) $tokenRow['id']]);
-
         $cleanPhone = $this->normalizeVnPhone($phone);
         if ($cleanPhone !== '' && !preg_match('/^(0[35789])[0-9]{8}$/', $cleanPhone)) {
             $this->jsonResponse('error', 422, [], 'Số điện thoại Việt Nam phải gồm 10 chữ số.');

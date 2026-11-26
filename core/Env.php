@@ -15,27 +15,11 @@ class Env
         if (self::$loaded) {
             return;
         }
-        $candidates = [
-            $filePath,
-            dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env',
-            __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '.env',
-            getcwd() . DIRECTORY_SEPARATOR . '.env',
-            'C:\\Users\\HOAI THUONG\\Downloads\\ecommerce-cosmetics-project-Nhom3\\.env'
-        ];
-        $path = null;
-        foreach ($candidates as $cand) {
-            if ($cand && is_file($cand)) {
-                $content = @file_get_contents($cand);
-                if ($content !== false && $content !== '') {
-                    $path = $cand;
-                    break;
-                }
-            }
-        }
-        if ($path !== null) {
-            $rawLines = preg_split("/\r\n|\n|\r/", (string) @file_get_contents($path));
-            if (is_array($rawLines)) {
-                foreach ($rawLines as $line) {
+        $path = $filePath ?? dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env';
+        if (is_file($path) && is_readable($path)) {
+            $lines = file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            if (is_array($lines)) {
+                foreach ($lines as $line) {
                     $trimmed = trim($line);
                     if ($trimmed === '' || str_starts_with($trimmed, '#')) {
                         continue;

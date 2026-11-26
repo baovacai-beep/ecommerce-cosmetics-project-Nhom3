@@ -302,60 +302,6 @@
       showBoxFeedback(feedbackEl, "", "error");
     }
 
-    const btnSendOtp = document.getElementById("btn-send-reg-otp");
-    const otpInput = document.getElementById("reg-otp");
-    const errOtp = document.getElementById("err-reg-otp");
-
-    if (btnSendOtp) {
-      btnSendOtp.addEventListener("click", async function (e) {
-        e.preventDefault();
-        const email = emailEl ? emailEl.value.trim() : "";
-        const fullName = nameEl ? nameEl.value.trim() : "";
-
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-          if (errEmail) errEmail.textContent = "Vui lòng nhập email hợp lệ trước khi nhận mã OTP.";
-          emailEl?.focus();
-          return;
-        }
-        if (errEmail) errEmail.textContent = "";
-
-        const origText = btnSendOtp.textContent;
-        btnSendOtp.disabled = true;
-        btnSendOtp.textContent = "Đang gửi OTP...";
-
-        try {
-          const res = await fetch("index.php?c=auth&a=ajaxSendRegisterOtp", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, full_name: fullName })
-          });
-          const json = await res.json();
-          if (json.status === "success" || json.success) {
-            showBoxFeedback(feedbackEl, json.message || "Mã OTP đã được gửi đến email của bạn!", "success");
-            let count = 60;
-            const timer = setInterval(() => {
-              count--;
-              if (count <= 0) {
-                clearInterval(timer);
-                btnSendOtp.disabled = false;
-                btnSendOtp.textContent = "Gửi lại OTP";
-              } else {
-                btnSendOtp.textContent = `Gửi lại (${count}s)`;
-              }
-            }, 1000);
-          } else {
-            showBoxFeedback(feedbackEl, json.message || "Không thể gửi OTP.", "error");
-            btnSendOtp.disabled = false;
-            btnSendOtp.textContent = origText;
-          }
-        } catch (err) {
-          showBoxFeedback(feedbackEl, "Lỗi kết nối khi gửi OTP. Vui lòng thử lại sau.", "error");
-          btnSendOtp.disabled = false;
-          btnSendOtp.textContent = origText;
-        }
-      });
-    }
-
     form.addEventListener("submit", function (event) {
       event.preventDefault();
       clearErrors();
