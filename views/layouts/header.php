@@ -17,6 +17,8 @@ $title = isset($pageTitle) ? (string) $pageTitle : 'BakeMate - Làm bánh chuẩ
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="<?= App::e(App::asset('css/style.css')) ?>">
+  <!-- Google Identity Services Script -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <script>
     window.BAKEMATE_PHP = {
       baseUrl: <?= json_encode(App::url(''), JSON_UNESCAPED_SLASHES) ?>,

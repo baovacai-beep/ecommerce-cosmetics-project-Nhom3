@@ -88,9 +88,13 @@ private function normalizeVnPhone(string $raw): string
             exit;
         }
 
+        $integrations = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'integrations.php';
+        $googleClientId = (string) ($integrations['google_oauth']['client_id'] ?? '');
+
         $this->view('pages/login', [
             'pageTitle' => 'Đăng nhập | BakeMate',
             'activeNav' => '',
+            'googleClientId' => $googleClientId,
             'redirect' => $this->sanitizeRedirect((string) ($_GET['redirect'] ?? '')),
         ]);
     }
@@ -101,9 +105,14 @@ private function normalizeVnPhone(string $raw): string
             header('Location: ' . App::url(''));
             exit;
         }
+
+        $integrations = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'integrations.php';
+        $googleClientId = (string) ($integrations['google_oauth']['client_id'] ?? '');
+
         $this->view('pages/register', [
             'pageTitle' => 'Đăng ký tài khoản | BakeMate',
             'activeNav' => '',
+            'googleClientId' => $googleClientId,
         ]);
     }
 
@@ -182,6 +191,113 @@ private function normalizeVnPhone(string $raw): string
             'role' => $user['role'],
             'redirect_url' => $redirect !== '' ? $redirect : $defaultRedirect,
         ], 'Đăng nhập thành công! Chào mừng ' . $user['full_name']);
+    }
+
+    /**
+     * Xác thực và đăng nhập/đăng ký bằng Google OAuth (Google Identity Services)
+     */
+    public function ajaxGoogleLogin(): void
+    {
+        $this->requirePostJson();
+        $in = $this->jsonInput();
+        $credential = trim((string) ($in['credential'] ?? ''));
+        $redirect = $this->sanitizeRedirect((string) ($in['redirect'] ?? ''));
+
+        if ($credential === '') {
+            $this->jsonResponse('error', 422, [], 'Không nhận được mã xác thực từ Google.');
+        }
+
+        $integrations = require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'integrations.php';
+        $clientId = trim((string) ($integrations['google_oauth']['client_id'] ?? ''));
+
+        if ($clientId === '') {
+            $this->jsonResponse('error', 500, [], 'Hệ thống chưa cấu hình GOOGLE_CLIENT_ID trong .env.');
+        }
+
+        // Xác minh ID Token hoặc Access Token trực tiếp qua Google API
+        $isAccessToken = !empty($in['access_token_mode']);
+        if ($isAccessToken) {
+            $verifyUrl = 'https://www.googleapis.com/oauth2/v3/userinfo';
+            $context = stream_context_create([
+                'http' => [
+                    'header' => "Authorization: Bearer " . $credential,
+                    'timeout' => 8,
+                    'ignore_errors' => true,
+                ]
+            ]);
+            $response = @file_get_contents($verifyUrl, false, $context);
+            $payload = is_string($response) ? json_decode($response, true) : null;
+            if (!is_array($payload) || empty($payload['email'])) {
+                $this->jsonResponse('error', 401, [], 'Access Token Google không hợp lệ hoặc đã hết hạn.');
+            }
+        } else {
+            $verifyUrl = 'https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($credential);
+            $context = stream_context_create([
+                'http' => [
+                    'timeout' => 8,
+                    'ignore_errors' => true,
+                ]
+            ]);
+            $response = @file_get_contents($verifyUrl, false, $context);
+            if ($response === false) {
+                $this->jsonResponse('error', 502, [], 'Không thể kết nối đến máy chủ xác thực Google.');
+            }
+
+            $payload = json_decode($response, true);
+            if (!is_array($payload) || ($payload['aud'] ?? '') !== $clientId) {
+                $this->jsonResponse('error', 401, [], 'Mã xác thực Google không hợp lệ hoặc đã hết hạn.');
+            }
+        }
+
+        $email = strtolower(trim((string) ($payload['email'] ?? '')));
+        $fullName = trim((string) ($payload['name'] ?? ''));
+        if ($email === '' || empty($payload['email_verified'])) {
+            $this->jsonResponse('error', 422, [], 'Tài khoản Google chưa được xác minh email.');
+        }
+
+        if ($fullName === '') {
+            $fullName = strstr($email, '@', true) ?: 'Khách hàng Google';
+        }
+
+        $userModel = $this->model('UserModel');
+        $user = $userModel->findByEmail($email);
+
+        // Nếu người dùng chưa tồn tại -> Tự động đăng ký tài khoản Customer mới
+        if (!$user) {
+            $randomPassword = bin2hex(random_bytes(16));
+            $res = $userModel->registerCustomer($fullName, $email, '', $randomPassword);
+            if (!$res['ok']) {
+                $this->jsonResponse('error', 500, [], 'Không thể tạo tài khoản từ Google: ' . $res['message']);
+            }
+            $user = $res['user'];
+        }
+
+        // Đăng nhập vào phiên làm việc
+        Rbac::loginUser($user);
+
+        // Đồng bộ giỏ hàng & yêu thích từ phiên khách vào tài khoản
+        try {
+            $orderModel = $this->model('OrderModel');
+            $contentModel = $this->model('ContentModel');
+            $orderModel->mergeGuestCartToDb((int) $user['id']);
+            $contentModel->mergeGuestWishlistToDb((int) $user['id']);
+        } catch (Throwable $e) {
+            // Không chặn đăng nhập
+        }
+
+        // Điều hướng theo phân quyền
+        $role = (string) ($user['role'] ?? 'customer');
+        $target = $redirect !== '' ? $redirect : ($role === 'admin' ? App::url('?c=admin&a=index') : App::url(''));
+
+        $this->jsonResponse('success', 200, [
+            'redirect_url' => $target,
+            'user' => [
+                'id' => $user['id'],
+                'full_name' => $user['full_name'],
+                'email' => $user['email'],
+                'role' => $user['role']
+            ]
+        ], 'Đăng nhập bằng tài khoản Google thành công!');
     }
 
     public function ajaxSendRegisterOtp(): void
